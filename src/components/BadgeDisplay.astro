@@ -1,0 +1,84 @@
+---
+interface Props {
+    badges: string[];
+}
+
+const { badges } = Astro.props;
+
+import { getAllBadges } from "../lib/badges";
+
+const allBadges = getAllBadges();
+---
+
+<div class="badge-display">
+    <h3 class="badge-title">🏆 Tus Logros</h3>
+
+    <div class="badge-grid">
+        {
+            allBadges.map((badge) => {
+                const earned = badges.includes(badge.id);
+                return (
+                    <div class={`badge-card ${earned ? "earned" : "locked"}`}>
+                        <div class="badge-icon">{badge.icon}</div>
+                        <div class="badge-info">
+                            <div class="badge-name">{badge.name}</div>
+                            <div class="badge-description">
+                                {badge.description}
+                            </div>
+                        </div>
+                        {!earned && <div class="badge-lock">🔒</div>}
+                    </div>
+                );
+            })
+        }
+    </div>
+</div>
+
+<style>
+    .badge-display {
+        background: var(--gradient-card);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        margin: 2rem 0;
+        backdrop-filter: blur(10px);
+    }
+
+    .badge-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .badge-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .badge-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.5rem;
+        background: var(--color-bg-secondary);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-md);
+        transition: var(--transition);
+        position: relative;
+    }
+
+    .badge-card.earned {
+        border-color: var(--color-primary);
+        box-shadow: var(--shadow-md);
+    }
+
+    .badge-card.locked {
+        opacity: 0.4;
+        filter: grayscale(1);
+    }
+</style>

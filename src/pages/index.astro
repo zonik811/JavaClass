@@ -1,0 +1,254 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import DayCard from "../components/DayCard.astro";
+import ProgressBar from "../components/ProgressBar.astro";
+import BadgeDisplay from "../components/BadgeDisplay.astro";
+
+const lessons = await getCollection("lessons");
+const sortedLessons = lessons.sort((a, b) => a.data.day - b.data.day);
+---
+
+<BaseLayout title="Inicio">
+    <div class="container">
+        <header class="hero">
+            <h1>☕ Curso de Java</h1>
+            <p class="hero-subtitle">De cero a POO en 20 días</p>
+            <p class="hero-description">
+                Aprende Java paso a paso, con ejercicios prácticos y proyectos
+                reales. Diseñado especialmente para aprender de forma clara y
+                efectiva.
+            </p>
+        </header>
+
+        <div id="progress-section"></div>
+        <div id="badges-section"></div>
+
+        <section class="lessons-section">
+            <h2>📚 Lecciones del Curso</h2>
+            <div class="lessons-grid">
+                {
+                    sortedLessons.map((lesson) => (
+                        <div
+                            id={`day-${lesson.data.day}`}
+                            class="lesson-wrapper"
+                        />
+                    ))
+                }
+            </div>
+        </section>
+    </div>
+
+    <script>
+        import { getProgress, getDayStatus } from "../lib/progress";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const progress = getProgress();
+
+            // Render progress bar
+            const progressSection = document.getElementById("progress-section");
+            if (progressSection) {
+                progressSection.innerHTML = `
+          <div class="progress-container">
+            <div class="progress-header">
+              <div class="progress-stats">
+                <span class="stat">
+                  <span class="stat-icon">📊</span>
+                  <span class="stat-value">${progress.completedDays.length}/20</span>
+                  <span class="stat-label">Días completados</span>
+                </span>
+                <span class="stat">
+                  <span class="stat-icon">🔥</span>
+                  <span class="stat-value">${progress.streak}</span>
+                  <span class="stat-label">Racha</span>
+                </span>
+                <span class="stat">
+                  <span class="stat-icon">📈</span>
+                  <span class="stat-value">${Math.round((progress.completedDays.length / 20) * 100)}%</span>
+                  <span class="stat-label">Progreso</span>
+                </span>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${(progress.completedDays.length / 20) * 100}%">
+                <span class="progress-text">${Math.round((progress.completedDays.length / 20) * 100)}%</span>
+              </div>
+            </div>
+          </div>
+        `;
+            }
+
+            // Render day cards with status
+            const lessons = [
+                {
+                    day: 1,
+                    title: "Tu Primer Programa Java",
+                    miniProject: false,
+                },
+                {
+                    day: 2,
+                    title: "Variables y Tipos de Datos",
+                    miniProject: false,
+                },
+                {
+                    day: 3,
+                    title: "Operadores y Expresiones",
+                    miniProject: false,
+                },
+                {
+                    day: 4,
+                    title: "Entrada de Datos con Scanner",
+                    miniProject: false,
+                },
+                {
+                    day: 5,
+                    title: "Control de Flujo: if/else",
+                    miniProject: true,
+                },
+                { day: 6, title: "Switch y Menús", miniProject: false },
+                {
+                    day: 7,
+                    title: "Bucles: while y do-while",
+                    miniProject: false,
+                },
+                { day: 8, title: "Bucles: for", miniProject: false },
+                {
+                    day: 9,
+                    title: "Break, Continue y Bucles Anidados",
+                    miniProject: false,
+                },
+                {
+                    day: 10,
+                    title: "Métodos (Funciones) - Parte 1",
+                    miniProject: true,
+                },
+                {
+                    day: 11,
+                    title: "Métodos - Parte 2: Retorno y Parámetros",
+                    miniProject: false,
+                },
+                { day: 12, title: "Arreglos (Arrays)", miniProject: false },
+                {
+                    day: 13,
+                    title: "Recorrer Arrays y Búsqueda",
+                    miniProject: false,
+                },
+                {
+                    day: 14,
+                    title: "Introducción a POO: Clases y Objetos",
+                    miniProject: false,
+                },
+                {
+                    day: 15,
+                    title: "Atributos, Métodos y Constructores",
+                    miniProject: true,
+                },
+                {
+                    day: 16,
+                    title: "Encapsulación: private, public, getters/setters",
+                    miniProject: false,
+                },
+                { day: 17, title: "Static vs Instancia", miniProject: false },
+                { day: 18, title: "Herencia Básica", miniProject: false },
+                {
+                    day: 19,
+                    title: "Polimorfismo e Interfaces",
+                    miniProject: false,
+                },
+                {
+                    day: 20,
+                    title: "Excepciones y Proyecto Final",
+                    miniProject: true,
+                },
+            ];
+
+            lessons.forEach((lesson) => {
+                const wrapper = document.getElementById(`day-${lesson.day}`);
+                if (!wrapper) return;
+
+                const status = getDayStatus(lesson.day);
+                const statusConfig = {
+                    locked: {
+                        icon: "🔒",
+                        label: "Bloqueado",
+                        class: "status-locked",
+                    },
+                    available: {
+                        icon: "📖",
+                        label: "Disponible",
+                        class: "status-available",
+                    },
+                    "in-progress": {
+                        icon: "⏳",
+                        label: "En progreso",
+                        class: "status-progress",
+                    },
+                    completed: {
+                        icon: "✅",
+                        label: "Completado",
+                        class: "status-completed",
+                    },
+                };
+
+                const config = statusConfig[status];
+                const isClickable = status !== "locked";
+
+                wrapper.innerHTML = `
+          <a href="${isClickable ? `/dia/${lesson.day}` : "#"}" 
+             class="day-card ${config.class} ${!isClickable ? "disabled" : ""}"
+             ${!isClickable ? 'aria-disabled="true"' : ""}>
+            <div class="day-number">Día ${lesson.day}</div>
+            <div class="day-content">
+              <h3>${lesson.title}</h3>
+              ${lesson.miniProject ? '<span class="mini-project-badge">🎯 Mini-Proyecto</span>' : ""}
+              <div class="status-badge">
+                <span class="status-icon">${config.icon}</span>
+                <span class="status-label">${config.label}</span>
+              </div>
+            </div>
+          </a>
+        `;
+            });
+        });
+    </script>
+
+    <style>
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .lessons-section {
+            margin-top: 3rem;
+        }
+
+        .lessons-section h2 {
+            margin-bottom: 2rem;
+        }
+
+        .lessons-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+    </style>
+</BaseLayout>

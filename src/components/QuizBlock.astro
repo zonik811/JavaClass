@@ -1,0 +1,198 @@
+---
+interface Props {
+    day: number;
+}
+
+const { day } = Astro.props;
+---
+
+<div class="quiz-block" data-day={day}>
+    <h3 class="quiz-title">📝 Mini-Quiz del Día {day}</h3>
+    <p class="quiz-description">
+        Responde estas preguntas para verificar tu comprensión
+    </p>
+
+    <div class="quiz-content">
+        <slot />
+    </div>
+
+    <div class="quiz-result" style="display: none;">
+        <div class="result-icon"></div>
+        <div class="result-text"></div>
+        <div class="result-score"></div>
+    </div>
+
+    <button class="btn btn-primary submit-quiz">Enviar Respuestas</button>
+</div>
+
+<style>
+    .quiz-block {
+        background: var(--gradient-card);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        margin: 2rem 0;
+        backdrop-filter: blur(10px);
+    }
+
+    .quiz-title {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--color-primary);
+    }
+
+    .quiz-description {
+        color: var(--color-text-muted);
+        margin-bottom: 1.5rem;
+    }
+
+    .quiz-content {
+        margin-bottom: 1.5rem;
+    }
+
+    .quiz-result {
+        padding: 1.5rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 1rem;
+        text-align: center;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .quiz-result.success {
+        background: rgba(6, 255, 165, 0.1);
+        border: 2px solid var(--color-success);
+    }
+
+    .quiz-result.partial {
+        background: rgba(255, 190, 11, 0.1);
+        border: 2px solid var(--color-warning);
+    }
+
+    .quiz-result.fail {
+        background: rgba(255, 0, 110, 0.1);
+        border: 2px solid var(--color-accent);
+    }
+
+    .result-icon {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .result-text {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .result-score {
+        font-size: 1rem;
+        color: var(--color-text-muted);
+    }
+
+    .submit-quiz {
+        width: 100%;
+    }
+
+    .submit-quiz:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const quizBlocks = document.querySelectorAll(".quiz-block");
+
+        quizBlocks.forEach((block) => {
+            const submitBtn = block.querySelector(
+                ".submit-quiz",
+            ) as HTMLButtonElement;
+            const resultDiv = block.querySelector(
+                ".quiz-result",
+            ) as HTMLDivElement;
+            const resultIcon = block.querySelector(
+                ".result-icon",
+            ) as HTMLDivElement;
+            const resultText = block.querySelector(
+                ".result-text",
+            ) as HTMLDivElement;
+            const resultScore = block.querySelector(
+                ".result-score",
+            ) as HTMLDivElement;
+
+            if (!submitBtn) return;
+
+            submitBtn.addEventListener("click", () => {
+                const questions = block.querySelectorAll(".quiz-question");
+                let correct = 0;
+                let total = questions.length;
+
+                questions.forEach((question) => {
+                    const selected = question.querySelector(
+                        'input[type="radio"]:checked',
+                    ) as HTMLInputElement;
+                    const correctAnswer = question.querySelector(
+                        'input[data-correct="true"]',
+                    ) as HTMLInputElement;
+
+                    if (selected && selected.dataset.correct === "true") {
+                        correct++;
+                        question.classList.add("correct");
+                        question.classList.remove("incorrect");
+                    } else if (selected) {
+                        question.classList.add("incorrect");
+                        question.classList.remove("correct");
+                    }
+
+                    // Show correct answer
+                    if (correctAnswer) {
+                        const label = question.querySelector(
+                            `label[for="${correctAnswer.id}"]`,
+                        );
+                        if (label) {
+                            label.classList.add("correct-answer");
+                        }
+                    }
+                });
+
+                // Show result
+                const percentage = (correct / total) * 100;
+                resultDiv.style.display = "block";
+
+                if (percentage === 100) {
+                    resultDiv.className = "quiz-result success";
+                    resultIcon.textContent = "🎉";
+                    resultText.textContent = "¡Perfecto!";
+                    resultScore.textContent = `${correct}/${total} respuestas correctas`;
+                } else if (percentage >= 60) {
+                    resultDiv.className = "quiz-result partial";
+                    resultIcon.textContent = "👍";
+                    resultText.textContent = "¡Bien hecho!";
+                    resultScore.textContent = `${correct}/${total} respuestas correctas. Revisa las incorrectas.`;
+                } else {
+                    resultDiv.className = "quiz-result fail";
+                    resultIcon.textContent = "📚";
+                    resultText.textContent = "Sigue practicando";
+                    resultScore.textContent = `${correct}/${total} respuestas correctas. Repasa el contenido.`;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Quiz Completado";
+
+                // Save score
+                const day = (block as HTMLElement).dataset.day;
+                if (day) {
+                    const progress = JSON.parse(
+                        localStorage.getItem("java-course-progress") || "{}",
+                    );
+                    if (!progress.quizScores) progress.quizScores = {};
+                    progress.quizScores[day] = correct;
+                    localStorage.setItem(
+                        "java-course-progress",
+                        JSON.stringify(progress),
+                    );
+                }
+            });
+        });
+    });
+</script>

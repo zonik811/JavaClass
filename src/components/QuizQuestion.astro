@@ -1,0 +1,101 @@
+---
+interface Props {
+    id: number;
+    question: string;
+    options: { text: string; correct?: boolean }[];
+}
+
+const { id, question, options } = Astro.props;
+const questionId = `q${id}`;
+---
+
+<div class="quiz-question">
+    <p class="question-text"><strong>Pregunta {id}:</strong> {question}</p>
+    <div class="options">
+        {
+            options.map((option, index) => {
+                const optionId = `${questionId}-opt${index}`;
+                return (
+                    <div class="option">
+                        <input
+                            type="radio"
+                            id={optionId}
+                            name={questionId}
+                            data-correct={option.correct ? "true" : "false"}
+                        />
+                        <label for={optionId}>{option.text}</label>
+                    </div>
+                );
+            })
+        }
+    </div>
+</div>
+
+<style>
+    .quiz-question {
+        background: var(--color-bg-secondary);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: var(--transition);
+    }
+
+    .quiz-question.correct {
+        border-color: var(--color-success);
+        background: rgba(6, 255, 165, 0.05);
+    }
+
+    .quiz-question.incorrect {
+        border-color: var(--color-accent);
+        background: rgba(255, 0, 110, 0.05);
+    }
+
+    .question-text {
+        margin-bottom: 1rem;
+        color: var(--color-text);
+        font-size: 1.05rem;
+    }
+
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .option {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .option input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: var(--color-primary);
+    }
+
+    .option label {
+        cursor: pointer;
+        color: var(--color-text-muted);
+        transition: var(--transition);
+        flex: 1;
+        padding: 0.5rem;
+        border-radius: var(--radius-sm);
+    }
+
+    .option label:hover {
+        color: var(--color-text);
+        background: var(--color-bg-card);
+    }
+
+    .option label.correct-answer {
+        color: var(--color-success);
+        font-weight: 600;
+    }
+
+    .option label.correct-answer::before {
+        content: "✓ ";
+    }
+</style>

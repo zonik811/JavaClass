@@ -1,0 +1,89 @@
+---
+interface Props {
+    currentDay: number;
+    totalDays?: number;
+}
+
+const { currentDay, totalDays = 20 } = Astro.props;
+
+const hasPrev = currentDay > 1;
+const hasNext = currentDay < totalDays;
+---
+
+<nav class="lesson-navigation">
+    {
+        hasPrev ? (
+            <a href={`/dia/${currentDay - 1}`} class="nav-btn prev-btn">
+                <span class="nav-icon">←</span>
+                <span class="nav-text">Día Anterior</span>
+            </a>
+        ) : (
+            <div class="nav-spacer" />
+        )
+    }
+
+    <a href="/" class="nav-btn home-btn">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">Inicio</span>
+    </a>
+
+    {
+        hasNext ? (
+            <a href={`/dia/${currentDay + 1}`} class="nav-btn next-btn">
+                <span class="nav-text">Día Siguiente</span>
+                <span class="nav-icon">→</span>
+            </a>
+        ) : (
+            <div class="nav-spacer" />
+        )
+    }
+</nav>
+
+<style>
+    .lesson-navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+
+    .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--gradient-card);
+        border: 2px solid var(--color-border);
+        border-radius: var(--radius-md);
+        color: var(--color-text);
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+    }
+
+    .nav-btn:hover {
+        border-color: var(--color-primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .nav-icon {
+        font-size: 1.25rem;
+    }
+
+    .nav-spacer {
+        width: 150px;
+    }
+
+    @media (max-width: 640px) {
+        .nav-text {
+            display: none;
+        }
+
+        .nav-spacer {
+            width: auto;
+        }
+    }
+</style>

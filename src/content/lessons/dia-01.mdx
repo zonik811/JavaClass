@@ -1,0 +1,628 @@
+---
+day: 1
+title: "Tu Primer Programa Java"
+objective: "Instalar JDK + VS Code y ejecutar tu primer programa 'Hola Mundo'"
+topics:
+  - "Instalación de JDK"
+  - "Configuración de VS Code"
+  - "Primer programa: Hola Mundo"
+  - "Compilar y ejecutar"
+  - "Entender errores básicos"
+miniProject: false
+---
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy vas a **instalar todo lo necesario** para programar en Java y **ejecutar tu primer programa**. Al final del día, verás tu primer "Hola Mundo" en la consola.
+
+---
+
+## 📋 Antes de Empezar
+
+- **No necesitas saber nada de Java** (empezamos desde cero)
+- **Vamos paso a paso** (cada instrucción es pequeña y clara)
+- **Si algo falla, hay soluciones** (errores comunes al final)
+- **Tómate tu tiempo** (no hay prisa, lo importante es entender)
+
+---
+
+## 📦 Paso 1: Instalar el JDK (Java Development Kit)
+
+### ¿Qué es el JDK?
+
+El **JDK** es el kit de herramientas que necesitas para escribir y ejecutar programas en Java. Sin él, tu computadora no entiende Java.
+
+### Pasos para instalar:
+
+1. **Abre tu navegador** (Chrome, Firefox, Edge, etc.)
+2. **Ve a**: [https://adoptium.net/](https://adoptium.net/)
+3. **Haz clic en el botón grande** que dice "Download"
+4. **Descarga la versión recomendada** (JDK 17 o superior)
+5. **Ejecuta el instalador** que descargaste
+6. **Sigue los pasos del instalador** (solo dale "Siguiente" → "Siguiente" → "Instalar")
+7. **Espera a que termine** (puede tardar 2-3 minutos)
+
+### ✅ Verificar que se instaló correctamente:
+
+1. **Abre la terminal/consola**:
+   - **Windows**: Presiona `Win + R`, escribe `cmd`, presiona Enter
+   - **Mac/Linux**: Abre "Terminal" desde aplicaciones
+
+2. **Escribe este comando** y presiona Enter:
+
+```bash
+java --version
+```
+
+3. **Deberías ver algo como esto**:
+
+```
+openjdk 17.0.x 2023-xx-xx
+OpenJDK Runtime Environment Temurin-17+xx
+```
+
+**Si ves números de versión = ¡Éxito! ✅**  
+**Si dice "comando no encontrado" = Ve a la sección de errores al final**
+
+---
+
+## 💻 Paso 2: Instalar VS Code
+
+### ¿Qué es VS Code?
+
+**VS Code** (Visual Studio Code) es el editor donde vas a escribir tu código Java. Es como un Word, pero para programadores.
+
+### Pasos para instalar:
+
+1. **Ve a**: [https://code.visualstudio.com/](https://code.visualstudio.com/)
+2. **Haz clic en "Download"**
+3. **Descarga la versión para tu sistema** (Windows/Mac/Linux)
+4. **Ejecuta el instalador**
+5. **Acepta todo** y dale "Siguiente" hasta que termine
+6. **Abre VS Code** cuando termine la instalación
+
+### Instalar la extensión de Java:
+
+1. **Dentro de VS Code**, haz clic en el ícono de **extensiones** (cuadrado con 4 cuadros en la barra izquierda)
+2. **Busca**: `Extension Pack for Java`
+3. **Haz clic en "Install"** en el paquete de Microsoft
+4. **Espera a que se instale** (puede tardar 1-2 minutos)
+
+---
+
+## 🚀 Paso 3: Crear tu Primer Programa
+
+### Crear una carpeta para tus proyectos:
+
+1. **Crea una carpeta** en tu escritorio llamada `CursoJava`
+2. **Dentro de esa carpeta**, crea otra llamada `Dia01`
+
+### Abrir la carpeta en VS Code:
+
+1. **En VS Code**, haz clic en `File` → `Open Folder`
+2. **Selecciona la carpeta** `Dia01` que acabas de crear
+3. **Haz clic en "Select Folder"**
+
+### Crear tu primer archivo Java:
+
+1. **Haz clic derecho** en el panel izquierdo de VS Code
+2. **Selecciona** `New File`
+3. **Nómbralo**: `HolaMundo.java` (¡Respeta las mayúsculas!)
+4. **Presiona Enter**
+
+---
+
+## ✍️ Paso 4: Escribir el Código
+
+**Copia este código EXACTAMENTE** en tu archivo `HolaMundo.java`:
+
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("¡Hola, Mundo!");
+    }
+}
+```
+
+### 📖 Explicación línea por línea:
+
+**Línea 1**: `public class HolaMundo {`
+- `public` = Este código puede ser usado desde cualquier parte
+- `class` = Estamos creando una "clase" (un contenedor de código)
+- `HolaMundo` = El nombre de nuestra clase (DEBE coincidir con el nombre del archivo)
+- `{` = Abre el bloque de código de la clase
+
+**Línea 2**: `public static void main(String[] args) {`
+- Esta es la **línea mágica** que Java busca para empezar a ejecutar tu programa
+- `main` = El punto de entrada (por donde empieza todo)
+- Por ahora, **solo cópiala tal cual** (la entenderás más adelante)
+
+**Línea 3**: `System.out.println("¡Hola, Mundo!");`
+- `System.out.println` = Comando para **imprimir en consola**
+- `"¡Hola, Mundo!"` = El texto que queremos mostrar (entre comillas)
+- `;` = Punto y coma al final (OBLIGATORIO en Java)
+
+**Líneas 4-5**: `}` y `}`
+- Cierran los bloques que abrimos con `{`
+
+---
+
+## ▶️ Paso 5: Ejecutar tu Programa
+
+### Opción 1: Botón de Play (Más fácil)
+
+1. **Haz clic derecho** en cualquier parte del código
+2. **Selecciona** `Run Java`
+3. **Mira la consola** en la parte inferior de VS Code
+
+**Deberías ver**:
+
+```
+¡Hola, Mundo!
+```
+
+### Opción 2: Desde la terminal (Más control)
+
+1. **Abre la terminal** en VS Code: `Terminal` → `New Terminal`
+2. **Compila el código**:
+
+```bash
+javac HolaMundo.java
+```
+
+3. **Ejecuta el programa**:
+
+```bash
+java HolaMundo
+```
+
+4. **Deberías ver**:
+
+```
+¡Hola, Mundo!
+```
+
+### 🤔 ¿Qué acabas de hacer?
+
+1. **Compilar** (`javac`): Convierte tu código Java en un archivo `.class` que la computadora entiende
+2. **Ejecutar** (`java`): Corre el programa compilado
+
+---
+
+## 💪 Ejercicios Guiados
+
+<ExerciseBlock id={1} title="Cambia el mensaje" difficulty="easy">
+  Modifica el programa para que diga `"¡Hola, [Tu Nombre]!"` en lugar de "Hola, Mundo".
+  
+  <div slot="hint1">
+    Solo necesitas cambiar el texto dentro de las comillas en `System.out.println(...)`.
+  </div>
+  
+  <div slot="hint2">
+    Busca la línea 3 y reemplaza `"¡Hola, Mundo!"` por `"¡Hola, Oscar!"` (o tu nombre).
+  </div>
+  
+  <div slot="solution">
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("¡Hola, Oscar!");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Imprime dos líneas" difficulty="easy">
+  Haz que tu programa imprima dos líneas:
+  - Primera línea: "¡Hola, Mundo!"
+  - Segunda línea: "Este es mi primer programa"
+  
+  <div slot="hint1">
+    Necesitas usar `System.out.println(...)` **dos veces**, una debajo de la otra.
+  </div>
+  
+  <div slot="hint2">
+    Copia la línea 3 y pégala debajo, luego cambia el texto de la segunda.
+  </div>
+  
+  <div slot="solution">
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("¡Hola, Mundo!");
+        System.out.println("Este es mi primer programa");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Imprime tu edad" difficulty="easy">
+  Imprime una línea que diga: "Tengo X años" (reemplaza X por tu edad).
+  
+  <div slot="hint1">
+    Usa `System.out.println("Tengo 15 años");` (cambia el número por tu edad).
+  </div>
+  
+  <div slot="hint2">
+    Agrega otra línea de `System.out.println(...)` con el texto que quieras.
+  </div>
+  
+  <div slot="solution">
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("Tengo 15 años");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Crea un nuevo archivo" difficulty="medium">
+  Crea un **nuevo archivo** llamado `MiPrograma.java` que imprima "Este es mi segundo programa".
+  
+  <div slot="hint1">
+    Recuerda: el nombre de la clase DEBE coincidir con el nombre del archivo.
+  </div>
+  
+  <div slot="hint2">
+    Si el archivo se llama `MiPrograma.java`, la clase debe llamarse `MiPrograma`.
+  </div>
+  
+  <div slot="solution">
+```java
+public class MiPrograma {
+    public static void main(String[] args) {
+        System.out.println("Este es mi segundo programa");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Imprime un dibujo ASCII" difficulty="medium">
+  Usa varias líneas de `System.out.println(...)` para dibujar un robot simple con texto:
+  
+  ```
+   O-O
+    |
+   /|\
+   / \
+  ```
+  
+  <div slot="hint1">
+    Cada línea del dibujo necesita su propio `System.out.println(...)`.
+  </div>
+  
+  <div slot="hint2">
+    Usa espacios para alinear el dibujo. Ejemplo: `System.out.println(" O-O");`
+  </div>
+  
+  <div slot="solution">
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println(" O-O");
+        System.out.println("  |");
+        System.out.println(" /|\\");
+        System.out.println(" / \\");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios de Práctica
+
+Intenta resolver estos **sin mirar las soluciones** primero:
+
+<ExerciseBlock id={6} title="Saludo personalizado" difficulty="easy">
+  Crea un programa que imprima:
+  - Tu nombre
+  - Tu edad
+  - Tu ciudad
+  
+  Cada dato en una línea separada.
+  
+  <div slot="hint1">
+    Necesitas 3 líneas de `System.out.println(...)`.
+  </div>
+  
+  <div slot="hint2">
+    ```java
+    System.out.println("Oscar");
+    System.out.println("15");
+    System.out.println("Bogotá");
+    ```
+  </div>
+  
+  <div slot="solution">
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("Oscar");
+        System.out.println("15");
+        System.out.println("Bogotá");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Menú de robot" difficulty="medium">
+  Imprime un menú de opciones para un robot:
+  ```
+  === MENÚ ROBOT ===
+  1. Avanzar
+  2. Retroceder
+  3. Girar
+  4. Detenerse
+  ```
+  
+  <div slot="hint1">
+    Usa 5 líneas de `System.out.println(...)`.
+  </div>
+  
+  <div slot="hint2">
+    Puedes usar `===` para hacer líneas decorativas.
+  </div>
+  
+  <div slot="solution">
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("=== MENÚ ROBOT ===");
+        System.out.println("1. Avanzar");
+        System.out.println("2. Retroceder");
+        System.out.println("3. Girar");
+        System.out.println("4. Detenerse");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="Información del robot" difficulty="medium">
+  Imprime información de un robot simulado:
+  - Nombre: RoboCop
+  - Batería: 100%
+  - Estado: Activo
+  - Velocidad: 50 km/h
+  
+  <div slot="hint1">
+    Usa el formato: `System.out.println("Nombre: RoboCop");`
+  </div>
+  
+  <div slot="hint2">
+    Necesitas 4 líneas, una para cada dato.
+  </div>
+  
+  <div slot="solution">
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("Nombre: RoboCop");
+        System.out.println("Batería: 100%");
+        System.out.println("Estado: Activo");
+        System.out.println("Velocidad: 50 km/h");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Banner de bienvenida" difficulty="medium">
+  Crea un banner de bienvenida con bordes:
+  ```
+  ************************
+  * BIENVENIDO A JAVA  *
+  ************************
+  ```
+  
+  <div slot="hint1">
+    Usa asteriscos `*` para hacer los bordes.
+  </div>
+  
+  <div slot="hint2">
+    Necesitas 3 líneas de `System.out.println(...)`.
+  </div>
+  
+  <div slot="solution">
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("************************");
+        System.out.println("*  BIENVENIDO A JAVA  *");
+        System.out.println("************************");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={10} title="Historia corta" difficulty="medium">
+  Escribe una historia corta de 5 líneas sobre un robot. Ejemplo:
+  ```
+  Había una vez un robot llamado R2D2.
+  Le gustaba explorar planetas.
+  Un día encontró un tesoro.
+  El tesoro era un chip de memoria.
+  Y vivió feliz para siempre.
+  ```
+  
+  <div slot="hint1">
+    Inventa tu propia historia, usa 5 líneas de `System.out.println(...)`.
+  </div>
+  
+  <div slot="hint2">
+    Cada línea de la historia va en un `System.out.println("...");` separado.
+  </div>
+  
+  <div slot="solution">
+```java
+public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("Había una vez un robot llamado R2D2.");
+        System.out.println("Le gustaba explorar planetas.");
+        System.out.println("Un día encontró un tesoro.");
+        System.out.println("El tesoro era un chip de memoria.");
+        System.out.println("Y vivió feliz para siempre.");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={1}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué comando usas para compilar un archivo Java?"
+    options={[
+      { text: 'java HolaMundo.java', correct: false },
+      { text: 'javac HolaMundo.java', correct: true },
+      { text: 'compile HolaMundo.java', correct: false },
+      { text: 'run HolaMundo.java', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={2}
+    question="¿Qué comando usas para ejecutar un programa Java compilado?"
+    options={[
+      { text: 'javac HolaMundo', correct: false },
+      { text: 'run HolaMundo', correct: false },
+      { text: 'java HolaMundo', correct: true },
+      { text: 'execute HolaMundo', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={3}
+    question="¿Cómo se llama el método principal donde empieza un programa Java?"
+    options={[
+      { text: 'start', correct: false },
+      { text: 'begin', correct: false },
+      { text: 'main', correct: true },
+      { text: 'run', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={4}
+    question="¿Qué símbolo va al final de cada instrucción en Java?"
+    options={[
+      { text: 'Punto (.)', correct: false },
+      { text: 'Coma (,)', correct: false },
+      { text: 'Punto y coma (;)', correct: true },
+      { text: 'Dos puntos (:)', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={5}
+    question="Si tu archivo se llama 'Robot.java', ¿cómo debe llamarse la clase?"
+    options={[
+      { text: 'robot', correct: false },
+      { text: 'Robot', correct: true },
+      { text: 'ROBOT', correct: false },
+      { text: 'Puede tener cualquier nombre', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## 🎁 Reto Opcional
+
+**Desafío**: Crea un programa llamado `Presentacion.java` que imprima:
+- Un banner de bienvenida
+- Tu nombre y edad
+- 3 cosas que te gustan
+- Un mensaje de despedida
+
+**Ejemplo de salida**:
+```
+====================
+  MI PRESENTACIÓN
+====================
+Nombre: Oscar
+Edad: 15
+
+Me gusta:
+- Programar
+- Robótica
+- Videojuegos
+
+¡Gracias por leer!
+```
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Instalé el JDK correctamente',
+    'Instalé VS Code y la extensión de Java',
+    'Creé y ejecuté mi primer programa "Hola Mundo"',
+    'Entiendo qué es compilar y ejecutar',
+    'Completé al menos 5 ejercicios',
+    'Entiendo que el nombre de la clase debe coincidir con el archivo'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "javac no se reconoce como comando"
+
+**Problema**: El JDK no está en el PATH del sistema.
+
+**Solución**:
+1. Busca dónde se instaló el JDK (usualmente en `C:\Program Files\Java\jdk-17\bin`)
+2. Agrega esa ruta al PATH del sistema
+3. Reinicia la terminal
+
+### Error: "class HolaMundo is public, should be declared in a file named HolaMundo.java"
+
+**Problema**: El nombre del archivo no coincide con el nombre de la clase.
+
+**Solución**: Asegúrate de que el archivo se llame exactamente igual que la clase (respetando mayúsculas).
+
+### Error: "';' expected"
+
+**Problema**: Olvidaste el punto y coma al final de una línea.
+
+**Solución**: Agrega `;` al final de cada instrucción.
+
+### Error: "cannot find symbol"
+
+**Problema**: Escribiste mal alguna palabra clave (como `System` o `println`).
+
+**Solución**: Revisa que todo esté escrito exactamente como en los ejemplos.
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 1. Ahora sabes:
+- ✅ Instalar y configurar Java
+- ✅ Crear y ejecutar programas básicos
+- ✅ Usar `System.out.println()` para mostrar texto
+- ✅ Compilar con `javac` y ejecutar con `java`
+
+**Mañana**: Aprenderás sobre variables y tipos de datos. ¡Nos vemos en el Día 2! 🚀

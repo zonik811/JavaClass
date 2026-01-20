@@ -1,0 +1,166 @@
+---
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navigation from "../../components/Navigation.astro";
+
+export const getStaticPaths = (async () => {
+    const lessons = await getCollection("lessons");
+    return lessons.map((lesson) => ({
+        params: { day: lesson.data.day.toString() },
+        props: { lesson },
+    }));
+}) satisfies GetStaticPaths;
+
+const { lesson } = Astro.props;
+const { Content } = await lesson.render();
+const { day, title, objective } = lesson.data;
+---
+
+<BaseLayout title={`Día ${day}: ${title}`}>
+    <div class="container">
+        <div class="lesson-header">
+            <div class="day-badge">Día {day}</div>
+            <h1>{title}</h1>
+            <p class="objective">🎯 <strong>Objetivo:</strong> {objective}</p>
+        </div>
+
+        <article class="lesson-content">
+            <Content />
+        </article>
+
+        <div class="lesson-footer">
+            <button id="mark-complete-btn" class="btn btn-success btn-large">
+                <span id="complete-icon">☐</span>
+                <span id="complete-text">Marcar día como completado</span>
+            </button>
+        </div>
+
+        <Navigation currentDay={day} />
+    </div>
+
+    <script>
+        import { markDayComplete, getDayStatus } from "../../lib/progress";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const btn = document.getElementById("mark-complete-btn");
+            const icon = document.getElementById("complete-icon");
+            const text = document.getElementById("complete-text");
+            const dayMatch = window.location.pathname.match(/\/dia\/(\d+)/);
+
+            if (!btn || !icon || !text || !dayMatch) return;
+
+            const day = parseInt(dayMatch[1]);
+            const status = getDayStatus(day);
+
+            if (status === "completed") {
+                btn.classList.add("completed");
+                icon.textContent = "✅";
+                text.textContent = "Día completado";
+            }
+
+            btn.addEventListener("click", () => {
+                markDayComplete(day);
+                btn.classList.add("completed");
+                icon.textContent = "✅";
+                text.textContent = "Día completado";
+
+                // Show celebration
+                showCelebration();
+            });
+        });
+
+        function showCelebration() {
+            const celebration = document.createElement("div");
+            celebration.className = "celebration";
+            celebration.textContent = "🎉 ¡Excelente trabajo!";
+            document.body.appendChild(celebration);
+
+            setTimeout(() => {
+                celebration.remove();
+            }, 3000);
+        }
+    </script>
+
+    <style>
+        .lesson-header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .day-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .lesson-header h1 {
+            margin-bottom: 1rem;
+        }
+
+        .objective {
+            font-size: 1.125rem;
+            color: var(--color-text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .lesson-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .lesson-footer {
+            max-width: 900px;
+            margin: 3rem auto;
+            text-align: center;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .btn-success.completed {
+            background: var(--color-success);
+            cursor: default;
+        }
+
+        :global(.celebration) {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2rem 3rem;
+            border-radius: var(--radius-lg);
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-lg);
+            animation: celebrationPop 0.5s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes celebrationPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+    </style>
+</BaseLayout>
