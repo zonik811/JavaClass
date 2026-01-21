@@ -1,49 +1,414 @@
 ---
 day: 2
 title: "Variables y Tipos de Datos"
-objective: "Declarar variables (int, double, String, boolean) y usarlas en programas"
+objective: "Entender qué son las variables y cómo almacenar datos (int, double, String, boolean)"
 topics:
-  - "Tipos primitivos"
-  - "Declaración de variables"
-  - "Asignación de valores"
-  - "Concatenación de strings"
+  - "Concepto de variable (Caja/Memoria)"
+  - "Tipos de datos primitivos + String"
+  - "Declaración y Asignación"
+  - "Nombrar variables (camelCase)"
+  - "Concatenación básica"
 miniProject: false
 ---
 
-# Día 2: Variables y Tipos de Datos
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
 
 ## 🎯 Objetivo del Día
-Aprender a declarar y usar variables para guardar datos en tus programas.
 
-## 📋 Antes de Empezar
-- Completaste el Día 1
-- Tienes VS Code abierto
-- Recuerdas cómo crear y ejecutar archivos Java
+Hoy aprenderás a **guardar información** en tu programa. Hasta ahora solo hemos impreso texto fijo, pero los programas reales necesitan recordar datos como nombres, puntuaciones, niveles de batería, etc.
 
-## Contenido
+---
 
-### ¿Qué es una variable?
-Una variable es como una caja donde guardas datos. Cada caja tiene:
-- Un **nombre** (para identificarla)
-- Un **tipo** (qué tipo de dato guarda)
-- Un **valor** (el dato que contiene)
+## 📦 ¿Qué es una Variable?
 
-### Tipos de datos básicos
+Imagina que la memoria de tu computadora es un **almacén gigante lleno de cajas**.
+Una **variable** es una de esas cajas donde puedes guardar algo.
+
+Para usar una caja en Java, necesitas 3 cosas:
+1. **Tipo**: ¿Qué forma tiene la caja? (¿Guarda números? ¿Texto?)
+2. **Nombre**: ¿Qué etiqueta tiene la caja? (para encontrarla después)
+3. **Valor**: ¿Qué hay adentro de la caja?
 
 ```java
-int edad = 15;              // Números enteros
-double precio = 19.99;      // Números decimales
-String nombre = "Oscar";    // Texto
-boolean activo = true;      // Verdadero o falso
+//   Tipo    Nombre     Valor
+     int      edad   =   15;
 ```
 
-*[Contenido completo a desarrollar]*
+---
 
-## Ejercicios
-*[10+ ejercicios a desarrollar]*
+## 🤖 Los 5 Tipos de Datos Esenciales
 
-## Mini-Quiz
-*[5 preguntas a desarrollar]*
+En Java hay muchos tipos, pero hoy nos enfocaremos en los 5 que usarás el 90% del tiempo. Vamos a usar un **Robot** como ejemplo:
 
-## Checklist
-*[Logros del día a desarrollar]*
+### 1. `int` (Enteros)
+Para números **sin decimales**.
+- **Ejemplos**: Edad, cantidad de vidas, número de ruedas.
+- **Robot**: `int ruedas = 4;`
+
+### 2. `double` (Decimales)
+Para números **con decimales** (mayor precisión).
+- **Ejemplos**: Precio, altura, porcentaje de batería.
+- **Robot**: `double bateria = 98.5;`
+
+### 3. `String` (Texto)
+Para **cadenas de texto**. Siempre va entre **comillas dobles** `""`.
+- **Ejemplos**: Nombre, dirección, mensaje.
+- **Robot**: `String nombre = "RoboCop";`
+
+### 4. `boolean` (Lógico)
+Solo puede valer `true` (verdadero) o `false` (falso). Es como un interruptor.
+- **Ejemplos**: ¿Está encendido?, ¿Es admin?, ¿Tiene acceso?
+- **Robot**: `boolean encendido = true;`
+
+### 5. `char` (Carácter)
+Para un **solo símbolo**. Siempre va entre **comillas simples** `''`.
+- **Ejemplos**: Inicial, calificación (A, B, C), género (M/F).
+- **Robot**: `char modelo = 'X';`
+
+---
+
+## 💻 Ejemplos en Código
+
+Crea un archivo llamado `DatosRobot.java` y escribe esto:
+
+```java
+public class DatosRobot {
+    public static void main(String[] args) {
+        // Declarar variables
+        String nombre = "R2D2";
+        int antiguedad = 50;
+        double altura = 1.1;
+        boolean funciona = true;
+        char serie = 'A';
+
+        // Usar variables (Imprimirlas)
+        System.out.println("Nombre del Robot: " + nombre);
+        System.out.println("Años de servicio: " + antiguedad);
+        System.out.println("Altura (metros): " + altura);
+        System.out.println("¿Está operativo?: " + funciona);
+        System.out.println("Serie: " + serie);
+    }
+}
+```
+
+### 🔍 Analicemos el código:
+- `+` se usa para **unir (concatenar)** texto con variables.
+- `System.out.println("Nombre: " + nombre);` muestra: `Nombre: R2D2`
+
+---
+
+## 📏 Reglas para Nombres (Sintaxis)
+
+Java es estricto. Sigue estas reglas para nombrar tus variables:
+
+1. **Empieza con minúscula**: `nombre`, `edad`.
+2. **Usa camelCase**: Si son dos palabras, la segunda empieza con mayúscula.
+   - ✅ `nombreCompleto`
+   - ✅ `velocidadMaxima`
+   - ✅ `numeroDeVidas`
+   - ❌ `Nombre_Completo` (Estilo Python/C)
+   - ❌ `nombrecompleto` (Difícil de leer)
+3. **Sé descriptivo**:
+   - ✅ `int puntosDeVida = 100;`
+   - ❌ `int x = 100;` (¿Qué es x?)
+
+---
+
+## 💪 Ejercicios Guiados
+
+<ExerciseBlock id={1} title="Tu Perfil Personal" difficulty="easy">
+  Crea un programa `Perfil.java` que guarde tu información en variables y la muestre.
+  Debe tener:
+  - `String` para tu nombre
+  - `int` para tu edad
+  - `double` para tu altura (ej: 1.75)
+  - `char` para la inicial de tu apellido
+  
+  <div slot="hint1">
+    Declara las 4 variables primero, luego usa 4 `System.out.println` para mostrarlas.
+  </div>
+  
+  <div slot="hint2">
+    Ejemplo: `double altura = 1.70;`
+  </div>
+  
+  <div slot="solution">
+```java
+public class Perfil {
+    public static void main(String[] args) {
+        String nombre = "Oscar";
+        int edad = 15;
+        double altura = 1.75;
+        char inicial = 'G';
+
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Edad: " + edad);
+        System.out.println("Altura: " + altura);
+        System.out.println("Inicial: " + inicial);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Inventario de Videojuego" difficulty="easy">
+  Imagina que estás programando el inventario de un juego. Define variables para:
+  - `monedas`: 500
+  - `nombreItem`: "Espada de Fuego"
+  - `dano`: 25.5
+  - `esMagico`: verdadero
+  
+  Imprime todo en un formato bonito.
+  
+  <div slot="hint1">
+    Usa `int` para monedas, `String` para nombre, `double` para daño y `boolean` para mágico.
+  </div>
+  
+  <div slot="solution">
+```java
+public class Inventario {
+    public static void main(String[] args) {
+        int monedas = 500;
+        String nombreItem = "Espada de Fuego";
+        double dano = 25.5;
+        boolean esMagico = true;
+
+        System.out.println("=== ITEM ACTUAL ===");
+        System.out.println("Arma: " + nombreItem);
+        System.out.println("Daño: " + dano);
+        System.out.println("¿Mágico?: " + esMagico);
+        System.out.println("Monedas: " + monedas);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Corrigiendo Errores" difficulty="medium">
+  El siguiente código tiene errores de tipos. Encuéntralos y corrígelos en tu editor.
+  
+  ```java
+  int nombre = "Juan";      // Error 1
+  String edad = 20;         // Error 2
+  boolean altura = 1.80;    // Error 3
+  double vivo = true;       // Error 4
+  ```
+  
+  <div slot="hint1">
+    Revisa qué tipo de dato acepta cada variable. "Juan" es texto, no número.
+  </div>
+  
+  <div slot="solution">
+```java
+public class Correcion {
+    public static void main(String[] args) {
+        // Corrección
+        String nombre = "Juan";  // Texto usa String
+        int edad = 20;           // Enteros usan int
+        double altura = 1.80;    // Decimales usan double
+        boolean vivo = true;     // Verdadero/Falso usa boolean
+        
+        System.out.println(nombre + " tiene " + edad + " años.");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Calculadora Simple (Suma)" difficulty="medium">
+  Crea dos variables `int` llamadas `num1` y `num2`, asígnales valores (ej: 10 y 20).
+  Crea una tercera variable `int resultado = num1 + num2;`.
+  Imprime el resultado.
+  
+  <div slot="hint1">
+    Puedes sumar variables igual que números: `int total = a + b;`
+  </div>
+  
+  <div slot="solution">
+```java
+public class Suma {
+    public static void main(String[] args) {
+        int num1 = 10;
+        int num2 = 20;
+        int resultado = num1 + num2;
+        
+        System.out.println("La suma es: " + resultado);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Actualizando Variables" difficulty="medium">
+  1. Declara una variable `puntos = 0`.
+  2. Imprime "Puntos iniciales: " + puntos.
+  3. Cambia el valor de puntos a 50 (`puntos = 50;`).
+  4. Imprime "Ganaste una moneda! Puntos: " + puntos.
+  5. Cambia el valor a 100.
+  6. Imprime "Ganaste nivel! Puntos: " + puntos.
+  
+  <div slot="hint1">
+    Recuerda que para actualizar una variable ya creada NO pones el tipo de dato otra vez.
+    Ejemplo: `puntos = 50;` (CORRECTO), `int puntos = 50;` (INCORRECTO, duplicado).
+  </div>
+  
+  <div slot="solution">
+```java
+public class Puntos {
+    public static void main(String[] args) {
+        int puntos = 0;
+        System.out.println("Puntos iniciales: " + puntos);
+        
+        puntos = 50;
+        System.out.println("Ganaste una moneda! Puntos: " + puntos);
+        
+        puntos = 100;
+        System.out.println("Ganaste nivel! Puntos: " + puntos);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🚀 Reto: Generador de Identificaciones
+
+Crea un programa llamado `GeneradorID.java` que simule la creación de una tarjeta de identificación para un nuevo empleado o estudiante.
+
+**Requisitos**:
+1. Usa variables para: Nombre, Apellido, Cargo, Edad, y si tiene acceso VIP.
+2. Imprime un diseño de tarjeta usando `System.out.println`.
+3. El resultado debe verse algo así:
+
+```
+##################################
+#      SISTEMA DE SEGURIDAD      #
+##################################
+# Nombre: Tony
+# Apellido: Stark
+# Edad: 35
+# Cargo: Ingeniero Jefe
+# Acceso VIP: true
+##################################
+```
+
+<div slot="hint1">
+  Declara todas las variables al principio.
+</div>
+
+<div slot="hint2">
+  Usa concatenación (`+`) para unir los bordes `#` con las variables, o simplemente imprime el texto y luego la variable.
+</div>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={2}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué tipo de dato usarías para guardar el precio de un producto (ej: 19.99)?"
+    options={[
+      { text: 'int', correct: false },
+      { text: 'String', correct: false },
+      { text: 'double', correct: true },
+      { text: 'boolean', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={2}
+    question="¿Cuál es la forma correcta de declarar una variable de texto?"
+    options={[
+      { text: 'String texto = "Hola";', correct: true },
+      { text: "String texto = 'Hola';", correct: false },
+      { text: 'Text texto = "Hola";', correct: false },
+      { text: 'string texto = "Hola";', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={3}
+    question="¿Qué valor puede tener una variable boolean?"
+    options={[
+      { text: 'Cualquier número', correct: false },
+      { text: 'Solo "true" o "false" (texto)', correct: false },
+      { text: 'Solo true o false (palabras reservadas)', correct: true },
+      { text: '0 o 1', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={4}
+    question="¿Cuál de estos es un nombre de variable válido en camelCase?"
+    options={[
+      { text: 'MiVariable', correct: false },
+      { text: 'mi_variable', correct: false },
+      { text: 'miVariable', correct: true },
+      { text: 'MIVARIABLE', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={5}
+    question="Si tienes 'int x = 5;', ¿cómo cambias su valor a 10?"
+    options={[
+      { text: 'int x = 10;', correct: false },
+      { text: 'x == 10;', correct: false },
+      { text: 'x = 10;', correct: true },
+      { text: 'change x to 10;', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo que una variable es un espacio en memoria',
+    'Conozco la diferencia entre int, double, String y boolean',
+    'Sé declarar una variable (Tipo nombre = valor;)',
+    'Sé imprimir variables combinadas con texto',
+    'Mis variables usan nombres descriptivos y camelCase',
+    'Completé el reto del Generador de Identificaciones'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes
+
+### 1. `Incompatible types`
+```java
+int numero = "Hola"; // Error: String cannot be converted to int
+```
+**Solución**: Asegúrate de que el valor coincida con el tipo de la caja.
+
+### 2. Olvidar las comillas en String
+```java
+String nombre = Oscar; // Error: cannot find symbol variable Oscar
+```
+**Solución**: Texto siempre va entre comillas dobles: `String nombre = "Oscar";`
+
+### 3. Usar comillas simples para String
+```java
+String nombre = 'Oscar'; // Error
+```
+**Solución**: Comillas simples `''` son solo para `char` (un carácter). Strings usan `""`.
+
+### 4. Declarar la misma variable dos veces
+```java
+int x = 5;
+int x = 10; // Error: variable x is already defined
+```
+**Solución**: Solo escribe el nombre para actualizar: `x = 10;`
+
+---
+
+¡Excelente trabajo! Ya sabes guardar datos. Mañana (Día 3) aprenderemos a **operar** con esos datos (sumar, restar, comparar) para hacer cosas más interesantes. 🚀

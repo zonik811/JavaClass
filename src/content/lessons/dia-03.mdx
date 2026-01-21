@@ -1,15 +1,314 @@
 ---
 day: 3
 title: "Operadores y Expresiones"
-objective: "Usar operadores aritméticos, de comparación y lógicos para calcular y comparar valores"
+objective: "Aprender a hacer cálculos matemáticos y comparaciones lógicas en Java"
 topics:
-  - "Operadores aritméticos (+, -, *, /, %)"
-  - "Operadores de comparación (==, !=, <, >, <=, >=)"
-  - "Operadores lógicos (&&, ||, !)"
-  - "Precedencia de operadores"
+  - "Matemáticas básicas (+, -, *, /)"
+  - "El operador Módulo (%)"
+  - "Comparaciones (mayor, menor, igual)"
+  - "Lógica Booleana (Y, O, NO)"
 miniProject: false
 ---
 
-# Día 3: Operadores y Expresiones
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
 
-*[Contenido completo a desarrollar siguiendo el mismo formato ultra-detallado del Día 1]*
+## 🎯 Objetivo del Día
+
+Hoy vamos a darle **cerebro** a tus programas. Aprenderás a hacer que tu computadora calcule cosas (matemáticas) y tome decisiones básicas comparando datos (lógica).
+
+---
+
+## ➕ 1. Operadores Matemáticos (Aritméticos)
+
+Java funciona como una calculadora superpotente.
+Imagina que estás programando las **físicas de un Robot**.
+
+| Operador | Nombre | Ejemplo | Resultado |
+| :---: | :--- | :--- | :--- |
+| `+` | Suma | `10 + 5` | `15` |
+| `-` | Resta | `10 - 2` | `8` |
+| `*` | Multiplicación | `4 * 3` | `12` |
+| `/` | División | `20 / 4` | `5` |
+| `%` | **Módulo** | `10 % 3` | `1` |
+
+### 🧠 ¿Qué es el Módulo (%)?
+El módulo te da el **resto** de una división. Es súper útil para saber si un número es par o para ciclos.
+* `10 / 3 = 3` (y sobra **1**) -> `10 % 3 = 1`
+* `12 / 2 = 6` (y sobra **0**) -> `12 % 2 = 0` (¡Es par!)
+
+```java
+public class Calculos {
+    public static void main(String[] args) {
+        int bateria = 100;
+        int gasto = 15;
+        int bateriaRestante = bateria - gasto;
+        
+        System.out.println("Batería restante: " + bateriaRestante + "%");
+    }
+}
+```
+
+---
+
+## ⚖️ 2. Operadores de Comparación
+
+Estos responden preguntas con **Verdadero (`true`)** o **Falso (`false`)**.
+Son los "sensores" de tu programa.
+
+| Símbolo | Significado | Ejemplo | Resultado |
+| :---: | :--- | :--- | :--- |
+| `>` | Mayor que | `10 > 5` | `true` |
+| `<` | Menor que | `3 < 8` | `true` |
+| `>=` | Mayor o igual | `10 >= 10` | `true` |
+| `<=` | Menor o igual | `5 <= 2` | `false` |
+| `==` | **Igual a** | `5 == 5` | `true` |
+| `!=` | **Diferente de** | `5 != 5` | `false` |
+
+### ⚠️ ¡Cuidado!
+* `=` (uno solo) es para **ASIGNAR** valor (`x = 5`).
+* `==` (dos) es para **COMPARAR** (`x == 5`).
+
+---
+
+## 🧠 3. Operadores Lógicos
+
+Estos sirven para combinar varias condiciones.
+Ejemplo: "Si tengo dinero **Y** la tienda está abierta".
+
+| Operador | Nombre | Lógica | Ejemplo |
+| :---: | :--- | :--- | :--- |
+| `&&` | **AND** (Y) | Todo debe ser verdadero | `true && true` = `true` |
+| `||` | **OR** (O) | Al menos uno debe ser verdadero | `true || false` = `true` |
+| `!` | **NOT** (NO) | Invierte el valor | `!true` = `false` |
+
+* `(5 > 3) && (2 < 4)` -> `true` Y `true` -> **`true`**
+* `(5 > 10) || (2 < 4)` -> `false` O `true` -> **`true`**
+
+---
+
+## 💪 Ejercicios Guiados
+
+<ExerciseBlock id={1} title="Calculadora de Daño" difficulty="easy">
+  Un robot tiene 100 puntos de vida. Recibe un ataque de 25 puntos y luego se repara 10 puntos.
+  Calcula e imprime su vida final.
+  
+  <div slot="hint1">
+    Usa una variable `int vida = 100;` y opera sobre ella.
+  </div>
+  
+  <div slot="solution">
+```java
+public class Batalla {
+    public static void main(String[] args) {
+        int vida = 100;
+        int ataque = 25;
+        int reparacion = 10;
+        
+        vida = vida - ataque + reparacion;
+        
+        System.out.println("Vida final: " + vida);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="¿Es Par o Impar?" difficulty="medium">
+  Usa el operador módulo `%` para verificar si el número de serie de un robot (ej: 1234) es par.
+  Imprime el resultado de la comparación (true/false).
+  
+  <div slot="hint1">
+    Un número es par si al dividirlo por 2, el resto es 0.
+    `boolean esPar = (numero % 2 == 0);`
+  </div>
+  
+  <div slot="solution">
+```java
+public class ParImpar {
+    public static void main(String[] args) {
+        int serie = 1234;
+        boolean esPar = (serie % 2 == 0);
+        
+        System.out.println("¿El robot " + serie + " es par?: " + esPar);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Sistema de Seguridad (AND)" difficulty="medium">
+  Para entrar a la base secreta necesitas dos cosas:
+  1. Tener una tarjeta de acceso (`tieneTarjeta = true`)
+  2. Saber la contraseña (`sabeClave = true`)
+  
+  Crea un programa que evalúe si puedes entrar.
+  
+  <div slot="hint1">
+    Usa el operador `&&` entre las dos variables booleanas.
+  </div>
+  
+  <div slot="solution">
+```java
+public class Seguridad {
+    public static void main(String[] args) {
+        boolean tieneTarjeta = true;
+        boolean sabeClave = true;
+        
+        boolean puedeEntrar = tieneTarjeta && sabeClave;
+        
+        System.out.println("¿Acceso concedido?: " + puedeEntrar);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Detector de Emergencia (OR)" difficulty="medium">
+  La alarma debe sonar si:
+  1. Hay fuego (`fuego = true`)
+  **O**
+  2. Hay intrusos (`intrusos = true`)
+  
+  Prueba con fuego=false e intrusos=true.
+  
+  <div slot="hint1">
+    Usa el operador `||` (OR). Si cualquiera es true, la alarma suena.
+  </div>
+  
+  <div slot="solution">
+```java
+public class Alarma {
+    public static void main(String[] args) {
+        boolean fuego = false;
+        boolean intrusos = true;
+        
+        boolean activarAlarma = fuego || intrusos;
+        
+        System.out.println("¿SONAR ALARMA?: " + activarAlarma);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🚀 Reto: Calculadora de Viaje Espacial
+
+Vas a programar la computadora de navegación de una nave.
+Crea `Navegacion.java` con las siguientes variables:
+- `distanciaPlaneta` = 1000 (km)
+- `velocidadNave` = 100 (km/h)
+- `combustible` = 500 (litros)
+- `gastoPorKm` = 2 (litros/km)
+
+Calcula e imprime:
+1. **Tiempo de llegada** (`distancia / velocidad`).
+2. **Combustible necesario** (`distancia * gastoPorKm`).
+3. **¿Tenemos suficiente combustible?** (Comparación: `combustible >= combustibleNecesario`).
+
+**Salida esperada**:
+```
+=== REPORTE DE NAVEGACIÓN ===
+Tiempo estimado: 10 horas
+Combustible necesario: 2000 litros
+Combustible actual: 500 litros
+¿Podemos llegar?: false
+```
+
+<div slot="hint1">
+  Calcula primero el `tiempo` y el `combustibleNecesario` y guárdalos en variables.
+</div>
+
+<div slot="hint2">
+  Para la última línea, crea un `boolean podemosLlegar` comparando lo que tienes vs lo que necesitas.
+</div>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={3}>
+  <QuizQuestion
+    id={1}
+    question="¿Cuál es el resultado de: 15 % 4?"
+    options={[
+      { text: '3.75', correct: false },
+      { text: '3', correct: true },
+      { text: '0', correct: false },
+      { text: '1', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={2}
+    question="¿Qué operador usas para verificar si dos valores son IGUALES?"
+    options={[
+      { text: '=', correct: false },
+      { text: '==', correct: true },
+      { text: 'equals', correct: false },
+      { text: '===', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={3}
+    question="Si (A es false) y (B es true), ¿cuál es el resultado de A || B?"
+    options={[
+      { text: 'true', correct: true },
+      { text: 'false', correct: false },
+      { text: 'error', correct: false },
+      { text: 'null', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={4}
+    question="¿Qué hace el operador '!' (ej: !true)?"
+    options={[
+      { text: 'Confirma el valor', correct: false },
+      { text: 'Borra el valor', correct: false },
+      { text: 'Invierte el valor (true a false)', correct: true },
+      { text: 'Hace el valor estático', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Sé usar operadores básicos (+, -, *, /)',
+    'Entiendo qué hace el módulo (%)',
+    'Sé comparar dos números (>, <, ==)',
+    'Sé combinar condiciones con && (Y) y || (O)',
+    'Completé el reto de la Nave Espacial'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes
+
+### 1. Confundir `=` con `==`
+```java
+if (x = 5) // Error! Estás asignando, no comparando.
+if (x == 5) // Correcto.
+```
+
+### 2. División de enteros
+```java
+int a = 5;
+int b = 2;
+System.out.println(a / b); // Imprime 2, no 2.5
+```
+**Nota**: Si divides dos `int`, el resultado es `int` (pierdes los decimales). Para tener decimales, uno debe ser `double`.
+
+---
+
+¡Bien hecho! Ahora tu computadora sabe calcular y comparar. En el **Día 4**, aprenderemos a hacer que la computadora nos hable y nos pida datos (Entrada de Usuario). 🗣️
