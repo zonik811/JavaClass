@@ -5,5 +5,271 @@ objective: "Leer datos del usuario desde consola usando la clase Scanner"
 topics: ["Scanner", "Entrada de usuario", "Programas interactivos"]
 miniProject: false
 ---
-# Día 4: Entrada de Datos con Scanner
-*[Contenido a desarrollar]*
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hasta ahora, tus programas han sido un poco "autistas": calculan cosas, pero no escuchan a nadie.
+Hoy aprenderás a usar la clase **Scanner** para que tus programas puedan **leer lo que escribes en el teclado**. ¡Es hora de hacerlos interactivos!
+
+---
+
+## 👂 1. La clase Scanner
+
+Para leer datos, Java tiene una herramienta llamada `Scanner` (escaner). Pero esta herramienta no viene "lista para usar" inmediatamente; está guardada en una caja de herramientas (paquete) llamada `java.util`.
+
+### Paso 1: Importar
+Primero, debemos decirle a Java que queremos usar esa herramienta. Esto va en la **primera línea** de tu archivo.
+```java
+import java.util.Scanner; // "Java, tráeme el Scanner de la caja de herramientas util"
+```
+
+### Paso 2: Crear el Scanner
+Dentro de tu `main`, creamos el objeto que se encargará de escuchar.
+```java
+Scanner scanner = new Scanner(System.in);
+```
+* `System.in`: Significa "Entrada del Sistema" (tu teclado).
+* `scanner`: Es el nombre que le damos a nuestra herramienta (puede ser cualquiera, pero `scanner` o `teclado` es lo común).
+
+---
+
+## 📥 2. Leyendo datos
+
+El Scanner tiene diferentes métodos según el tipo de dato que quieras leer:
+
+| Método | Tipo que lee | Ejemplo de uso |
+| :--- | :--- | :--- |
+| `nextLine()` | Texto completo (`String`) | `String nombre = scanner.nextLine();` |
+| `nextInt()` | Número entero (`int`) | `int edad = scanner.nextInt();` |
+| `nextDouble()` | Decimal (`double`) | `double precio = scanner.nextDouble();` |
+
+### Ejemplo Completo
+```java
+import java.util.Scanner;
+
+public class Saludo {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in); // Preparamos el oído
+
+        System.out.println("¿Cómo te llamas?");
+        String nombre = scanner.nextLine(); // El programa espera a que escribas y des ENTER
+
+        System.out.println("¡Hola " + nombre + "!");
+        
+        // ¡Importante! En programas reales, cerramos el scanner al final
+        scanner.close(); 
+    }
+}
+```
+
+---
+
+## 💪 Ejercicios Guiados
+
+<ExerciseBlock id={1} title="Tu Primer Chatbot" difficulty="easy">
+  Crea un programa que pregunte el nombre de un robot y luego imprima "Iniciando sistemas de [nombre]...".
+  
+  <div slot="hint1">
+    No olvides `import java.util.Scanner;` al principio.
+  </div>
+  
+  <div slot="solution">
+```java
+import java.util.Scanner;
+
+public class RobotBoot {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Introduce el nombre del robot:");
+        String nombre = scanner.nextLine();
+        
+        System.out.println("Iniciando sistemas de " + nombre + "...");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Calculadora de Edad" difficulty="medium">
+  Pregunta al usuario su año de nacimiento, calcula cuántos años tiene (asumiendo que es el año 2026) e imprímelo.
+  
+  <div slot="hint1">
+    Usa `scanner.nextInt()` para leer el año. Resta ese valor a 2026.
+  </div>
+  
+  <div slot="solution">
+```java
+import java.util.Scanner;
+
+public class Edad {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("¿En qué año naciste?");
+        int anioNacimiento = scanner.nextInt();
+        
+        int edad = 2026 - anioNacimiento;
+        
+        System.out.println("Tienes (o cumplirás) " + edad + " años.");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## ⚠️ 3. La Trampa del `nextLine()` (El Buffer)
+
+Este es el error más común de los principiantes (y expertos a veces).
+Si lees un **número** (`nextInt`) y **luego** quieres leer un **texto** (`nextLine`), ¡el programa se saltará el texto!
+
+### ¿Por qué pasa esto?
+Cuando escribes un número y das `ENTER`, el `nextInt` se come el número, pero **deja el `ENTER` (salto de línea) flotando**.
+Cuando llega el `nextLine`, ve el `ENTER` flotando, piensa "¡Ah, el usuario ya terminó de escribir una línea vacía!" y se cierra.
+
+### La Solución: "Limpiar el buffer"
+Agrega un `nextLine()` extra "de mentira" después de leer números, para que se coma ese Enter basura.
+
+```java
+System.out.println("Edad:");
+int edad = scanner.nextInt();
+
+scanner.nextLine(); // <--- LIMPIEZA: Se come el ENTER que sobró
+
+System.out.println("Nombre:");
+String nombre = scanner.nextLine(); // Ahora sí funciona
+```
+
+<ExerciseBlock id={3} title="Registro de Usuario (El Reto del Buffer)" difficulty="hard">
+  Crea un programa que pida:
+  1. Edad (int)
+  2. Altura en metros (double, ej: 1.75)
+  3. Comida favorita (String) - ¡Cuidado aquí!
+  
+  Imprime un resumen al final.
+  
+  <div slot="hint1">
+    Después de leer la altura (`nextDouble`), necesitarás un `scanner.nextLine()` extra antes de leer la comida.
+  </div>
+  
+  <div slot="solution">
+```java
+import java.util.Scanner;
+
+public class Registro {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Ingresa tu edad:");
+        int edad = scanner.nextInt();
+        
+        System.out.println("Ingresa tu altura:");
+        double altura = scanner.nextDouble();
+        
+        // LIMPIEZA DEL BUFFER
+        scanner.nextLine(); 
+        
+        System.out.println("¿Cuál es tu comida favorita?");
+        String comida = scanner.nextLine();
+        
+        System.out.println("Resumen: " + edad + " años, " + altura + "m, le gusta: " + comida);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🚀 Reto: La Cafetería Interactiva
+
+Eres el programador de una máquina expendedora de café inteligente.
+Crea `Cafeteria.java` que haga lo siguiente:
+
+1. Pregunte el **nombre del cliente**.
+2. Pregunte **cuántos cafés quiere**.
+3. Pregunte el **precio por café** (puede ser decimal).
+4. Calcule el **total a pagar**.
+5. Imprima un ticket personalizado.
+
+**Salida esperada**:
+```
+=== BIENVENIDO A JAVA COFFEE ===
+¿Su nombre?: Oscar
+¿Cuántos cafés?: 2
+¿Precio por unidad?: 3.5
+... procesando ...
+
+Tiket para Oscar:
+2 cafés x $3.5
+TOTAL A PAGAR: $7.0
+¡Gracias por su compra!
+```
+
+<div slot="hint1">
+  Recuerda el orden: primero `nextLine`, luego `nextInt`, luego `nextDouble`. Aquí no necesitas limpiar buffer entre nombre y cantidad porque `nextLine` (nombre) se come su propio Enter.
+</div>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={4}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué paquete necesitas importar para usar Scanner?"
+    options={[
+      { text: 'java.input.Scanner', correct: false },
+      { text: 'java.util.Scanner', correct: true },
+      { text: 'java.scanner.Util', correct: false },
+      { text: 'No se necesita importar', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={2}
+    question="Para leer una frase completa con espacios, usas:"
+    options={[
+      { text: 'scanner.nextText()', correct: false },
+      { text: 'scanner.next()', correct: false },
+      { text: 'scanner.nextLine()', correct: true },
+      { text: 'scanner.readString()', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={3}
+    question="Si tu programa se salta una pregunta de texto después de leer un número, ¿qué faltó?"
+    options={[
+      { text: 'Reiniciar la variable', correct: false },
+      { text: 'Limpiar el buffer con un nextLine() extra', correct: true },
+      { text: 'Cerrar el scanner', correct: false },
+      { text: 'Usar nextInt() en lugar de nextLine()', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Sé importar la clase Scanner',
+    'Puedo crear un objeto Scanner conectado al teclado',
+    'Diferencio entre nextInt(), nextDouble() y nextLine()',
+    'Entiendo el problema del "buffer" y cómo limpiarlo',
+    '¡Creé mi primer programa interactivo!'
+  ]}
+/>
+
+---
+
+## 💡 Consejo Pro
+`Scanner` no es la única forma de leer datos, pero es la más fácil para empezar. En aplicaciones reales con interfaces gráficas (ventanas, botones), ¡la entrada de datos es totalmente diferente (Eventos)! Pero la lógica de "pedir -> guardar en variable -> procesar" es la misma.
