@@ -191,13 +191,345 @@ switch(mes) {
 
 ---
 
+## ⚠️ 4. Errores Comunes
+
+### 1. Olvidar el `break`
+```java
+int opcion = 1;
+
+switch (opcion) {
+    case 1:
+        System.out.println("Uno");
+        // ¡FALTA EL break! Se ejecutará el caso 2 también
+    case 2:
+        System.out.println("Dos");
+        break;
+    case 3:
+        System.out.println("Tres");
+        break;
+}
+// Salida: "Uno" y luego "Dos"
+```
+**Solución**: Siempre pon `break` al final de cada `case` (a menos que quieras fall-through intencional).
+
+### 2. Usar tipos no compatibles
+```java
+double precio = 9.99;
+switch (precio) { // ¡ERROR! switch no acepta double
+    case 9.99:
+        System.out.println("En oferta");
+}
+```
+**Solución**: Usa `if-else` para comparar decimales o convierte a otro tipo.
+
+### 3. Comparar Strings sensibles a mayúsculas
+```java
+String comando = "START";
+switch (comando) {
+    case "start": // No coincidirá, porque "START" != "start"
+        System.out.println("Iniciando...");
+        break;
+}
+```
+**Solución**: Usa `.toLowerCase()` o `.toUpperCase()` antes del switch.
+
+---
+
+<ExerciseBlock id={3} title="Calculadora Mejorada con Switch" difficulty="medium">
+  Reescribe la calculadora del Día 5 usando `switch` en lugar de múltiples `if-else`.
+  Usa los símbolos: "+", "-", "*", "/" como casos.
+  
+  <div slot="hint1">
+    Lee la operación como String y úsala en el switch.
+  </div>
+  
+  <div slot="solution">
+```java
+import java.util.Scanner;
+
+public class CalculadoraSwitch {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Ingresa el primer número:");
+        double num1 = scanner.nextDouble();
+        
+        System.out.println("Ingresa el segundo número:");
+        double num2 = scanner.nextDouble();
+        
+        scanner.nextLine(); // Limpiar buffer
+        
+        System.out.println("Operación (+, -, *, /):");
+        String op = scanner.nextLine();
+        
+        switch (op) {
+            case "+":
+                System.out.println("Resultado: " + (num1 + num2));
+                break;
+            case "-":
+                System.out.println("Resultado: " + (num1 - num2));
+                break;
+            case "*":
+                System.out.println("Resultado: " + (num1 * num2));
+                break;
+            case "/":
+                if (num2 != 0) {
+                    System.out.println("Resultado: " + (num1 / num2));
+                } else {
+                    System.out.println("Error: División por cero");
+                }
+                break;
+            default:
+                System.out.println("Operación no válida");
+        }
+        
+        scanner.close();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Clasificador de Notas con Rangos" difficulty="hard">
+  Crea un programa que convierta una nota numérica (0-100) a letra (A, B, C, D, F).
+  - A: 90-100
+  - B: 80-89
+  - C: 70-79
+  - D: 60-69
+  - F: 0-59
+  
+  **Pista**: switch trabaja con valores exactos, así que tendrás que dividir la nota entre 10 primero.
+  
+  <div slot="hint1">
+    Divide la nota entre 10 para obtener la decena: `int decena = nota / 10;`
+  </div>
+  
+  <div slot="hint2">
+    Usa fall-through para las decenas 9 y 10 (ambas son A).
+  </div>
+  
+  <div slot="solution">
+```java
+import java.util.Scanner;
+
+public class NotasLetra {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Ingresa tu nota (0-100):");
+        int nota = scanner.nextInt();
+        
+        int decena = nota / 10;
+        
+        switch (decena) {
+            case 10:
+            case 9:
+                System.out.println("Tu calificación es: A (Excelente)");
+                break;
+            case 8:
+                System.out.println("Tu calificación es: B (Bien)");
+                break;
+            case 7:
+                System.out.println("Tu calificación es: C (Aceptable)");
+                break;
+            case 6:
+                System.out.println("Tu calificación es: D (Apenas pasas)");
+                break;
+            default:
+                System.out.println("Tu calificación es: F (Reprobado)");
+        }
+        
+        scanner.close();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🚀 Reto: Sistema de Menú ATM
+
+Vas a simular el menú de un cajero automático.
+
+**Requisitos**:
+1. El usuario tiene un **saldo inicial** de $1000.
+2. Muestra un **menú** con 4 opciones:
+   - `1` → Ver Saldo
+   - `2` → Depositar
+   - `3` → Retirar
+   - `4` → Salir
+3. Según la opción, realiza la operación correspondiente.
+4. Para Depositar/Retirar, pide la cantidad y actualiza el saldo.
+5. Valida que no se pueda retirar más de lo disponible.
+
+**Salida esperada** (ejemplo):
+```
+=== CAJERO AUTOMÁTICO ===
+1. Ver Saldo
+2. Depositar
+3. Retirar
+4. Salir
+Elige una opción: 1
+
+Tu saldo es: $1000.0
+```
+
+<div slot="hint1">
+  Usa un `switch` con la variable de opción. Dentro de cada caso, realiza las operaciones correspondientes.
+</div>
+
+<div slot="hint2">
+  Para Retirar, usa un `if` dentro del caso para verificar que `cantidad <= saldo`.
+</div>
+
+<div slot="solution">
+```java
+import java.util.Scanner;
+
+public class ATM {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        double saldo = 1000.0;
+        
+        System.out.println("=== CAJERO AUTOMÁTICO ===");
+        System.out.println("1. Ver Saldo");
+        System.out.println("2. Depositar");
+        System.out.println("3. Retirar");
+        System.out.println("4. Salir");
+        System.out.print("Elige una opción: ");
+        
+        int opcion = scanner.nextInt();
+        
+        switch (opcion) {
+            case 1:
+                System.out.println("\nTu saldo es: $" + saldo);
+                break;
+                
+            case 2:
+                System.out.print("\n¿Cuánto deseas depositar?: $");
+                double deposito = scanner.nextDouble();
+                
+                if (deposito > 0) {
+                    saldo += deposito;
+                    System.out.println("Depósito exitoso. Nuevo saldo: $" + saldo);
+                } else {
+                    System.out.println("Cantidad inválida.");
+                }
+                break;
+                
+            case 3:
+                System.out.print("\n¿Cuánto deseas retirar?: $");
+                double retiro = scanner.nextDouble();
+                
+                if (retiro > 0 && retiro <= saldo) {
+                    saldo -= retiro;
+                    System.out.println("Retiro exitoso. Nuevo saldo: $" + saldo);
+                } else if (retiro > saldo) {
+                    System.out.println("Fondos insuficientes.");
+                } else {
+                    System.out.println("Cantidad inválida.");
+                }
+                break;
+                
+            case 4:
+                System.out.println("\n¡Gracias por usar nuestro cajero!");
+                break;
+                
+            default:
+                System.out.println("\nOpción no válida.");
+        }
+        
+        scanner.close();
+    }
+}
+```
+</div>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={6}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué palabra clave DETIENE la ejecución dentro de un switch?"
+    options={[
+      { text: 'stop', correct: false },
+      { text: 'exit', correct: false },
+      { text: 'break', correct: true },
+      { text: 'return', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={2}
+    question="¿Qué sucede si olvidas el 'break' en un case?"
+    options={[
+      { text: 'Da error de compilación', correct: false },
+      { text: 'Se ejecuta ese caso y TAMBIÉN los siguientes (fall-through)', correct: true },
+      { text: 'El programa se cierra', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={3}
+    question="¿Se puede usar 'double' (decimales) en un switch?"
+    options={[
+      { text: 'Sí, sin problemas', correct: false },
+      { text: 'No, no está permitido', correct: true },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={4}
+    question="¿Cuál es la ventaja principal de switch sobre múltiples if-else?"
+    options={[
+      { text: 'Es más rápido en todos los casos', correct: false },
+      { text: 'Mejor legibilidad cuando comparas un valor con múltiples opciones exactas', correct: true },
+      { text: 'Puede hacer comparaciones complejas como x > 5', correct: false },
+      { text: 'No necesita llaves {}', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
 ## ✅ Checklist de Logros
 
 <Checklist
   items={[
-    'Entiendo la estructura switch/case/break',
+    'Entiendo la estructura switch/case/break/default',
     'Sé cuándo usar switch vs if-else',
     'Sé usar switch con números y con texto (String)',
-    'Entiendo cómo agrupar casos omitiendo el break'
+    'Entiendo cómo agrupar casos omitiendo el break',
+    '¡Creé mi propio sistema de menú ATM!'
   ]}
 />
+
+---
+
+## 💡 Consejo Pro
+
+En versiones modernas de Java (Java 12+), existe una sintaxis mejorada de `switch` llamada **"Switch Expressions"** que es más elegante y no necesita `break`:
+
+```java
+// Switch tradicional (lo que aprendes hoy)
+switch (dia) {
+    case "LUNES":
+        System.out.println("Inicio de semana");
+        break;
+    case "VIERNES":
+        System.out.println("Fin de semana pronto");
+        break;
+}
+
+// Switch moderno (Java 12+)
+switch (dia) {
+    case "LUNES" -> System.out.println("Inicio de semana");
+    case "VIERNES" -> System.out.println("Fin de semana pronto");
+}
+```
+
+¡Pero primero domina el clásico! Es lo que verás en la mayoría del código existente.
