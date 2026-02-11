@@ -5,5 +5,199 @@ objective: "Crear menús interactivos con switch y casos múltiples"
 topics: ["switch", "case", "break", "default"]
 miniProject: false
 ---
-# Día 6: Switch y Menús
-*[Contenido a desarrollar]*
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Cuando tienes **muchas opciones** (como un menú de restaurante), usar demasiados `if - else if` se vuelve desordenado y difícil de leer.
+Para eso existe el **`switch`** (interruptor o conmutador): una forma limpia de elegir un camino entre muchos, basándose en un solo valor.
+
+---
+
+## 🎛️ 1. Sintaxis del `switch`
+
+El `switch` revisa una variable y salta directamente al "caso" (`case`) que coincida.
+
+```java
+int opcion = 2;
+
+switch (opcion) {
+    case 1:
+        System.out.println("Elegiste Opción 1");
+        break;
+    case 2:
+        System.out.println("Elegiste Opción 2");
+        break;
+    case 3:
+        System.out.println("Elegiste Opción 3");
+        break;
+    default:
+        System.out.println("Opción no válida");
+}
+```
+
+### Piezas clave:
+1.  **`switch (variable)`**: La variable que evalúas (puede ser `int`, `String`, `char` o `Enum`).
+2.  **`case valor:`**: Etiqueta para cada posible valor.
+3.  **`break;`**: ¡CRUCIAL! Detiene la ejecución y sale del switch. Si lo olvidas, el código sigue ejecutando los casos de abajo (esto se llama **fall-through**).
+4.  **`default:`**: Es como el `else` final. Se ejecuta si ningún caso coincidió.
+
+---
+
+## 🆚 2. Switch vs If-Else
+
+| Característica | `if - else if` | `switch` |
+| :--- | :--- | :--- |
+| **Uso** | Condiciones complejas (`x > 5`, `y && z`) | Condiciones de igualdad exacta (`x == 1`) |
+| **Legibilidad** | Se puede volver un "spaghetti" si hay muchos anidados | Muy limpio para menús o catálogos |
+| **Tipos** | Cualquiera (`boolean`, comparaciones) | Limitado (`int`, `String`, `char`, etc.) |
+
+---
+
+## 💪 Ejercicios Guiados
+
+<ExerciseBlock id={1} title="Días de la Semana" difficulty="easy">
+  Crea un programa que reciba un número del 1 al 7 e imprima el día correspondiente (1=Lunes, 7=Domingo).
+  Si el número no es válido, imprime "Error".
+  
+  <div slot="hint1">
+    Usa `case 1:`, `case 2:`, etc. No olvides el `break`.
+  </div>
+  
+  <div slot="solution">
+```java
+public class Dias {
+    public static void main(String[] args) {
+        int dia = 3;
+
+        switch (dia) {
+            case 1: System.out.println("Lunes"); break;
+            case 2: System.out.println("Martes"); break;
+            case 3: System.out.println("Miércoles"); break;
+            case 4: System.out.println("Jueves"); break;
+            case 5: System.out.println("Viernes"); break;
+            case 6: System.out.println("Sábado"); break;
+            case 7: System.out.println("Domingo"); break;
+            default: System.out.println("Error: Día inválido");
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Menú de Comida (Strings)" difficulty="medium">
+  Un robot mesero te pregunta qué quieres comer: "Pizza", "Hamburguesa" o "Ensalada".
+  Usa un `switch` con un `String` para responder algo diferente en cada caso.
+  
+  <div slot="hint1">
+    Java permite usar `String` en el switch. ¡Asegúrate de escribir los casos exactamente igual (mayúsculas/minúsculas)!
+  </div>
+  
+  <div slot="solution">
+```java
+import java.util.Scanner;
+
+public class Mesero {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Menú: Pizza, Hamburguesa, Ensalada");
+        String comida = scanner.nextLine();
+        
+        // Convertimos a minúsculas pa evitar errores de tipeo
+        switch (comida.toLowerCase()) {
+            case "pizza":
+                System.out.println("¡Margarita o Peperoni!");
+                break;
+            case "hamburguesa":
+                System.out.println("Con papas fritas.");
+                break;
+            case "ensalada":
+                System.out.println("Muy saludable.");
+                break;
+            default:
+                System.out.println("No tenemos eso en el menú.");
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🧱 3. Agrupando casos (El poder del "Fall-through")
+
+A veces **queremos** que varios casos hagan lo mismo. Aquí es donde **no** poner `break` es útil.
+
+```java
+int mes = 2;
+
+switch(mes) {
+    case 12:
+    case 1:
+    case 2:
+        System.out.println("Es Invierno");
+        break;
+    case 3:
+    case 4:
+    case 5:
+        System.out.println("Es Primavera");
+        break;
+    // ...
+}
+```
+*Si `mes` es 12, 1 o 2, imprimirá "Es Invierno".*
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={6}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué palabra clave DETIENE la ejecución dentro de un switch?"
+    options={[
+      { text: 'stop', correct: false },
+      { text: 'exit', correct: false },
+      { text: 'break', correct: true },
+      { text: 'return', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={2}
+    question="¿Qué sucede si olvidas el 'break' en un case?"
+    options={[
+      { text: 'Da error de compilación', correct: false },
+      { text: 'Se ejecuta ese caso y TAMBIÉN los siguientes (fall-through)', correct: true },
+      { text: 'El programa se cierra', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={3}
+    question="¿Se puede usar 'double' (decimales) en un switch?"
+    options={[
+      { text: 'Sí, sin problemas', correct: false },
+      { text: 'No, no está permitido', correct: true },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo la estructura switch/case/break',
+    'Sé cuándo usar switch vs if-else',
+    'Sé usar switch con números y con texto (String)',
+    'Entiendo cómo agrupar casos omitiendo el break'
+  ]}
+/>

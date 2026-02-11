@@ -6,5 +6,267 @@ topics: ["if", "else", "else if", "Condiciones"]
 miniProject: true
 projectTitle: "Calculadora Básica"
 ---
-# Día 5: Control de Flujo + Mini-Proyecto Calculadora
-*[Contenido a desarrollar]*
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+¿Alguna vez has visto un videojuego donde eliges qué camino tomar? "Ir a la izquierda" o "Ir a la derecha".
+Eso es **Control de Flujo**. Hoy le enseñarás a tu programa a **tomar decisiones** basándose en datos, usando la sentencia más famosa de la programación: `if` (si...).
+
+---
+
+## 🚦 1. La Sentencia `if` (Si...)
+
+El `if` es como un guardia de seguridad. Solo deja pasar el código si se cumple una condición (es decir, si es `true`).
+
+### Sintaxis
+```java
+if (condicion) {
+    // Código que se ejecuta SI la condición es verdadera
+}
+```
+
+### Ejemplo
+```java
+int bateria = 5;
+
+if (bateria < 15) {
+    System.out.println("¡Batería baja! Conecta el cargador.");
+}
+```
+*Si `bateria` fuera 50, el mensaje NUNCA se imprimiría.*
+
+---
+
+## 🛤️ 2. `else` (Si no...) y `else if`
+
+¿Qué pasa si la condición es falsa? Usamos `else` (si no) para definir un "Plan B".
+
+### Estructura `if - else`
+```java
+int edad = 16;
+
+if (edad >= 18) {
+    System.out.println("Eres mayor de edad.");
+} else {
+    System.out.println("Eres menor de edad.");
+}
+```
+
+### Estructura `if - else if - else` (Múltiples opciones)
+Imagina un semáforo. No es solo "Verde" o "No Verde". Hay opciones intermedias.
+
+```java
+String colorSemaforo = "AMARILLO";
+
+if (colorSemaforo.equals("ROJO")) {
+    System.out.println("Alto total.");
+} else if (colorSemaforo.equals("AMARILLO")) {
+    System.out.println("Precaución, baja velocidad.");
+} else if (colorSemaforo.equals("VERDE")) {
+    System.out.println("Avanza.");
+} else {
+    System.out.println("Color desconocido, semáforo roto.");
+}
+```
+
+---
+
+## 💪 Ejercicios Guiados
+
+<ExerciseBlock id={1} title="Aprobado o Reprobado" difficulty="easy">
+  Crea un programa que tenga una variable `nota` (int).
+  Si la nota es **mayor o igual a 60**, imprime "¡Aprobaste!".
+  Si no, imprime "Nos vemos en recuperación.".
+  
+  <div slot="hint1">
+    Usa una estructura `if - else` simple.
+  </div>
+  
+  <div slot="solution">
+```java
+public class Notas {
+    public static void main(String[] args) {
+        int nota = 75;
+        
+        if (nota >= 60) {
+            System.out.println("¡Aprobaste!");
+        } else {
+            System.out.println("Nos vemos en recuperación.");
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Clasificador de Números" difficulty="medium">
+  Dado un `int numero`, determina si es:
+  1. **Positivo** (mayor a 0)
+  2. **Negativo** (menor a 0)
+  3. **Cero** (igual a 0)
+  
+  <div slot="hint1">
+    Necesitarás usar `else if`. Primero pregunta si es > 0, luego si es < 0, y el `else` final será el cero.
+  </div>
+  
+  <div slot="solution">
+```java
+public class Clasificador {
+    public static void main(String[] args) {
+        int numero = -5;
+        
+        if (numero > 0) {
+            System.out.println("Es positivo");
+        } else if (numero < 0) {
+            System.out.println("Es negativo");
+        } else {
+            System.out.println("Es cero");
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🚫 Errores Comunes
+
+### 1. El punto y coma traicionero
+```java
+if (edad > 18); { // <--- ¡ERROR! Ese ; termina el if inmediatamente.
+    System.out.println("Esto se imprime SIEMPRE");
+}
+```
+**Regla**: Los `if` no llevan `;` antes de la llave `{`.
+
+### 2. Comparar Strings con `==`
+Como vimos en el Quiz, para comparar texto se usa `.equals()`.
+```java
+String clave = "1234";
+if (clave == "1234") // MAL (A veces funciona, a veces no)
+if (clave.equals("1234")) // BIEN (Siempre funciona)
+```
+
+---
+
+## 🚀 Mini-Proyecto: Calculadora Básica
+
+Vamos a combinar **Scanner** (Día 4) con **If/Else** (Día 5) para crear una calculadora real.
+
+**Requisitos**:
+1. Pedir el **primer número**.
+2. Pedir el **segundo número**.
+3. Pedir la **operación** (1: Suma, 2: Resta, 3: Multiplicación, 4: División).
+4. Mostrar el resultado correcto según la elección.
+
+<div slot="hint1">
+  Usa `scanner` para pedir los datos. Luego usa una cadena de `if - else if` mirando la variable de la operación.
+</div>
+
+<div slot="solution">
+```java
+import java.util.Scanner;
+
+public class Calculadora {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 1. Pedir datos
+        System.out.println("Ingresa el primer número:");
+        double num1 = scanner.nextDouble();
+
+        System.out.println("Ingresa el segundo número:");
+        double num2 = scanner.nextDouble();
+
+        System.out.println("Elige operación: 1-Suma, 2-Resta, 3-Multi, 4-Div");
+        int op = scanner.nextInt();
+        
+        double resultado = 0;
+
+        // 2. Lógica de decisión
+        if (op == 1) {
+            resultado = num1 + num2;
+            System.out.println("Suma: " + resultado);
+        } else if (op == 2) {
+            resultado = num1 - num2;
+            System.out.println("Resta: " + resultado);
+        } else if (op == 3) {
+            resultado = num1 * num2;
+            System.out.println("Multiplicación: " + resultado);
+        } else if (op == 4) {
+            if (num2 != 0) {
+                 resultado = num1 / num2;
+                 System.out.println("División: " + resultado);
+            } else {
+                 System.out.println("Error: No se puede dividir por cero.");
+            }
+        } else {
+            System.out.println("Operación no válida.");
+        }
+        
+        scanner.close();
+    }
+}
+```
+</div>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={5}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué código se ejecuta si la condición del 'if' es FALSA?"
+    options={[
+      { text: 'El código dentro del if', correct: false },
+      { text: 'El código dentro del else (si existe)', correct: true },
+      { text: 'El programa se detiene', correct: false },
+      { text: 'Se repite el if', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={2}
+    question="¿Cuál es la sintaxis correcta para 'si no, si...'?"
+    options={[
+      { text: 'else if (condicion)', correct: true },
+      { text: 'elseif (condicion)', correct: false },
+      { text: 'if else (condicion)', correct: false },
+      { text: 'then if (condicion)', correct: false },
+    ]}
+  />
+  
+  <QuizQuestion
+    id={3}
+    question="¿Qué pasa si pones un punto y coma ';' justo después del if(...)?"
+    options={[
+      { text: 'Error de compilación', correct: false },
+      { text: 'Nada, funciona normal', correct: false },
+      { text: 'El if pierde su efecto y el bloque siguiente se ejecuta siempre', correct: true },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo cómo funciona if y else',
+    'Sé usar else if para múltiples opciones',
+    'Sé evitar el error del punto y coma',
+    '¡Creé mi propia Calculadora funcional!'
+  ]}
+/>
+
+---
+
+## 💡 Consejo de Seguridad
+En programación real, validar datos (como hicimos revisando si la división es por cero) es vital. Un programa que se cierra inesperadamente (crash) por un error matemático es un programa "inestable". ¡Siempre usa `if` para proteger operaciones peligrosas!
