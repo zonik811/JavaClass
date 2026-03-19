@@ -1,9 +1,313 @@
 ---
 day: 9
-title: "Break, Continue y Bucles Anidados"
-objective: "Controlar flujo dentro de bucles con break y continue"
-topics: ["break", "continue", "Bucles anidados"]
+title: "Control de Bucles y Bucles Anidados"
+objective: "Controlar el flujo dentro de los bucles y crear estructuras complejas"
+topics: ["break", "continue", "Bucles anidados", "Control de flujo"]
 miniProject: false
 ---
-# Día 9: Control de Bucles
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy aprenderás a ser el "director" de tus bucles. Veremos cómo detener un bucle de golpe con `break`, cómo saltarnos una vuelta con `continue` y, lo más emocionante, cómo meter un bucle dentro de otro para crear patrones y rejillas.
+
+---
+
+## 🛑 `break`: El Freno de Mano
+
+El `break` sirve para salir de un bucle **inmediatamente**, sin importar si la condición todavía era verdadera.
+
+### Ejemplo: Buscando un número prohibido
+```java
+for (int i = 1; i <= 10; i++) {
+    if (i == 7) {
+        System.out.println("¡Encontré el 7! Deteniendo...");
+        break; // El bucle se detiene aquí y no llega al 8, 9 ni 10.
+    }
+    System.out.println("Número: " + i);
+}
+```
+
+---
+
+## ⏭️ `continue`: El Botón de Saltar
+
+El `continue` no detiene el bucle, sino que **se salta el resto del código** de la vuelta actual y pasa directamente a la siguiente.
+
+### Ejemplo: El Robot que odia el número 3
+```java
+for (int i = 1; i <= 5; i++) {
+    if (i == 3) {
+        continue; // Salta el print para el número 3 y sigue con el 4.
+    }
+    System.out.println("Contando: " + i);
+}
+// Resultado: 1, 2, 4, 5 (el 3 no aparece)
+```
+
+---
+
+## 🔄 Bucles Anidados: El Reloj
+
+Un bucle anidado es simplemente **un bucle dentro de otro**. Es como un reloj: el bucle de adentro (minutos) tiene que dar una vuelta completa para que el de afuera (horas) avance un paso.
+
+### Ejemplo: Una Rejilla de Coordenadas (3x3)
+```java
+for (int i = 1; i <= 3; i++) { // Bucle de Filas
+    for (int j = 1; j <= 3; j++) { // Bucle de Columnas
+        System.out.print("(" + i + "," + j + ") ");
+    }
+    System.out.println(); // Salto de línea al terminar cada fila
+}
+```
+
+**Resultado:**
+(1,1) (1,2) (1,3)
+(2,1) (2,2) (2,3)
+(3,1) (3,2) (3,3)
+
+---
+
+## 💪 Ejercicios Guiados
+
+<ExerciseBlock id={1} title="Buscador de Tesoros" difficulty="easy">
+  Crea un bucle del 1 al 100, pero detenlo (`break`) cuando llegues al 25.
+  
+  <div slot="solution">
+```java
+for (int i = 1; i <= 100; i++) {
+    if (i == 25) break;
+    System.out.println(i);
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Evita los Múltiplos de 3" difficulty="easy">
+  Imprime los números del 1 al 10, pero usa `continue` para saltarte los que sean múltiplos de 3.
+  
+  <div slot="hint1">Usa `if (i % 3 == 0) continue;`.</div>
+  <div slot="solution">
+```java
+for (int i = 1; i <= 10; i++) {
+    if (i % 3 == 0) continue;
+    System.out.println(i);
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Cuadrado de Asteriscos" difficulty="medium">
+  Dibuja un cuadrado de 4x4 asteriscos `*` usando bucles anidados.
+  
+  <div slot="solution">
+```java
+for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+        System.out.print("* ");
+    }
+    System.out.println();
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Tablas de Multiplicar (1 al 5)" difficulty="hard">
+  Usa bucles anidados para imprimir las tablas de multiplicar del 1, 2, 3, 4 y 5.
+  
+  <div slot="hint1">El bucle exterior controla de qué número es la tabla, el interior multiplica del 1 al 10.</div>
+  <div slot="solution">
+```java
+for (int i = 1; i <= 5; i++) {
+    System.out.println("Tabla del " + i + ":");
+    for (int j = 1; j <= 10; j++) {
+        System.out.println(i + " x " + j + " = " + (i * j));
+    }
+    System.out.println(); // Espacio entre tablas
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Suma hasta Limite" difficulty="medium">
+  Crea un bucle que sume números del 1 al 100, pero detente si la suma supera los 500.
+  
+  <div slot="solution">
+```java
+int suma = 0;
+for (int i = 1; i <= 100; i++) {
+    suma += i;
+    if (suma > 500) {
+        System.out.println("Limite superado en " + i);
+        break;
+    }
+}
+System.out.println("Suma total: " + suma);
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios de Práctica
+
+<ExerciseBlock id={6} title="Reloj de Arena (Simulado)" difficulty="medium">
+  Imprime pares de (Minuto, Segundo) para 2 minutos (0:00 a 1:59).
+  
+  <div slot="solution">
+```java
+for (int m = 0; m < 2; m++) {
+    for (int s = 0; s < 60; s++) {
+        System.out.println(m + ":" + s);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Triángulo de Números" difficulty="hard">
+  Usa bucles anidados para crear este patrón:
+  1
+  1 2
+  1 2 3
+  
+  <div slot="hint1">La condición del bucle interior debe depender de la variable del bucle exterior: `j <= i`.</div>
+  <div slot="solution">
+```java
+for (int i = 1; i <= 3; i++) {
+    for (int j = 1; j <= i; j++) {
+        System.out.print(j + " ");
+    }
+    System.out.println();
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="Filtro de Seguridad" difficulty="medium">
+  Imprime los números del 1 al 20, pero sáltate el 13 (mala suerte) y detente en el 18.
+  
+  <div slot="solution">
+```java
+for (int i = 1; i <= 20; i++) {
+    if (i == 13) continue;
+    if (i == 18) break;
+    System.out.println(i);
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Buscando el Primer Múltiplo de 7 y 11" difficulty="hard">
+  Encuentra el primer número mayor a 100 que sea divisible por 7 y 11 al mismo tiempo.
+  
+  <div slot="solution">
+```java
+for (int i = 101; i < 1000; i++) {
+    if (i % 7 == 0 && i % 11 == 0) {
+        System.out.println("El número es: " + i);
+        break;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={10} title="Rectángulo Personalizado" difficulty="hard">
+  Pide al usuario filas y columnas, y dibuja un rectángulo con el carácter `#`.
+  
+  <div slot="solution">
+```java
+Scanner sc = new Scanner(System.in);
+System.out.print("Filas: ");
+int f = sc.nextInt();
+System.out.print("Columnas: ");
+int c = sc.nextInt();
+
+for (int i = 0; i < f; i++) {
+    for (int j = 0; j < c; j++) {
+        System.out.print("# ");
+    }
+    System.out.println();
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={9}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué diferencia hay entre 'break' y 'continue'?"
+    options={[
+      { text: 'Break detiene el bucle por completo, continue solo la vuelta actual', correct: true },
+      { text: 'Continue detiene el bucle, break solo la vuelta actual', correct: false },
+      { text: 'Ambos hacen lo mismo', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={2}
+    question="Si un bucle exterior corre 3 veces y el interior 4, ¿cuántas veces se ejecuta el código del centro?"
+    options={[
+      { text: '7 veces', correct: false },
+      { text: '12 veces', correct: true },
+      { text: '34 veces', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={3}
+    question="¿Qué imprime este código: for(i=1; i<=3; i++) { if(i==2) continue; print(i); }?"
+    options={[
+      { text: '1, 2', correct: false },
+      { text: '1, 3', correct: true },
+      { text: '1, 2, 3', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={4}
+    question="¿Para qué se suele usar un bucle anidado?"
+    options={[
+      { text: 'Para procesar datos en 2D (matrices, rejillas, tablas)', correct: true },
+      { text: 'Para que el código vaya más rápido', correct: false },
+      { text: 'Solo para dibujar asteriscos', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={5}
+    question="¿Se puede usar 'break' dentro de un 'if' que está dentro de un 'for'?"
+    options={[
+      { text: 'Sí, romperá el bucle que lo contiene', correct: true },
+      { text: 'No, los break solo van solos', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Sé cómo detener un bucle forzado con break',
+    'Entiendo cómo saltar elementos específicos con continue',
+    'Puedo explicar la lógica de los bucles anidados',
+    'Logré dibujar figuras geométricas usando asteriscos',
+    'Puedo generar tablas de multiplicar dinámicas',
+    'Entiendo la relación entre bucle exterior e interior'
+  ]}
+/>
+
+---
+
+## 🎉 ¡Día 9 Completado!
+
+¡Impresionante! Has dominado el control total de los bucles. Con estas herramientas ya puedes resolver problemas complejos de lógica.
+
+**Mañana**: Finalmente entraremos al mundo de los **Arrays** (Arreglos), donde aprenderás a guardar colecciones de datos. ¡No te lo pierdas! 🚀

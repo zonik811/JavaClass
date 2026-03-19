@@ -1,9 +1,276 @@
 ---
 day: 8
-title: "Bucles: for"
-objective: "Usar for para repeticiones con contador"
-topics: ["for", "Iteración", "Contadores"]
+title: "El Bucle for"
+objective: "Dominar las repeticiones controladas por contadores"
+topics: ["for", "Iteración", "Contadores", "Bucles"]
 miniProject: false
 ---
-# Día 8: Bucles for
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy conocerás al "rey" de los bucles: el `for`. Es el favorito de los programadores porque permite escribir en **una sola línea** lo que al `while` le toma tres. Es ideal cuando sabemos exactamente cuántas veces queremos repetir algo.
+
+---
+
+## 📋 Antes de Empezar
+
+- El `for` está diseñado específicamente para **contar**.
+- Todo lo que hace un `for` se puede hacer con un `while`, pero el `for` es más limpio y organizado.
+- Se lee casi como una frase: "Desde que i es 0, mientras i sea menor a 10, aumenta i en 1".
+
+---
+
+## 🏎️ El Bucle `for` (El Especialista)
+
+La estructura del `for` agrupa las tres partes esenciales de un bucle en un solo lugar:
+
+### Estructura:
+```java
+for (inicialización; condición; actualización) {
+    // Código que se repite
+}
+```
+
+### Ejemplo: El Robot que cuenta del 1 al 5
+```java
+for (int i = 1; i <= 5; i++) {
+    System.out.println("Cati dice: " + i);
+}
+```
+
+**Las 3 piezas del rompecabezas:**
+1. **Inicialización (`int i = 1`)**: Crea la variable y le da un valor inicial. Solo ocurre una vez al empezar.
+2. **Condición (`i <= 5`)**: Antes de cada vuelta, pregunta "¿Puedo seguir?". Si es true, entra.
+3. **Actualización (`i++`)**: Al final de cada vuelta, cambia el valor (normalmente suma 1).
+
+---
+
+## 💡 ¿Cuándo usar `for` vs `while`?
+
+| Bucle | Úsalo cuando... |
+| :--- | :--- |
+| **`for`** | Sabes exactamente cuántas vueltas dará (ej: 10 veces, del 1 al 100). |
+| **`while`** | No sabes cuántas vueltas dará, depende de una condición externa (ej: hasta que el usuario escriba "salir"). |
+
+---
+
+## 💪 Ejercicios Guiados
+
+<ExerciseBlock id={1} title="Cuenta Regresiva" difficulty="easy">
+  Usa un `for` para imprimir una cuenta regresiva del 10 al 1.
+  
+  <div slot="hint1">Inicia en 10 y usa `i--` como actualización.</div>
+  <div slot="solution">
+```java
+for (int i = 10; i >= 1; i--) {
+    System.out.println(i);
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Los Pares del 0 al 20" difficulty="easy">
+  Imprime los números pares (0, 2, 4...) hasta el 20 usando `i += 2`.
+  
+  <div slot="solution">
+```java
+for (int i = 0; i <= 20; i += 2) {
+    System.out.println(i);
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Tabla del 7" difficulty="medium">
+  Imprime la tabla de multiplicar del 7 (del 1 al 10).
+  
+  <div slot="hint1">Usa un `for` de 1 a 10 y multiplica por 7 dentro del `println`.</div>
+  <div slot="solution">
+```java
+for (int i = 1; i <= 10; i++) {
+    System.out.println("7 x " + i + " = " + (7 * i));
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Suma de los primeros 10" difficulty="medium">
+  Calcula la suma de los números del 1 al 10 y muestra el total.
+  
+  <div slot="hint1">Crea una variable `int suma = 0` ANTES del bucle.</div>
+  <div slot="solution">
+```java
+int suma = 0;
+for (int i = 1; i <= 10; i++) {
+    suma += i;
+}
+System.out.println("La suma es: " + suma);
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="El Grito del Robot" difficulty="easy">
+  Pide un número al usuario y haz que el robot diga "¡HOLA!" esa cantidad de veces.
+  
+  <div slot="solution">
+```java
+Scanner sc = new Scanner(System.in);
+System.out.print("¿Cuántas veces grito?: ");
+int veces = sc.nextInt();
+
+for (int i = 0; i < veces; i++) {
+    System.out.println("¡HOLA!");
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios de Práctica
+
+<ExerciseBlock id={6} title="Solo Impares" difficulty="easy">
+  Imprime los números impares del 1 al 15.
+  
+  <div slot="solution">
+```java
+for (int i = 1; i <= 15; i += 2) {
+    System.out.println(i);
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Multiplos de 5" difficulty="medium">
+  Muestra los múltiplos de 5 desde el 50 hasta el 0 (hacia atrás).
+  
+  <div slot="solution">
+```java
+for (int i = 50; i >= 0; i -= 5) {
+    System.out.println(i);
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="Calculadora de Potencia" difficulty="hard">
+  Calcula 2 elevado a la 10 (2^10) usando un bucle `for` (sin usar Math.pow).
+  
+  <div slot="hint1">Inicia `resultado = 1` y multiplícalo por 2 en cada una de las 10 vueltas.</div>
+  <div slot="solution">
+```java
+int base = 2;
+int potencia = 1;
+for (int i = 1; i <= 10; i++) {
+    potencia *= base;
+}
+System.out.println("2 elevado a 10 es: " + potencia);
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Cuadrados Perfectos" difficulty="medium">
+  Imprime el cuadrado de cada número del 1 al 10 (ej: 1, 4, 9, 16...).
+  
+  <div slot="solution">
+```java
+for (int i = 1; i <= 10; i++) {
+    System.out.println("El cuadrado de " + i + " es " + (i * i));
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={10} title="Dibujando una Línea" difficulty="hard">
+  Pide un número y dibuja una línea de asteriscos `*` de ese largo.
+  
+  <div slot="hint1">Usa `System.out.print("*")` (sin 'ln') para que salgan en la misma línea.</div>
+  <div slot="solution">
+```java
+int largo = 10;
+for (int i = 0; i < largo; i++) {
+    System.out.print("*");
+}
+System.out.println(); // Salto de línea al final
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={8}>
+  <QuizQuestion
+    id={1}
+    question="¿Cuáles son las 3 partes obligatorias dentro del paréntesis de un 'for'?"
+    options={[
+      { text: 'Inicio, Condición, Actualización', correct: true },
+      { text: 'Inicio, Fin, Salto', correct: false },
+      { text: 'If, Else, Switch', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={2}
+    question="¿Cuál es la ventaja principal del bucle 'for' sobre el 'while'?"
+    options={[
+      { text: 'Es más rápido para la computadora', correct: false },
+      { text: 'Es más organizado para repeticiones controladas por contadores', correct: true },
+      { text: 'No permite bucles infinitos', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={3}
+    question="¿Qué significa 'i++' en un bucle for?"
+    options={[
+      { text: 'Sumar 1 al valor de i', correct: true },
+      { text: 'Multiplicar i por sí mismo', correct: false },
+      { text: 'Terminar el bucle', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={4}
+    question="Si escribo 'for (int i=1; i<5; i++)', ¿cuántas veces se ejecuta el código?"
+    options={[
+      { text: '3 veces', correct: false },
+      { text: '4 veces (1, 2, 3, 4)', correct: true },
+      { text: '5 veces', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={5}
+    question="¿Es válido usar 'i = i + 5' en la parte de actualización de un for?"
+    options={[
+      { text: 'Sí, puedes saltar de cuanto en cuanto quieras', correct: true },
+      { text: 'No, solo se permite i++ o i--', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo las 3 partes de un bucle for',
+    'Sé cuándo elegir un for sobre un while',
+    'Puedo hacer bucles que cuenten hacia atrás',
+    'Logré calcular una suma acumulada con for',
+    'Puedo usar diferentes incrementos (como i += 2)',
+    'Completé los 10 ejercicios del día'
+  ]}
+/>
+
+---
+
+## 🎉 ¡Día 8 Completado!
+
+¡Excelente trabajo! El bucle `for` es una de tus herramientas más poderosas. Ahora puedes procesar listas de datos, generar series de números y controlar procesos repetitivos con elegancia.
+
+**Mañana**: Entraremos al mundo de los **Arrays** (Arreglos), donde aprenderás a guardar muchos datos en una sola variable. ¡Prepárate! 🚀
