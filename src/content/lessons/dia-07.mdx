@@ -5,5 +5,328 @@ objective: "Repetir código mientras una condición sea verdadera"
 topics: ["while", "do-while", "Bucles"]
 miniProject: false
 ---
-# Día 7: Bucles while y do-while
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy aprenderás a hacer que tu código se **repita** automáticamente. No más copiar y pegar la misma línea 10 veces. Veremos cómo usar `while` (mientras) y `do-while` (haz-mientras) para controlar repeticiones.
+
+---
+
+## 📋 Antes de Empezar
+
+- Los bucles son como una **canción en repeat**: se detienen solo cuando la condición cambia.
+- ¡Cuidado con los **bucles infinitos**! Es cuando el código nunca para (como un robot dando vueltas sin fin).
+- Usaremos variables que cambian en cada vuelta (contadores).
+
+---
+
+## 🔄 El Bucle `while` (El Vigilante)
+
+El `while` primero **pregunta** y luego **actúa**. Solo entra si la respuesta es "Sí" (true).
+
+### Estructura:
+```java
+while (condicion) {
+    // Código que se repite
+}
+```
+
+### Ejemplo: El Robot Contador (1 al 5)
+```java
+int contador = 1;
+
+while (contador <= 5) {
+    System.out.println("Vuelta número: " + contador);
+    contador++; // ¡IMPORTANTE! Si no sumas, el bucle nunca termina
+}
+```
+
+**Paso a paso:**
+1. Empezamos en 1.
+2. ¿1 es menor o igual a 5? **Sí**. Imprime "Vuelta 1" y suma 1 (ahora es 2).
+3. ¿2 es menor o igual a 5? **Sí**. Imprime "Vuelta 2" y suma 1.
+4. ... así hasta que el contador llega a 6.
+5. ¿6 es menor o igual a 5? **Nop**. El bucle se rompe. 🛑
+
+---
+
+## 🔁 El Bucle `do-while` (El Decidido)
+
+El `do-while` primero **actúa** y luego **pregunta**. Siempre se ejecuta **al menos una vez**.
+
+### Estructura:
+```java
+do {
+    // Código que se repite
+} while (condicion);
+```
+
+### Ejemplo: Pidiendo el PIN
+```java
+int pin;
+Scanner teclado = new Scanner(System.in);
+
+do {
+    System.out.print("Introduce tu PIN: ");
+    pin = teclado.nextInt();
+} while (pin != 1234);
+
+System.out.println("¡Acceso concedido!");
+```
+
+**Diferencia clave:**
+- `while`: Puede no ejecutarse nunca si la condición es falsa desde el inicio.
+- `do-while`: Se ejecuta 1 vez sí o sí, aunque la condición sea falsa después.
+
+---
+
+## 💪 Ejercicios Guiados
+
+<ExerciseBlock id={1} title="Cuenta hasta 10" difficulty="easy">
+  Crea un bucle `while` que imprima los números del 1 al 10.
+  
+  <div slot="hint1">Inicia tu variable en 1 y usa la condición `contador <= 10`.</div>
+  <div slot="hint2">No olvides el `contador++` dentro del bucle.</div>
+  
+  <div slot="solution">
+```java
+int i = 1;
+while (i <= 10) {
+    System.out.println(i);
+    i++;
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="La Cuenta Regresiva" difficulty="easy">
+  Imprime los números del 5 al 1 (hacia atrás) y al final que diga "¡Despegue! 🚀".
+  
+  <div slot="hint1">Empieza en 5 y usa `contador--` para restar.</div>
+  <div slot="hint2">La condición debe ser `contador > 0`.</div>
+  
+  <div slot="solution">
+```java
+int i = 5;
+while (i > 0) {
+    System.out.println(i);
+    i--;
+}
+System.out.println("¡Despegue! 🚀");
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Solo Pares" difficulty="medium">
+  Imprime solo los números pares del 2 al 20 usando un salto de +2.
+  
+  <div slot="hint1">Inicia en 2. En lugar de `i++`, usa `i = i + 2`.</div>
+  <div slot="solution">
+```java
+int i = 2;
+while (i <= 20) {
+    System.out.println(i);
+    i += 2;
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Suma Acumulada" difficulty="medium">
+  Suma todos los números del 1 al 100 y muestra el resultado final.
+  
+  <div slot="hint1">Necesitas dos variables: un `contador` y una `suma`.</div>
+  <div slot="solution">
+```java
+int i = 1;
+int suma = 0;
+while (i <= 100) {
+    suma += i;
+    i++;
+}
+System.out.println("La suma total es: " + suma);
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Bucle do-while de Seguridad" difficulty="medium">
+  Pide por teclado una respuesta de "S" o "N" hasta que el usuario escriba algo válido.
+  
+  <div slot="hint1">Usa `do-while` para preguntar al menos una vez.</div>
+  <div slot="solution">
+```java
+Scanner sc = new Scanner(System.in);
+char respuesta;
+do {
+    System.out.print("¿Deseas continuar? (S/N): ");
+    respuesta = sc.next().charAt(0);
+} while (respuesta != 'S' && respuesta != 'N');
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios de Práctica
+
+<ExerciseBlock id={6} title="Tabla de Multiplicar" difficulty="easy">
+  Pide un número al usuario e imprime su tabla del 1 al 10 usando un `while`.
+  
+  <div slot="hint1">Usa `System.out.println(num + " x " + i + " = " + (num*i));`</div>
+  <div slot="solution">
+```java
+int num = 5; // Ejemplo
+int i = 1;
+while (i <= 10) {
+    System.out.println(num + " x " + i + " = " + (num * i));
+    i++;
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Ahorro del Robot" difficulty="medium">
+  Un robot ahorra el doble de lo que guardó el día anterior. Si empieza con $1 el día 1, ¿cuánto tendrá el día 10?
+  
+  <div slot="hint1">Día 1: 1. Día 2: 2. Día 3: 4... Usa una variable `ahorro` que se multiplique por 2 cada vuelta.</div>
+  <div slot="solution">
+```java
+int dia = 1;
+int ahorro = 1;
+while (dia <= 10) {
+    System.out.println("Día " + dia + ": $" + ahorro);
+    ahorro *= 2;
+    dia++;
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="Adivina el Número" difficulty="hard">
+  Crea un programa que tenga un número secreto (ej: 7) y pida números al usuario hasta que lo adivine.
+  
+  <div slot="hint1">Usa un `while` con la condición `intento != secreto`.</div>
+  <div slot="solution">
+```java
+int secreto = 7;
+int intento = 0;
+while (intento != secreto) {
+    System.out.print("Adivina el número: ");
+    intento = sc.nextInt();
+}
+System.out.println("¡Lo lograste!");
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Batería en Descenso" difficulty="easy">
+  Simula la descarga de una batería del 100% al 0%, bajando de 10 en 10.
+  
+  <div slot="hint1">Usa `bateria -= 10`.</div>
+  <div slot="solution">
+```java
+int bateria = 100;
+while (bateria >= 0) {
+    System.out.println("Batería: " + bateria + "%");
+    bateria -= 10;
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={10} title="Factorial Mágico" difficulty="hard">
+  Calcula el factorial de 5 (5 * 4 * 3 * 2 * 1).
+  
+  <div slot="hint1">Empieza con `resultado = 1` y multiplica en cada vuelta.</div>
+  <div slot="solution">
+```java
+int n = 5;
+int factorial = 1;
+while (n > 0) {
+    factorial *= n;
+    n--;
+}
+System.out.println("Factorial: " + factorial);
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={7}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué sucede si la condición de un 'while' es falsa desde el principio?"
+    options={[
+      { text: 'Se ejecuta una vez', correct: false },
+      { text: 'No se ejecuta nunca', correct: true },
+      { text: 'El programa explota', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={2}
+    question="¿Qué bucle se ejecuta SIEMPRE al menos una vez?"
+    options={[
+      { text: 'while', correct: false },
+      { text: 'do-while', correct: true },
+      { text: 'if-else', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={3}
+    question="¿Cómo evitamos un bucle infinito?"
+    options={[
+      { text: 'Cerrando la computadora', correct: false },
+      { text: 'Cambiando el valor de la variable de control dentro del bucle', correct: true },
+      { text: 'No usando bucles', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={4}
+    question="En 'while (i < 5)', ¿cuántas veces corre si i empieza en 0?"
+    options={[
+      { text: '4 veces', correct: false },
+      { text: '5 veces', correct: true },
+      { text: '6 veces', correct: false },
+    ]}
+  />
+  <QuizQuestion
+    id={5}
+    question="¿Qué operador usamos comúnmente para aumentar un contador en 1?"
+    options={[
+      { text: 'i--', correct: false },
+      { text: 'i++', correct: true },
+      { text: 'i && 1', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo la diferencia entre while y do-while',
+    'Sé cómo crear un contador para mis bucles',
+    'Puedo identificar un bucle infinito antes de que pase',
+    'Logré hacer una cuenta regresiva',
+    'Entiendo para qué sirve el do-while en validaciones',
+    'Completé los 10 ejercicios del día'
+  ]}
+/>
+
+---
+
+## 🎉 ¡Día 7 Completado!
+
+¡Increíble! Ahora tienes el superpoder de repetir tareas sin cansarte. Los bucles son el corazón de la programación.
+
+**Mañana**: Aprenderás el bucle `for`, el favorito de los programadores para contar. ¡Nos vemos! 🚀

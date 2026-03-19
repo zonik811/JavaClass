@@ -1,12 +1,12 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import type { GetStaticPaths } from "astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 
 export const getStaticPaths = (async () => {
     const lessons = await getCollection("lessons");
-    return lessons.map((lesson) => ({
+    return lessons.map((lesson: CollectionEntry<"lessons">) => ({
         params: { day: lesson.data.day.toString() },
         props: { lesson },
     }));
