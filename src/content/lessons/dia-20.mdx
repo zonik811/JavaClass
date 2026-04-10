@@ -1,10 +1,1166 @@
 ---
 day: 20
 title: "Excepciones y Proyecto Final"
-objective: "Manejar errores con try/catch y crear proyecto completo"
-topics: ["try", "catch", "throw", "Excepciones"]
+objective: "Manejar errores con try/catch y completar el Juego de Aventura como proyecto final"
+topics: ["try", "catch", "finally", "throw", "Excepciones personalizadas", "Proyecto Final"]
 miniProject: true
 projectTitle: "Juego de Aventura por Consola"
 ---
-# Día 20: Excepciones + Proyecto Final
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy aprenderás a **manejar errores** con `try/catch` y construirás el **Proyecto Final: un Juego de Aventura por Consola** combinando TODO lo aprendido en 20 días.
+
+---
+
+## 📋 Antes de Empezar
+
+- **Ya sabes POO completa**: clases, objetos, herencia, interfaces, polimorfismo
+- **Ya sabes `if`, `for`, `while`, arrays, métodos**
+- **El problema**: Cuando algo falla, tu programa se cierra feo
+- **La solución**: `try/catch` para manejar errores elegantemente
+
+---
+
+## 🤔 ¿Qué es una Excepción?
+
+### La analogía del paracaídas:
+
+**Sin try/catch** (sin paracaídas):
+```java
+int resultado = 10 / 0;  // 💥 ¡¡¡ERROR!!! El programa MUERE
+System.out.println("Esto nunca se ejecuta");
+```
+
+**Con try/catch** (con paracaídas):
+```java
+try {
+    int resultado = 10 / 0;  // ← Error
+} catch (ArithmeticException e) {
+    System.out.println("❌ No puedes dividir por cero!");
+}
+System.out.println("✅ El programa continúa");
+```
+
+---
+
+## 📦 Paso 1: try/catch Básico
+
+### La fórmula mágica:
+
+```java
+try {
+    // Código que PUEDE fallar
+    códigoPeligroso();
+} catch (TipoDeExcepción e) {
+    // Qué hacer si FALLA
+    System.out.println("Error: " + e.getMessage());
+} finally {
+    // SIEMPRE se ejecuta (opcional)
+    System.out.println("Limpieza...");
+}
+```
+
+### Ejemplo paso a paso:
+
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.print("Ingresa un número: ");
+        String input = sc.nextLine();
+        
+        try {
+            // Paso 1: Intentar convertir
+            int numero = Integer.parseInt(input);
+            
+            // Paso 2: Intentar dividir
+            int resultado = 100 / numero;
+            
+            // Paso 3: Si todo salió bien
+            System.out.println("100 / " + numero + " = " + resultado);
+            
+        } catch (NumberFormatException e) {
+            // Error: no es un número
+            System.out.println("❌ Eso no es un número válido!");
+            
+        } catch (ArithmeticException e) {
+            // Error: división por cero
+            System.out.println("❌ No puedes dividir por cero!");
+            
+        } catch (Exception e) {
+            // Error: cualquier otra cosa
+            System.out.println("❌ Error inesperado: " + e.getMessage());
+        } finally {
+            // Siempre se ejecuta
+            System.out.println("✅ Programa continuando normalmente...");
+        }
+        
+        System.out.println("Adiós!");
+    }
+}
+```
+
+### 📖 Paso a paso:
+
+1. **`try`** → Intenta ejecutar este código
+2. **Si funciona** → salta todos los `catch`
+3. **Si falla** → busca el `catch` que coincide con el error
+4. **`finally`** → siempre se ejecuta (limpieza, cerrar archivos, etc.)
+
+---
+
+## 🚀 Paso 2: `throw` (Lanzar excepciones)
+
+### ¿Qué es?
+
+Es **crear tu propio error** cuando algo no está bien.
+
+### La fórmula mágica:
+
+```java
+public void setEdad(int edad) {
+    if (edad < 0 || edad > 150) {
+        throw new IllegalArgumentException("Edad inválida: " + edad);
+    }
+    this.edad = edad;
+}
+```
+
+### Ejemplo completo:
+
+```java
+public class CuentaBancaria {
+    private double saldo;
+    
+    public void retirar(double cantidad) {
+        if (cantidad < 0) {
+            throw new IllegalArgumentException("Cantidad negativa: " + cantidad);
+        }
+        if (cantidad > saldo) {
+            throw new IllegalStateException("Fondos insuficientes. Saldo: $" + saldo);
+        }
+        
+        saldo -= cantidad;
+        System.out.println("✅ Retiro exitoso: $" + cantidad);
+    }
+}
+
+// Uso:
+public class Main {
+    public static void main(String[] args) {
+        CuentaBancaria cuenta = new CuentaBancaria();
+        
+        try {
+            cuenta.retirar(-100);  // ← Lanzará excepción
+        } catch (IllegalArgumentException e) {
+            System.out.println("❌ " + e.getMessage());
+        }
+    }
+}
+```
+
+---
+
+## 💪 Ejercicios Guiados (Combinando Todo)
+
+<ExerciseBlock id={1} title="Try/Catch básico: Calculadora segura" difficulty="easy">
+  Crea una calculadora que maneje división por cero y input inválido.
+
+  <div slot="hint1">
+    Usa `try { int resultado = a / b; } catch (ArithmeticException e) { ... }`
+  </div>
+
+  <div slot="hint2">
+    Para input usa `Integer.parseInt(input)` dentro de try/catch.
+  </div>
+
+  <div slot="solution">
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("🔢 CALCULADORA SEGURA\n");
+        
+        while (true) {
+            System.out.print("\nIngresa primer número (o 'salir'): ");
+            String input1 = sc.nextLine();
+            
+            if (input1.equalsIgnoreCase("salir")) break;
+            
+            try {
+                int a = Integer.parseInt(input1);
+                
+                System.out.print("Ingresa segundo número: ");
+                String input2 = sc.nextLine();
+                int b = Integer.parseInt(input2);
+                
+                try {
+                    int resultado = a / b;
+                    System.out.println(a + " / " + b + " = " + resultado);
+                } catch (ArithmeticException e) {
+                    System.out.println("❌ No puedes dividir por cero!");
+                }
+                
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Input inválido. Ingresa solo números.");
+            }
+        }
+        
+        System.out.println("\n👋 ¡Hasta luego!");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Throw personalizado: Validador de contraseñas" difficulty="medium">
+  Crea una clase `ValidadorContraseña` que lance excepciones personalizadas para reglas de contraseña.
+
+  <div slot="hint1">
+    Crea tu propia excepción: `public class ContraseñaInvalidaException extends Exception`.
+  </div>
+
+  <div slot="hint2">
+    El validador lanza `throw new ContraseñaInvalidaException("mensaje")` si falla alguna regla.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: ContraseñaInvalidaException.java
+public class ContraseñaInvalidaException extends Exception {
+    public ContraseñaInvalidaException(String mensaje) {
+        super(mensaje);
+    }
+}
+
+// Archivo: ValidadorContraseña.java
+public class ValidadorContraseña {
+    public static void validar(String contraseña) throws ContraseñaInvalidaException {
+        if (contraseña.length() < 8) {
+            throw new ContraseñaInvalidaException("Debe tener al menos 8 caracteres");
+        }
+        
+        boolean tieneMayuscula = false;
+        boolean tieneNumero = false;
+        boolean tieneEspecial = false;
+        
+        for (int i = 0; i < contraseña.length(); i++) {
+            char c = contraseña.charAt(i);
+            if (Character.isUpperCase(c)) tieneMayuscula = true;
+            if (Character.isDigit(c)) tieneNumero = true;
+            if ("!@#$%^&*".indexOf(c) != -1) tieneEspecial = true;
+        }
+        
+        if (!tieneMayuscula) {
+            throw new ContraseñaInvalidaException("Debe tener al menos una mayúscula");
+        }
+        if (!tieneNumero) {
+            throw new ContraseñaInvalidaException("Debe tener al menos un número");
+        }
+        if (!tieneEspecial) {
+            throw new ContraseñaInvalidaException("Debe tener al menos un carácter especial (!@#$%^&*)");
+        }
+        
+        System.out.println("✅ Contraseña válida!");
+    }
+}
+
+// Archivo: Main.java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("🔒 VALIDADOR DE CONTRASEÑAS\n");
+        
+        while (true) {
+            System.out.print("Ingresa contraseña (o 'salir'): ");
+            String pass = sc.nextLine();
+            
+            if (pass.equalsIgnoreCase("salir")) break;
+            
+            try {
+                ValidadorContraseña.validar(pass);
+            } catch (ContraseñaInvalidaException e) {
+                System.out.println("❌ " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("❌ Error inesperado: " + e.getMessage());
+            }
+            
+            System.out.println();
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Try/Catch + arrays: Gestor de inventario seguro" difficulty="medium">
+  Crea un gestor que maneje índices fuera de rango y conversiones inválidas.
+
+  <div slot="hint1">
+    Usa try/catch alrededor de `array[indice]` para capturar `ArrayIndexOutOfBoundsException`.
+  </div>
+
+  <div slot="hint2">
+    Usa try/catch alrededor de `Double.parseDouble()` para capturar `NumberFormatException`.
+  </div>
+
+  <div slot="solution">
+```java
+public class InventarioSeguro {
+    private String[] productos;
+    private double[] precios;
+    private int total;
+    
+    public InventarioSeguro(int capacidad) {
+        this.productos = new String[capacidad];
+        this.precios = new double[capacidad];
+        this.total = 0;
+    }
+    
+    public void agregarProducto(String nombre, String precioStr) {
+        if (total >= productos.length) {
+            System.out.println("❌ Inventario lleno!");
+            return;
+        }
+        
+        try {
+            double precio = Double.parseDouble(precioStr);
+            
+            if (precio < 0) {
+                System.out.println("❌ Precio no puede ser negativo");
+                return;
+            }
+            
+            productos[total] = nombre;
+            precios[total] = precio;
+            total++;
+            System.out.println("✅ " + nombre + " agregado ($" + precio + ")");
+            
+        } catch (NumberFormatException e) {
+            System.out.println("❌ Precio inválido: " + precioStr);
+        }
+    }
+    
+    public void verProducto(int indice) {
+        try {
+            System.out.println("📦 " + productos[indice]);
+            System.out.println("   Precio: $" + precios[indice]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("❌ Producto #" + indice + " no existe (total: " + total + ")");
+        }
+    }
+    
+    public void mostrarTodo() {
+        System.out.println("\n📋 INVENTARIO:");
+        for (int i = 0; i < total; i++) {
+            System.out.println("[" + i + "] " + productos[i] + " - $" + precios[i]);
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        InventarioSeguro inv = new InventarioSeguro(5);
+        
+        inv.agregarProducto("Laptop", "999.99");
+        inv.agregarProducto("Mouse", "25.50");
+        inv.agregarProducto("Teclado", "precio_invalido");  // Error manejado
+        inv.agregarProducto("Monitor", "-100");             // Error manejado
+        
+        inv.mostrarTodo();
+        inv.verProducto(0);
+        inv.verProducto(10);  // Error manejado (fuera de rango)
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Throw + Herencia: Sistema bancario con excepciones" difficulty="hard">
+  Crea un sistema bancario con excepciones personalizadas para cada tipo de error.
+
+  <div slot="hint1">
+    Crea `SaldoInsuficienteException`, `CuentaCerradaException`, etc.
+  </div>
+
+  <div slot="hint2">
+    Cada método lanza la excepción apropiada con `throw`.
+  </div>
+
+  <div slot="solution">
+```java
+// Excepciones personalizadas
+public class SaldoInsuficienteException extends Exception {
+    public SaldoInsuficienteException(double saldo, double monto) {
+        super("Saldo insuficiente. Disponible: $" + saldo + ", Intentaste retirar: $" + monto);
+    }
+}
+
+public class CuentaCerradaException extends Exception {
+    public CuentaCerradaException() {
+        super("La cuenta está cerrada. No se pueden realizar operaciones.");
+    }
+}
+
+// Cuenta Bancaria
+public class CuentaBancaria {
+    private String titular;
+    private double saldo;
+    private boolean abierta;
+    
+    public CuentaBancaria(String titular, double saldoInicial) {
+        this.titular = titular;
+        this.saldo = saldoInicial;
+        this.abierta = true;
+    }
+    
+    public void depositar(double monto) throws CuentaCerradaException {
+        if (!abierta) throw new CuentaCerradaException();
+        if (monto <= 0) throw new IllegalArgumentException("Monto debe ser positivo");
+        
+        saldo += monto;
+        System.out.println("✅ Depósito: $" + monto + " | Saldo: $" + saldo);
+    }
+    
+    public void retirar(double monto) throws SaldoInsuficienteException, CuentaCerradaException {
+        if (!abierta) throw new CuentaCerradaException();
+        if (monto > saldo) throw new SaldoInsuficienteException(saldo, monto);
+        
+        saldo -= monto;
+        System.out.println("✅ Retiro: $" + monto + " | Saldo: $" + saldo);
+    }
+    
+    public void cerrar() {
+        abierta = false;
+        System.out.println("🔒 Cuenta de " + titular + " cerrada");
+    }
+    
+    public void mostrarEstado() {
+        String estado = abierta ? "✅ Abierta" : "🔒 Cerrada";
+        System.out.println("🏦 " + titular + " | " + estado + " | Saldo: $" + saldo);
+    }
+}
+
+// Main
+public class Main {
+    public static void main(String[] args) {
+        CuentaBancaria cuenta = new CuentaBancaria("Ana", 1000);
+        cuenta.mostrarEstado();
+        
+        try {
+            cuenta.depositar(500);
+            cuenta.retirar(200);
+            cuenta.retirar(2000);  // Lanzará SaldoInsuficienteException
+        } catch (SaldoInsuficienteException e) {
+            System.out.println("❌ " + e.getMessage());
+        } catch (CuentaCerradaException e) {
+            System.out.println("❌ " + e.getMessage());
+        }
+        
+        cuenta.cerrar();
+        
+        try {
+            cuenta.depositar(100);  // Lanzará CuentaCerradaException
+        } catch (CuentaCerradaException e) {
+            System.out.println("❌ " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("❌ Error: " + e.getMessage());
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 PROYECTO FINAL: Juego de Aventura por Consola
+
+Ahora construirás el **proyecto final** combinando TODO lo aprendido en 20 días: clases, objetos, constructores, encapsulación, herencia, interfaces, polimorfismo, arrays, métodos, `if`, `for`, `while`, y excepciones.
+
+<ExerciseBlock id={5} title="Paso 1: Clase Personaje base" difficulty="medium">
+  Crea la clase `Personaje` con `nombre`, `vida`, `ataque`, `defensa`, `nivel`, `experiencia`.
+
+  <div slot="hint1">
+    Constructor con todos los parámetros. Getters y setters con validación.
+  </div>
+
+  <div slot="hint2">
+    Método `subirNivel()` que verifica si experiencia >= nivel × 100.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Personaje.java
+public class Personaje {
+    private String nombre;
+    private int vida;
+    private int vidaMax;
+    private int ataque;
+    private int defensa;
+    private int nivel;
+    private int experiencia;
+    private int pociones;
+    
+    public Personaje(String nombre, int vida, int ataque, int defensa) {
+        this.nombre = nombre;
+        this.vida = vida;
+        this.vidaMax = vida;
+        this.ataque = ataque;
+        this.defensa = defensa;
+        this.nivel = 1;
+        this.experiencia = 0;
+        this.pociones = 3;
+    }
+    
+    // GETTERS
+    public String getNombre() { return nombre; }
+    public int getVida() { return vida; }
+    public int getVidaMax() { return vidaMax; }
+    public int getAtaque() { return ataque; }
+    public int getDefensa() { return defensa; }
+    public int getNivel() { return nivel; }
+    public int getExperiencia() { return experiencia; }
+    public int getPociones() { return pociones; }
+    
+    public boolean estaVivo() {
+        return vida > 0;
+    }
+    
+    public void recibirDaño(int daño) {
+        int dañoReal = Math.max(0, daño - defensa);
+        vida = Math.max(0, vida - dañoReal);
+        System.out.println("💥 " + nombre + " recibió " + dañoReal + " de daño! (HP: " + vida + "/" + vidaMax + ")");
+    }
+    
+    public void atacar(Enemigo enemigo) {
+        int daño = (int)(Math.random() * ataque) + 5;
+        System.out.println("⚔️ " + nombre + " ataca a " + enemigo.getNombre() + " por " + daño + " de daño!");
+        enemigo.recibirDaño(daño);
+    }
+    
+    public void usarPocion() {
+        if (pociones > 0) {
+            int curacion = 30;
+            vida = Math.min(vidaMax, vida + curacion);
+            pociones--;
+            System.out.println("🧪 " + nombre + " usó poción! +" + curacion + " HP (HP: " + vida + "/" + vidaMax + ")");
+        } else {
+            System.out.println("❌ " + nombre + " no tiene pociones!");
+        }
+    }
+    
+    public void ganarExperiencia(int exp) {
+        experiencia += exp;
+        System.out.println("✨ " + nombre + " ganó " + exp + " de experiencia!");
+        
+        if (experiencia >= nivel * 100) {
+            subirNivel();
+        }
+    }
+    
+    private void subirNivel() {
+        nivel++;
+        experiencia = 0;
+        vidaMax += 10;
+        vida = vidaMax;
+        ataque += 5;
+        defensa += 3;
+        pociones++;
+        System.out.println("🎉 ¡" + nombre + " subió al nivel " + nivel + "!");
+    }
+    
+    public void mostrarEstado() {
+        System.out.println("👤 " + nombre + " (Nv." + nivel + ")");
+        System.out.println("   ❤️ HP: " + vida + "/" + vidaMax);
+        System.out.println("   ⚔️ ATK: " + ataque + " | 🛡️ DEF: " + defensa);
+        System.out.println("   ✨ EXP: " + experiencia + "/" + (nivel * 100));
+        System.out.println("   🧪 Pociones: " + pociones);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={6} title="Paso 2: Interfaz Enemigo y clases de enemigos" difficulty="medium">
+  Crea interfaz `Enemigo` y clases `Slime`, `Esqueleto`, `Dragon`.
+
+  <div slot="hint1">
+    Interfaz `Enemigo` con `getNombre()`, `recibirDaño()`, `atacar(Personaje)`, `estaVivo()`, `getExpReward()`.
+  </div>
+
+  <div slot="hint2">
+    Cada enemigo implementa con diferentes valores de vida/ataque.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Enemigo.java
+public interface Enemigo {
+    String getNombre();
+    void recibirDaño(int daño);
+    void atacar(Personaje personaje);
+    boolean estaVivo();
+    int getExpReward();
+}
+
+// Archivo: Slime.java
+public class Slime implements Enemigo {
+    private String nombre;
+    private int vida;
+    private int ataque;
+    
+    public Slime() {
+        this.nombre = "Slime";
+        this.vida = 30;
+        this.ataque = 8;
+    }
+    
+    @Override
+    public String getNombre() { return nombre; }
+    
+    @Override
+    public void recibirDaño(int daño) {
+        vida = Math.max(0, vida - daño);
+        System.out.println("💥 Slime recibió " + daño + " de daño! (HP: " + vida + ")");
+    }
+    
+    @Override
+    public void atacar(Personaje personaje) {
+        System.out.println("🟢 Slime salta y ataca!");
+        personaje.recibirDaño(ataque);
+    }
+    
+    @Override public boolean estaVivo() { return vida > 0; }
+    @Override public int getExpReward() { return 20; }
+}
+
+// Archivo: Esqueleto.java
+public class Esqueleto implements Enemigo {
+    private String nombre;
+    private int vida;
+    private int ataque;
+    
+    public Esqueleto() {
+        this.nombre = "Esqueleto";
+        this.vida = 50;
+        this.ataque = 15;
+    }
+    
+    @Override
+    public String getNombre() { return nombre; }
+    
+    @Override
+    public void recibirDaño(int daño) {
+        vida = Math.max(0, vida - daño);
+        System.out.println("💥 Esqueleto recibió " + daño + " de daño! (HP: " + vida + ")");
+    }
+    
+    @Override
+    public void atacar(Personaje personaje) {
+        System.out.println("💀 Esqueleto ataca con espada!");
+        personaje.recibirDaño(ataque);
+    }
+    
+    @Override public boolean estaVivo() { return vida > 0; }
+    @Override public int getExpReward() { return 40; }
+}
+
+// Archivo: Dragon.java
+public class Dragon implements Enemigo {
+    private String nombre;
+    private int vida;
+    private int ataque;
+    
+    public Dragon() {
+        this.nombre = "🐉 Dragón";
+        this.vida = 100;
+        this.ataque = 25;
+    }
+    
+    @Override
+    public String getNombre() { return nombre; }
+    
+    @Override
+    public void recibirDaño(int daño) {
+        vida = Math.max(0, vida - daño);
+        System.out.println("💥 Dragón recibió " + daño + " de daño! (HP: " + vida + ")");
+    }
+    
+    @Override
+    public void atacar(Personaje personaje) {
+        System.out.println("🔥 Dragón lanza fuego!");
+        personaje.recibirDaño(ataque);
+    }
+    
+    @Override public boolean estaVivo() { return vida > 0; }
+    @Override public int getExpReward() { return 100; }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Paso 3: Sistema de batalla con try/catch" difficulty="medium">
+  Crea la clase `Batalla` que maneje el combate con validación de errores.
+
+  <div slot="hint1">
+    Método `combate(Personaje, Enemigo)` con `while` hasta que uno muera.
+  </div>
+
+  <div slot="hint2">
+    Usa try/catch para manejar cualquier error inesperado durante la batalla.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Batalla.java
+public class Batalla {
+    public static void combate(Personaje heroe, Enemigo enemigo) {
+        System.out.println("\n⚔️ ═══════════════════════════");
+        System.out.println("   BATALLA: " + heroe.getNombre() + " vs " + enemigo.getNombre());
+        System.out.println("═══════════════════════════\n");
+        
+        int turno = 1;
+        
+        try {
+            while (heroe.estaVivo() && enemigo.estaVivo()) {
+                System.out.println("--- Turno " + turno + " ---");
+                
+                // Héroe ataca
+                heroe.atacar(enemigo);
+                
+                if (!enemigo.estaVivo()) {
+                    System.out.println("\n🎉 ¡" + enemigo.getNombre() + " derrotado!");
+                    heroe.ganarExperiencia(enemigo.getExpReward());
+                    return;
+                }
+                
+                // Enemigo ataca
+                enemigo.atacar(heroe);
+                
+                if (!heroe.estaVivo()) {
+                    System.out.println("\n💀 ¡" + heroe.getNombre() + " ha caído...");
+                    return;
+                }
+                
+                turno++;
+                System.out.println();
+            }
+        } catch (Exception e) {
+            System.out.println("\n❌ Error en batalla: " + e.getMessage());
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="Paso 4: Mapa del juego con arrays 2D" difficulty="hard">
+  Crea un mapa 2D con diferentes zonas que el héroe puede explorar.
+
+  <div slot="hint1">
+    Array 2D de Strings: cada celda es un tipo de zona ("bosque", "cueva", "castillo", "aldea").
+  </div>
+
+  <div slot="hint2">
+    El héroe se mueve con coordenadas (x, y). Cada zona tiene enemigos diferentes.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Mapa.java
+public class Mapa {
+    private String[][] mapa;
+    private String[] nombresZonas;
+    
+    public Mapa() {
+        this.mapa = new String[][]{
+            {"aldea", "bosque", "bosque", "cueva"},
+            {"bosque", "montaña", "cueva", "cueva"},
+            {"montaña", "montaña", "pantano", "castillo"},
+            {"aldea", "montaña", "pantano", "castillo"}
+        };
+        this.nombresZonas = new String[]{
+            "Aldea Segura", "Bosque Oscuro", "Cueva Terrible",
+            "Montaña Helada", "Pantano Maldito", "Castillo del Dragón"
+        };
+    }
+    
+    public String getZona(int x, int y) {
+        try {
+            return mapa[y][x];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("❌ Zona fuera del mapa!");
+            return "aldea";
+        }
+    }
+    
+    public Enemigo generarEnemigo(String zona) {
+        try {
+            double random = Math.random();
+            
+            switch (zona) {
+                case "aldea":
+                    return null;  // Zona segura
+                case "bosque":
+                    return new Slime();
+                case "cueva":
+                    return new Esqueleto();
+                case "castillo":
+                    return new Dragon();
+                default:
+                    return new Slime();
+            }
+        } catch (Exception e) {
+            System.out.println("❌ Error generando enemigo: " + e.getMessage());
+            return new Slime();
+        }
+    }
+    
+    public void mostrarMapa(int px, int py) {
+        System.out.println("\n🗺️ MAPA DEL MUNDO");
+        System.out.println("══════════════════\n");
+        
+        for (int y = 0; y < mapa.length; y++) {
+            for (int x = 0; x < mapa[y].length; x++) {
+                if (x == px && y == py) {
+                    System.out.print("📍");  // Jugador
+                } else {
+                    switch (mapa[y][x]) {
+                        case "aldea": System.out.print("🏘️"); break;
+                        case "bosque": System.out.print("🌲"); break;
+                        case "cueva": System.out.print("🕳️"); break;
+                        case "montaña": System.out.print("⛰️"); break;
+                        case "pantano": System.out.print("🌊"); break;
+                        case "castillo": System.out.print("🏰"); break;
+                        default: System.out.print("❓");
+                    }
+                }
+            }
+            System.out.println();
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Paso 5: Juego principal con menú y try/catch" difficulty="hard">
+  Crea el `main()` con menú interactivo, manejo de input y ciclo de juego.
+
+  <div slot="hint1">
+    Menú con opciones: Explorar, Descansar, Ver Estado, Usar Pocion, Salir.
+  </div>
+
+  <div slot="hint2">
+    Usa Scanner dentro de try/catch para manejar input inválido.
+  </div>
+
+  <div slot="solution">
+```java
+import java.util.Scanner;
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("🎮 ═══════════════════════════");
+        System.out.println("   🗡️  AVENTURA EN JAVA  🗡️");
+        System.out.println("═══════════════════════════\n");
+        
+        // Crear personaje
+        System.out.print("¿Cuál es tu nombre, héroe? ");
+        String nombre = sc.nextLine();
+        
+        Personaje heroe = new Personaje(nombre, 100, 20, 10);
+        Mapa mapa = new Mapa();
+        
+        int x = 0, y = 0;  // Posición inicial (aldea)
+        boolean jugando = true;
+        
+        System.out.println("\n¡Bienvenido, " + nombre + "! Tu aventura comienza en la Aldea Segura.\n");
+        
+        while (jugando && heroe.estaVivo()) {
+            mapa.mostrarMapa(x, y);
+            heroe.mostrarEstado();
+            
+            System.out.println("\n📍 Estás en: " + mapa.getZona(x, y).toUpperCase());
+            System.out.println("\n⌨️  Qué quieres hacer?");
+            System.out.println("1. 🗺️ Explorar zona");
+            System.out.println("2. 🏘️ Ir a la aldea (descansar)");
+            System.out.println("3. ⬆️ Subir");
+            System.out.println("4. ⬇️ Bajar");
+            System.out.println("5. ⬅️ Izquierda");
+            System.out.println("6. ➡️ Derecha");
+            System.out.println("7. 🧪 Usar poción");
+            System.out.println("8. 🚪 Salir");
+            
+            System.out.print("\nOpción: ");
+            String input = sc.nextLine();
+            
+            try {
+                int opcion = Integer.parseInt(input);
+                
+                switch (opcion) {
+                    case 1: // Explorar
+                        explorarZona(heroe, mapa, x, y);
+                        break;
+                        
+                    case 2: // Ir a aldea
+                        x = 0;
+                        y = 0;
+                        heroe.recibirDaño(-30);  // Curar
+                        if (heroe.getVida() > heroe.getVidaMax()) {
+                            // Resetear vida al máximo
+                        }
+                        System.out.println("\n🏘️ Descansaste en la aldea. HP restaurado!");
+                        break;
+                        
+                    case 3: // Subir
+                        if (y > 0) y--;
+                        else System.out.println("❌ No puedes ir más arriba");
+                        break;
+                        
+                    case 4: // Bajar
+                        if (y < 3) y++;
+                        else System.out.println("❌ No puedes ir más abajo");
+                        break;
+                        
+                    case 5: // Izquierda
+                        if (x > 0) x--;
+                        else System.out.println("❌ No puedes ir más a la izquierda");
+                        break;
+                        
+                    case 6: // Derecha
+                        if (x < 3) x++;
+                        else System.out.println("❌ No puedes ir más a la derecha");
+                        break;
+                        
+                    case 7: // Usar poción
+                        heroe.usarPocion();
+                        break;
+                        
+                    case 8: // Salir
+                        jugando = false;
+                        System.out.println("\n👋 ¡Gracias por jugar, " + nombre + "!");
+                        break;
+                        
+                    default:
+                        System.out.println("❌ Opción inválida");
+                }
+                
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Ingresa un número válido");
+            } catch (Exception e) {
+                System.out.println("❌ Error: " + e.getMessage());
+            }
+            
+            System.out.println("\n─────────────────────────────\n");
+        }
+        
+        if (!heroe.estaVivo()) {
+            System.out.println("\n💀 " + heroe.getNombre() + " ha caído en batalla...");
+        }
+        
+        System.out.println("\n📊 ESTADÍSTICAS FINALES:");
+        System.out.println("Nivel alcanzado: " + heroe.getNivel());
+        System.out.println("Experiencia total: " + heroe.getExperiencia());
+        System.out.println("\n🎮 ¡Fin del juego!");
+    }
+    
+    private static void explorarZona(Personaje heroe, Mapa mapa, int x, int y) {
+        String zona = mapa.getZona(x, y);
+        
+        if (zona.equals("aldea")) {
+            System.out.println("🏘️ Estás en la aldea. Aquí estás seguro.");
+            System.out.println("Descansa o compra provisiones.");
+            return;
+        }
+        
+        System.out.println("\n🔍 Explorando " + zona + "...");
+        
+        Enemigo enemigo = mapa.generarEnemigo(zona);
+        
+        if (enemigo != null) {
+            Batalla.combate(heroe, enemigo);
+        } else {
+            System.out.println("✅ No encontraste enemigos.");
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={20}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué bloque usas para manejar errores en Java?"
+    options={[
+      { text: 'if/else', correct: false },
+      { text: 'try/catch', correct: true },
+      { text: 'for/while', correct: false },
+      { text: 'switch/case', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="¿Qué hace `finally` en un try/catch?"
+    options={[
+      { text: 'Se ejecuta solo si hay error', correct: false },
+      { text: 'Se ejecuta solo si no hay error', correct: false },
+      { text: 'SIEMPRE se ejecuta, haya o no error', correct: true },
+      { text: 'Detiene el programa', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="¿Qué palabra clave usas para LANZAR una excepción manualmente?"
+    options={[
+      { text: 'catch', correct: false },
+      { text: 'throw', correct: true },
+      { text: 'throws', correct: false },
+      { text: 'raise', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="Si `Integer.parseInt("abc")` falla, ¿qué excepción lanza?"
+    options={[
+      { text: 'ArithmeticException', correct: false },
+      { text: 'NullPointerException', correct: false },
+      { text: 'NumberFormatException', correct: true },
+      { text: 'IOException', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="¿Puedes crear tus propias excepciones?"
+    options={[
+      { text: 'No, solo las que tiene Java', correct: false },
+      { text: 'Sí, extendiendo Exception', correct: true },
+      { text: 'Solo si son abstractas', correct: false },
+      { text: 'Solo en main()', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo qué es una excepción y para qué sirve',
+    'Puedo usar try/catch para manejar errores',
+    'Puedo crear excepciones personalizadas con throw',
+    'Uso finally para limpieza siempre',
+    'Completé el Proyecto Final: Juego de Aventura',
+    'El juego tiene personaje, enemigos, mapa 2D y batallas',
+    'El juego maneja errores con try/catch',
+    'Combiné TODO lo aprendido en 20 días'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "unreported exception ... must be caught or declared"
+
+**Problema**: Llamaste un método que lanza excepción sin try/catch.
+
+**Solución**: Envuelve en try/catch o declara `throws` en tu método.
+
+### Error: Catch genérico captura todo
+
+**Problema**: Usas `catch (Exception e)` y no sabes qué error específico fue.
+
+**Solución**: Usa catch específicos primero, genérico al final:
+```java
+try {
+    // código
+} catch (NumberFormatException e) {
+    // Específico primero
+} catch (Exception e) {
+    // Genérico último
+}
+```
+
+### Error: finally con return
+
+**Problema**: Pones `return` en finally que sobrescribe el return del try.
+
+**Solución**: No pongas `return` en finally.
+
+---
+
+## 🎉 ¡FELICIDADES! ¡COMPLETASTE EL CURSO!
+
+Has terminado los **20 Días de Java**. Ahora sabes:
+
+### ✅ Fundamentos (Días 1-9)
+- Instalar JDK y VS Code
+- Variables, tipos, operadores
+- Control de flujo (if, switch)
+- Bucles (while, for)
+- Métodos básicos
+
+### ✅ POO (Días 10-19)
+- Métodos con retorno y parámetros
+- Arrays y recorrido
+- Clases y Objetos
+- Constructores
+- Encapsulación
+- Static vs Instancia
+- Herencia
+- Polimorfismo e Interfaces
+
+### ✅ Avanzado (Día 20)
+- Excepciones (try/catch/throw)
+- Proyecto Final completo
+
+### 🏆 Tu Proyecto Final
+Construiste un **Juego de Aventura por Consola** completo con:
+- Personaje con stats y niveles
+- Sistema de batalla por turnos
+- Múltiples tipos de enemigos
+- Mapa 2D para explorar
+- Sistema de experiencia y nivel
+- Manejo de errores robusto
+
+**¡Eres un programador Java! 🚀**
+
+### 📚 Próximos Pasos
+- Practica creando proyectos propios
+- Aprende sobre Collections (ArrayList, HashMap)
+- Explora JavaFX para interfaces gráficas
+- Aprende Spring Boot para aplicaciones web
+- ¡Comparte tu código con el mundo!
+
+**¡Nos vemos en tu próxima aventura de programación! ☕🎮**

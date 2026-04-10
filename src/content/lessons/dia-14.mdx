@@ -1,9 +1,942 @@
 ---
 day: 14
 title: "Introducción a POO: Clases y Objetos"
-objective: "Crear tu primera clase y objetos"
-topics: ["class", "new", "Objetos", "Instancias"]
+objective: "Crear tu primera clase, objetos y combinar métodos, if, for con atributos"
+topics: ["class", "new", "Objetos", "Atributos", "Métodos de instancia", "this"]
 miniProject: false
 ---
-# Día 14: Primera Clase
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy darás el gran salto: **Programación Orientada a Objetos (POO)**. Aprenderás a crear **clases** (planos) y **objetos** (cosas reales) con atributos y métodos. Combinarás todo: `if`, `for`, `while`, métodos.
+
+---
+
+## 📋 Antes de Empezar
+
+- **Ya sabes usar variables y métodos** sueltos
+- **Ya sabes usar `if`, `for`, `while`**
+- **Una clase es como un "plano"** (de un robot, un carro, un estudiante)
+- **Un objeto es una "cosa real"** creada desde ese plano
+- **Hoy todo es visual** (te muestro paso a paso)
+
+---
+
+## 🤔 ¿Qué es la POO?
+
+### Piensa en un videojuego:
+
+**Sin POO** (todo suelto):
+```java
+String jugador1Nombre = "Mario";
+int jugador1Vida = 100;
+int jugador1Nivel = 1;
+
+String jugador2Nombre = "Luigi";
+int jugador2Vida = 100;
+int jugador2Nivel = 1;
+// ¡Necesitas 6 variables para 2 jugadores! 😱
+```
+
+**Con POO** (organizado):
+```java
+// Creas la clase (plano)
+Jugador mario = new Jugador("Mario", 100, 1);
+Jugador luigi = new Jugador("Luigi", 100, 1);
+// ¡Dos jugadores con solo 2 variables! 😎
+```
+
+---
+
+## 📦 Paso 1: Tu Primera Clase
+
+### ¿Qué es una clase?
+
+Una **clase** es un **plano** que define qué tiene y qué hace algo.
+
+### La fórmula mágica:
+
+```java
+public class NombreDeLaClase {
+    // ATRIBUTOS (lo que TIENE)
+    public tipo nombreAtributo;
+    
+    // MÉTODOS (lo que HACE)
+    public void nombreDelMetodo() {
+        // código
+    }
+}
+```
+
+### Ejemplo paso a paso: Clase `Robot`
+
+```java
+// Paso 1: CREAR la clase (el plano)
+public class Robot {
+    // ATRIBUTOS (lo que el robot TIENE)
+    public String nombre;
+    public int bateria;       // 0-100
+    public int movimientos;   // cuántos pasos ha dado
+    
+    // MÉTODO: El robot SALUDA (lo que HACE)
+    public void saludar() {
+        System.out.println("¡Hola! Soy " + nombre);
+        System.out.println("Batería: " + bateria + "%");
+        System.out.println("");
+    }
+    
+    // MÉTODO: El robot SE MUEVE
+    public void mover() {
+        if (bateria > 0) {
+            bateria = bateria - 10;
+            movimientos = movimientos + 1;
+            System.out.println(nombre + " se movió. Bateria: " + bateria + "%");
+        } else {
+            System.out.println(nombre + ": ❌ Sin batería!");
+        }
+    }
+}
+```
+
+### 📖 Paso a paso:
+
+1. **`public class Robot`** → Defines la clase (el plano)
+2. **`public String nombre`** → Un atributo (lo que TIENE)
+3. **`public int bateria`** → Otro atributo
+4. **`public void saludar()`** → Un método (lo que HACE)
+5. **`this.nombre`** → Se refiere al atributo de ESTE objeto
+
+---
+
+## 🚀 Paso 2: Crear Objetos (Instanciar)
+
+### ¿Cómo se usa?
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // Paso 1: CREAR un objeto Robot (instanciar)
+        Robot robo1 = new Robot();
+        
+        // Paso 2: DARLE valores a sus atributos
+        robo1.nombre = "R2D2";
+        robo1.bateria = 100;
+        robo1.movimientos = 0;
+        
+        // Paso 3: USAR sus métodos
+        robo1.saludar();
+        robo1.mover();
+        robo1.mover();
+        robo1.saludar();  // ← Ahora con menos batería
+    }
+}
+```
+
+**Salida**:
+```
+¡Hola! Soy R2D2
+Batería: 100%
+
+R2D2 se movió. Bateria: 90%
+R2D2 se movió. Bateria: 80%
+¡Hola! Soy R2D2
+Batería: 80%
+```
+
+### 📖 Paso a paso:
+
+1. **`new Robot()`** → Creas un objeto desde la clase
+2. **`robo1.nombre = "R2D2"`** → Le das nombre
+3. **`robo1.saludar()`** → Llamas al método del objeto
+4. **`robo1.mover()`** → Gasta batería
+5. **Cada objeto es independiente** (puedes crear otro robot con otra batería)
+
+---
+
+## 💪 Ejercicios Guiados (Combinando Todo)
+
+<ExerciseBlock id={1} title="Crear clase Persona" difficulty="easy">
+  Crea una clase `Persona` con atributos `nombre`, `edad`, `ciudad` y un método `presentarse()` que imprima toda la info.
+
+  <div slot="hint1">
+    La clase va en un archivo `Persona.java`. Los atributos son `public`.
+  </div>
+
+  <div slot="hint2">
+    El método `presentarse()` imprime: "Soy [nombre], tengo [edad] años y vivo en [ciudad]".
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Persona.java
+public class Persona {
+    public String nombre;
+    public int edad;
+    public String ciudad;
+    
+    public void presentarse() {
+        System.out.println("👋 Soy " + nombre + ", tengo " + edad + " años y vivo en " + ciudad);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Persona p1 = new Persona();
+        p1.nombre = "Ana";
+        p1.edad = 15;
+        p1.ciudad = "Madrid";
+        p1.presentarse();
+        
+        Persona p2 = new Persona();
+        p2.nombre = "Luis";
+        p2.edad = 16;
+        p2.ciudad = "Barcelona";
+        p2.presentarse();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Clase con if: Verificar mayoría de edad" difficulty="easy">
+  Agrega a la clase `Persona` un método `esMayorDeEdad()` que devuelva `true` o `false`.
+
+  <div slot="hint1">
+    El método es `public boolean esMayorDeEdad()` y usa `if (edad >= 18)`.
+  </div>
+
+  <div slot="hint2">
+    Retorna `true` si es mayor, `false` si no.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Persona.java
+public class Persona {
+    public String nombre;
+    public int edad;
+    public String ciudad;
+    
+    public void presentarse() {
+        System.out.println("👋 Soy " + nombre + ", tengo " + edad + " años y vivo en " + ciudad);
+    }
+    
+    public boolean esMayorDeEdad() {
+        if (edad >= 18) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Persona p1 = new Persona();
+        p1.nombre = "Ana";
+        p1.edad = 15;
+        p1.presentarse();
+        System.out.println("¿Mayor de edad? " + p1.esMayorDeEdad());
+        
+        Persona p2 = new Persona();
+        p2.nombre = "Carlos";
+        p2.edad = 20;
+        p2.presentarse();
+        System.out.println("¿Mayor de edad? " + p2.esMayorDeEdad());
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Clase con for: Estudiante y materias" difficulty="medium">
+  Crea una clase `Estudiante` con `nombre`, `String[] materias`, `double[] notas`. Agrega un método `mostrarNotas()` que imprima todo.
+
+  <div slot="hint1">
+    En `mostrarNotas()` usa un `for` para recorrer materias y notas.
+  </div>
+
+  <div slot="hint2">
+    Acumula el promedio y muéstralo al final.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Estudiante.java
+public class Estudiante {
+    public String nombre;
+    public String[] materias;
+    public double[] notas;
+    
+    public void mostrarNotas() {
+        System.out.println("📊 NOTAS DE " + nombre.toUpperCase());
+        System.out.println("══════════════════");
+        
+        double suma = 0;
+        for (int i = 0; i < materias.length; i++) {
+            System.out.println(materias[i] + ": " + notas[i]);
+            suma = suma + notas[i];
+        }
+        
+        double promedio = suma / materias.length;
+        System.out.println("──────────────────────");
+        System.out.println("Promedio: " + String.format("%.1f", promedio));
+        
+        if (promedio >= 70) {
+            System.out.println("✅ APROBADO");
+        } else {
+            System.out.println("❌ REPROBADO");
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Estudiante e1 = new Estudiante();
+        e1.nombre = "Ana";
+        e1.materias = new String[]{"Mate", "Ciencia", "Historia"};
+        e1.notas = new double[]{85, 92, 78};
+        e1.mostrarNotas();
+        
+        System.out.println();
+        
+        Estudiante e2 = new Estudiante();
+        e2.nombre = "Pedro";
+        e2.materias = new String[]{"Mate", "Ciencia", "Historia"};
+        e2.notas = new double[]{60, 55, 65};
+        e2.mostrarNotas();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Clase con while: Cuenta regresiva del robot" difficulty="medium">
+  Crea una clase `Cohete` con `nombre`, `combustible` (0-100). Agrega un método `despegar()` que reste combustible de 10 en 10 con un mensaje en cada paso.
+
+  <div slot="hint1">
+    Usa `while (combustible > 0)` para la cuenta regresiva.
+  </div>
+
+  <div slot="hint2">
+    Dentro: `combustible = combustible - 10;` y imprime el estado.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Cohete.java
+public class Cohete {
+    public String nombre;
+    public int combustible;
+    
+    public void despegar() {
+        System.out.println("🚀 " + nombre + " - INICIANDO DESPEGUE");
+        System.out.println("══════════════════");
+        
+        while (combustible > 0) {
+            combustible = combustible - 10;
+            System.out.println("Combustible: " + combustible + "%");
+            
+            if (combustible == 50) {
+                System.out.println("⚡ Mitad del tanque!");
+            }
+            if (combustible == 20) {
+                System.out.println("⚠️ Nivel crítico!");
+            }
+        }
+        
+        System.out.println("🎉 ¡Despegue completado!");
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Cohete saturno = new Cohete();
+        saturno.nombre = "Saturno V";
+        saturno.combustible = 100;
+        saturno.despegar();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Clase con método calcular: Producto" difficulty="medium">
+  Crea una clase `Producto` con `nombre`, `precio`, `stock`. Agrega métodos: `valorTotal()` (precio × stock) y `vender(int cantidad)` con validación.
+
+  <div slot="hint1">
+    `valorTotal()` retorna `double`: `return precio * stock;`
+  </div>
+
+  <div slot="hint2">
+    `vender()` usa `if (cantidad > stock)` para validar.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Producto.java
+public class Producto {
+    public String nombre;
+    public double precio;
+    public int stock;
+    
+    public double valorTotal() {
+        return precio * stock;
+    }
+    
+    public void vender(int cantidad) {
+        System.out.println("💰 Vendiendo: " + nombre + " x" + cantidad);
+        
+        if (cantidad <= 0) {
+            System.out.println("❌ Cantidad inválida");
+        } else if (cantidad > stock) {
+            System.out.println("❌ Stock insuficiente. Disponible: " + stock);
+        } else {
+            stock = stock - cantidad;
+            double ingreso = precio * cantidad;
+            System.out.println("✅ Venta exitosa!");
+            System.out.println("   Ingreso: $" + ingreso);
+            System.out.println("   Stock restante: " + stock);
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Producto laptop = new Producto();
+        laptop.nombre = "Laptop";
+        laptop.precio = 999.99;
+        laptop.stock = 10;
+        
+        System.out.println("Valor total: $" + laptop.valorTotal());
+        laptop.vender(3);
+        laptop.vender(8);  // Debería fallar (solo quedan 7)
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios Dinámicos (Combinaciones Avanzadas)
+
+<ExerciseBlock id={6} title="Clase + for: Generador de contraseñas" difficulty="medium">
+  Crea una clase `GeneradorPassword` con método `generar(int longitud)` que devuelva un String aleatorio.
+
+  <div slot="hint1">
+    Usa un String con caracteres posibles y un `for` para construir el password.
+  </div>
+
+  <div slot="hint2">
+    `(int)(Math.random() * caracteres.length())` para índice aleatorio.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: GeneradorPassword.java
+public class GeneradorPassword {
+    public String generar(int longitud) {
+        String caracteres = "abcdefghijklmnopqrstuvwxyz0123456789";
+        String password = "";
+        
+        for (int i = 0; i < longitud; i++) {
+            int indice = (int)(Math.random() * caracteres.length());
+            password = password + caracteres.charAt(indice);
+        }
+        
+        return password;
+    }
+    
+    public void generarLote(int cantidad, int longitud) {
+        System.out.println("🔐 LOTE DE " + cantidad + " CONTRASEÑAS");
+        System.out.println("══════════════════\n");
+        
+        for (int i = 1; i <= cantidad; i++) {
+            String pass = generar(longitud);
+            System.out.println(i + ". " + pass);
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        GeneradorPassword gen = new GeneradorPassword();
+        gen.generarLote(5, 8);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Clase + while: Temporizador" difficulty="medium">
+  Crea una clase `Temporizador` con `segundos` y método `iniciar()` que cuente hacia atrás simulando tiempo.
+
+  <div slot="hint1">
+    Usa `while (segundos > 0)` y `Thread.sleep(1000)` para esperar 1 segundo (opcional).
+  </div>
+
+  <div slot="hint2">
+    Si no quieres usar `sleep`, solo imprime la cuenta regresiva sin pausa.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Temporizador.java
+public class Temporizador {
+    public String nombre;
+    public int segundos;
+    
+    public void iniciar() {
+        System.out.println("⏱️ TEMPORIZADOR: " + nombre);
+        System.out.println("══════════════════");
+        
+        while (segundos > 0) {
+            int minutos = segundos / 60;
+            int secs = segundos % 60;
+            System.out.println(String.format("%02d:%02d", minutos, secs));
+            segundos = segundos - 1;
+        }
+        
+        System.out.println("🔔 ¡TIEMPO!");
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Temporizador t1 = new Temporizador();
+        t1.nombre = "Examen";
+        t1.segundos = 10;  // Para prueba rápida
+        t1.iniciar();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="Clase + for + if: Inventario de tienda" difficulty="hard">
+  Crea una clase `Tienda` con `String[] productos`, `double[] precios`, `int[] cantidades`. Agrega métodos: `mostrarInventario()`, `buscarProducto(String)`, `valorTotal()`.
+
+  <div slot="hint1">
+    Cada método usa `for` para recorrer los arrays.
+  </div>
+
+  <div slot="hint2">
+    `buscarProducto()` usa `if` para comparar nombres.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Tienda.java
+public class Tienda {
+    public String nombre;
+    public String[] productos;
+    public double[] precios;
+    public int[] cantidades;
+    
+    public void mostrarInventario() {
+        System.out.println("🏪 INVENTARIO: " + nombre);
+        System.out.println("══════════════════\n");
+        
+        for (int i = 0; i < productos.length; i++) {
+            System.out.println("[" + (i + 1) + "] " + productos[i]);
+            System.out.println("    Precio: $" + precios[i]);
+            System.out.println("    Stock: " + cantidades[i]);
+            
+            if (cantidades[i] == 0) {
+                System.out.println("    ⚠️ AGOTADO");
+            } else if (cantidades[i] < 5) {
+                System.out.println("    ⚠️ Stock bajo");
+            }
+            System.out.println("");
+        }
+    }
+    
+    public int buscarProducto(String nombre) {
+        for (int i = 0; i < productos.length; i++) {
+            if (productos[i].equals(nombre)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public double valorTotal() {
+        double total = 0;
+        for (int i = 0; i < productos.length; i++) {
+            total = total + (precios[i] * cantidades[i]);
+        }
+        return total;
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Tienda miTienda = new Tienda();
+        miTienda.nombre = "Tech Store";
+        miTienda.productos = new String[]{"Laptop", "Mouse", "Teclado"};
+        miTienda.precios = new double[]{999.99, 25.50, 75.00};
+        miTienda.cantidades = new int[]{10, 50, 0};
+        
+        miTienda.mostrarInventario();
+        
+        System.out.println("\n🔍 Buscando 'Mouse'...");
+        int pos = miTienda.buscarProducto("Mouse");
+        System.out.println("Encontrado en posición: " + (pos + 1));
+        
+        System.out.println("\n💰 Valor total: $" + miTienda.valorTotal());
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Clase + métodos múltiples: Juego de adivinanza" difficulty="hard">
+  Crea una clase `JuegoAdivinanza` con `int numeroSecreto` (aleatorio), `intentos` (0 al inicio). Métodos: `adivinar(int)`, `getIntentos()`.
+
+  <div slot="hint1">
+    En el constructor: `numeroSecreto = (int)(Math.random() * 100) + 1;`
+  </div>
+
+  <div slot="hint2">
+    `adivinar(int)` compara y retorna String con pistas.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: JuegoAdivinanza.java
+public class JuegoAdivinanza {
+    public int numeroSecreto;
+    public int intentos;
+    public boolean ganado;
+    
+    public JuegoAdivinanza() {
+        numeroSecreto = (int)(Math.random() * 100) + 1;
+        intentos = 0;
+        ganado = false;
+    }
+    
+    public String adivinar(int numero) {
+        if (ganado) {
+            return "🎉 ¡Ya ganaste! El número era " + numeroSecreto;
+        }
+        
+        intentos = intentos + 1;
+        
+        if (numero == numeroSecreto) {
+            ganado = true;
+            return "🎉 ¡CORRECTO! Lo adivinaste en " + intentos + " intentos!";
+        } else if (numero < numeroSecreto) {
+            return "⬆️ Muy bajo! Intento #" + intentos;
+        } else {
+            return "⬇️ Muy alto! Intento #" + intentos;
+        }
+    }
+    
+    public int getIntentos() {
+        return intentos;
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        JuegoAdivinanza juego = new JuegoAdivinanza();
+        
+        System.out.println("🎮 JUEGO DE ADIVINANZA (1-100)");
+        System.out.println("══════════════════\n");
+        
+        // Simulación
+        int[] intentos = {50, 75, 62, 68, 65};
+        
+        for (int intento : intentos) {
+            String resultado = juego.adivinar(intento);
+            System.out.println("Intenté " + intento + ": " + resultado);
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={10} title="Clase + arrays de objetos: Sistema escolar" difficulty="hard">
+  Crea una clase `SistemaEscolar` que maneje un array de objetos `Estudiante`. Métodos: `agregarEstudiante(Estudiante)`, `mostrarTodos()`, `mejorPromedio()`.
+
+  <div slot="hint1">
+    Usa `Estudiante[] estudiantes` como atributo y un contador `int totalEstudiantes`.
+  </div>
+
+  <div slot="hint2">
+    `mejorPromedio()` recorre el array y compara promedios.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: SistemaEscolar.java
+public class SistemaEscolar {
+    public Estudiante[] estudiantes;
+    public int totalEstudiantes;
+    
+    public SistemaEscolar(int capacidad) {
+        estudiantes = new Estudiante[capacidad];
+        totalEstudiantes = 0;
+    }
+    
+    public void agregarEstudiante(Estudiante e) {
+        if (totalEstudiantes < estudiantes.length) {
+            estudiantes[totalEstudiantes] = e;
+            totalEstudiantes++;
+            System.out.println("✅ " + e.nombre + " agregado!");
+        } else {
+            System.out.println("❌ Sistema lleno!");
+        }
+    }
+    
+    public void mostrarTodos() {
+        System.out.println("\n📚 LISTA DE ESTUDIANTES");
+        System.out.println("══════════════════\n");
+        
+        for (int i = 0; i < totalEstudiantes; i++) {
+            estudiantes[i].mostrarNotas();
+            System.out.println();
+        }
+    }
+    
+    public Estudiante mejorPromedio() {
+        Estudiante mejor = estudiantes[0];
+        double mejorProm = estudiantes[0].calcularPromedio();
+        
+        for (int i = 1; i < totalEstudiantes; i++) {
+            double prom = estudiantes[i].calcularPromedio();
+            if (prom > mejorProm) {
+                mejorProm = prom;
+                mejor = estudiantes[i];
+            }
+        }
+        
+        return mejor;
+    }
+}
+
+// Archivo: Estudiante.java (modificado)
+public class Estudiante {
+    public String nombre;
+    public String[] materias;
+    public double[] notas;
+    
+    public void mostrarNotas() {
+        System.out.println("👤 " + nombre);
+        double suma = 0;
+        for (int i = 0; i < materias.length; i++) {
+            System.out.println("  " + materias[i] + ": " + notas[i]);
+            suma = suma + notas[i];
+        }
+        System.out.println("  Promedio: " + String.format("%.1f", suma / materias.length));
+    }
+    
+    public double calcularPromedio() {
+        double suma = 0;
+        for (double nota : notas) {
+            suma = suma + nota;
+        }
+        return suma / notas.length;
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        SistemaEscolar sistema = new SistemaEscolar(10);
+        
+        Estudiante e1 = new Estudiante();
+        e1.nombre = "Ana";
+        e1.materias = new String[]{"Mate", "Ciencia"};
+        e1.notas = new double[]{95, 90};
+        
+        Estudiante e2 = new Estudiante();
+        e2.nombre = "Luis";
+        e2.materias = new String[]{"Mate", "Ciencia"};
+        e2.notas = new double[]{80, 85};
+        
+        sistema.agregarEstudiante(e1);
+        sistema.agregarEstudiante(e2);
+        
+        sistema.mostrarTodos();
+        
+        Estudiante mejor = sistema.mejorPromedio();
+        System.out.println("🏆 Mejor promedio: " + mejor.nombre);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={14}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué es una clase en POO?"
+    options={[
+      { text: 'Un tipo de variable', correct: false },
+      { text: 'Un plano que define atributos y métodos de un objeto', correct: true },
+      { text: 'Un método especial', correct: false },
+      { text: 'Un array de objetos', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="¿Qué palabra clave usas para crear un objeto desde una clase?"
+    options={[
+      { text: 'create', correct: false },
+      { text: 'make', correct: false },
+      { text: 'new', correct: true },
+      { text: 'object', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="Si tienes `Robot r = new Robot()`, ¿cómo accedes al atributo `nombre`?"
+    options={[
+      { text: 'Robot.nombre', correct: false },
+      { text: 'r.nombre', correct: true },
+      { text: 'Robot->nombre', correct: false },
+      { text: 'r->nombre', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="¿Puedes crear múltiples objetos de la misma clase?"
+    options={[
+      { text: 'No, solo uno', correct: false },
+      { text: 'Sí, cada uno con sus propios valores', correct: true },
+      { text: 'Solo si la clase es pública', correct: false },
+      { text: 'Solo en main()', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="¿Qué es un atributo?"
+    options={[
+      { text: 'Una función que hace algo', correct: false },
+      { text: 'Una variable que describe al objeto', correct: true },
+      { text: 'Un tipo de bucle', correct: false },
+      { text: 'Una clase dentro de otra', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## 🎁 Reto Opcional: Simulador de Mascota Virtual (Tamagotchi)
+
+**Desafío**: Crea una clase `Mascota` con:
+- Atributos: `nombre`, `hambre` (0-100), `felicidad` (0-100), `energia` (0-100)
+- Métodos: `alimentar()`, `jugar()`, `dormir()`, `mostrarEstado()`
+- Cada método modifica atributos con `if` para validar límites
+
+Luego crea un `main()` que simule un día con la mascota.
+
+**Ejemplo de interacción**:
+```
+🐾 Mi mascota: Firulais
+Hambre: 70/100 | Felicidad: 50/100 | Energía: 80/100
+
+🍖 Alimentando a Firulais...
+Hambre bajó a 50
+
+⚽ Jugando con Firulais...
+Felicidad subió a 70, Energía bajó a 60
+
+😴 Firulais está durmiendo...
+Energía subió a 90
+```
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo qué es una clase y un objeto',
+    'Puedo crear clases con atributos y métodos',
+    'Puedo instanciar objetos con new',
+    'Puedo acceder a atributos con objeto.atributo',
+    'Puedo llamar métodos de objetos con objeto.metodo()',
+    'Combiné if, for, while dentro de métodos de clase',
+    'Completé el sistema escolar con array de objetos',
+    'Entiendo que cada objeto es independiente'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "cannot find symbol" al usar atributo
+
+**Problema**: El atributo no existe en la clase.
+
+**Solución**: Verifica que esté declarado: `public String nombre;`
+
+### Error: NullPointerException
+
+**Problema**: Creaste la variable del objeto pero no usaste `new`.
+
+**Solución**:
+```java
+// ❌ Mal
+Robot r;
+r.nombre = "R2D2";  // ¡No existe el objeto aún!
+
+// ✅ Bien
+Robot r = new Robot();  // ← Primero CREAR
+r.nombre = "R2D2";      // ← Luego USAR
+```
+
+### Error: "non-static variable cannot be referenced from static context"
+
+**Problema**: Intentas usar un objeto desde `main()` sin crearlo.
+
+**Solución**: Siempre crea el objeto primero con `new`.
+
+### Error: Atributo no se modifica
+
+**Problema**: Estás modificando una copia local.
+
+**Solución**: Modifica directamente: `this.bateria = bateria - 10;` o `objeto.atributo = valor;`
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 14. Ahora sabes:
+- ✅ Qué es una clase y qué es un objeto
+- ✅ Crear clases con atributos y métodos
+- ✅ Instanciar objetos con `new`
+- ✅ Acceder a atributos y llamar métodos
+- ✅ Combinar `if`, `for`, `while` dentro de métodos de clase
+- ✅ Crear sistemas con arrays de objetos
+
+**Lo que viene**: Día 15 profundizarás en **constructores, atributos privados y getters/setters** con el mini-proyecto: **Robot Simulator**.
+
+**¡Bienvenido a la POO! 🎯** 🚀

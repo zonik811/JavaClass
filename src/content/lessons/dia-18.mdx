@@ -1,9 +1,883 @@
 ---
 day: 18
 title: "Herencia Básica"
-objective: "Crear clases hijas que heredan de clases padres"
-topics: ["extends", "super", "Herencia", "Sobrescritura"]
+objective: "Crear clases hijas que heredan atributos y métodos de clases padres usando extends y super"
+topics: ["extends", "super", "Herencia", "Sobrescritura @Override", "Jerarquías"]
 miniProject: false
 ---
-# Día 18: Herencia
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy aprenderás **Herencia**: crear clases nuevas que heredan todo de otra clase. Usarás `extends`, `super()`, `@Override` para evitar repetir código y organizar mejor.
+
+---
+
+## 📋 Antes de Empezar
+
+- **Ya sabes crear clases** con constructores, atributos, métodos
+- **Ya sabes encapsulación** (private, getters, setters)
+- **El problema**: Tienes clases muy parecidas y repites mucho código
+- **La solución**: Herencia (una clase padre → clases hijas)
+
+---
+
+## 🤔 ¿Qué es la Herencia?
+
+### Piensa en animales:
+
+**Sin herencia** (repitiendo todo):
+```java
+// Perro
+public class Perro {
+    private String nombre;
+    private int edad;
+    private String raza;
+    // getters, setters, comer(), dormir(), ladrar()...
+}
+
+// Gato
+public class Gato {
+    private String nombre;
+    private int edad;
+    private String color;
+    // getters, setters, comer(), dormir(), maullar()...
+}
+// ¡Repitiste nombre, edad, comer(), dormir()! 😩
+```
+
+**Con herencia** (organizado):
+```java
+// Clase PADRE (tiene lo común)
+public class Animal {
+    private String nombre;
+    private int edad;
+    public void comer() { ... }
+    public void dormir() { ... }
+}
+
+// Clases HIJAS (heredan + agregan lo suyo)
+public class Perro extends Animal {
+    private String raza;
+    public void ladrar() { ... }
+}
+
+public class Gato extends Animal {
+    private String color;
+    public void maullar() { ... }
+}
+// ¡No repitiste nada! 😎
+```
+
+---
+
+## 📦 Paso 1: Tu Primera Herencia
+
+### La fórmula mágica:
+
+```java
+// Clase PADRE
+public class ClasePadre {
+    private atributoComun;
+    
+    public ClasePadre(atributoComun) {
+        this.atributoComun = atributoComun;
+    }
+    
+    public void metodoComun() { ... }
+}
+
+// Clase HIJA
+public class ClaseHija extends ClasePadre {
+    private atributoPropio;
+    
+    public ClaseHija(atributoComun, atributoPropio) {
+        super(atributoComun);  // ← Llama al constructor del padre
+        this.atributoPropio = atributoPropio;
+    }
+}
+```
+
+### Ejemplo paso a paso:
+
+```java
+// Archivo: Vehiculo.java (PADRE)
+public class Vehiculo {
+    private String marca;
+    private String modelo;
+    private int anio;
+    
+    public Vehiculo(String marca, String modelo, int anio) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.anio = anio;
+    }
+    
+    // GETTERS
+    public String getMarca() { return this.marca; }
+    public String getModelo() { return this.modelo; }
+    public int getAnio() { return this.anio; }
+    
+    public void mostrarInfo() {
+        System.out.println("🚗 " + marca + " " + modelo + " (" + anio + ")");
+    }
+    
+    public void encender() {
+        System.out.println(marca + " " + modelo + " está encendido ✅");
+    }
+}
+
+// Archivo: Auto.java (HIJA)
+public class Auto extends Vehiculo {
+    private int puertas;
+    private String tipoCombustible;
+    
+    public Auto(String marca, String modelo, int anio, int puertas, String combustible) {
+        super(marca, modelo, anio);  // ← Llama al constructor de Vehiculo
+        this.puertas = puertas;
+        this.tipoCombustible = combustible;
+    }
+    
+    public int getPuertas() { return this.puertas; }
+    
+    @Override
+    public void mostrarInfo() {
+        System.out.println("🚗 " + getMarca() + " " + getModelo() + " (" + getAnio() + ")");
+        System.out.println("   Puertas: " + puertas + " | Combustible: " + tipoCombustible);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Auto hereda todo de Vehiculo
+        Auto a1 = new Auto("Toyota", "Corolla", 2023, 4, "Gasolina");
+        a1.mostrarInfo();  // ← Usa el método sobrescrito
+        a1.encender();     // ← Usa el método heredado
+        
+        System.out.println();
+        
+        // Otro auto
+        Auto a2 = new Auto("Honda", "Civic", 2024, 2, "Gasolina");
+        a2.mostrarInfo();
+        a2.encender();
+    }
+}
+```
+
+### 📖 Paso a paso:
+
+1. **`Auto extends Vehiculo`** → Auto hereda TODO de Vehiculo
+2. **`super(marca, modelo, anio)`** → Llama al constructor de Vehiculo
+3. **Auto tiene**: marca, modelo, anio (heredados) + puertas, combustible (propios)
+4. **`@Override`** → Sobrescribe el método del padre con versión nueva
+
+---
+
+## 🚀 Paso 2: `@Override` (Sobrescribir)
+
+### ¿Qué es?
+
+Es **reemplazar** un método del padre con tu propia versión en el hijo.
+
+### Ejemplo:
+
+```java
+public class Animal {
+    public void hacerSonido() {
+        System.out.println("...");
+    }
+}
+
+public class Perro extends Animal {
+    @Override
+    public void hacerSonido() {
+        System.out.println("¡Guau! 🐕");
+    }
+}
+
+public class Gato extends Animal {
+    @Override
+    public void hacerSonido() {
+        System.out.println("¡Miau! 🐱");
+    }
+}
+```
+
+---
+
+## 💪 Ejercicios Guiados (Combinando Todo)
+
+<ExerciseBlock id={1} title="Herencia: Empleado y sus tipos" difficulty="easy">
+  Crea clase `Empleado` (padre) con `nombre`, `salarioBase`. Luego `Gerente` y `Vendedor` que hereden.
+
+  <div slot="hint1">
+    `Empleado` es padre. `Gerente extends Empleado` y `Vendedor extends Empleado`.
+  </div>
+
+  <div slot="hint2">
+    Constructor hijo: `super(nombre, salarioBase)` y luego atributos propios.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Empleado.java (PADRE)
+public class Empleado {
+    private String nombre;
+    private double salarioBase;
+    
+    public Empleado(String nombre, double salarioBase) {
+        this.nombre = nombre;
+        this.salarioBase = salarioBase;
+    }
+    
+    public String getNombre() { return this.nombre; }
+    public double getSalarioBase() { return this.salarioBase; }
+    
+    public void mostrarInfo() {
+        System.out.println("👤 " + nombre + " | Salario: $" + salarioBase);
+    }
+}
+
+// Archivo: Gerente.java (HIJA)
+public class Gerente extends Empleado {
+    private String departamento;
+    private int equipo;
+    
+    public Gerente(String nombre, double salario, String depto, int equipo) {
+        super(nombre, salario);
+        this.departamento = depto;
+        this.equipo = equipo;
+    }
+    
+    @Override
+    public void mostrarInfo() {
+        System.out.println("👔 GERENTE: " + getNombre());
+        System.out.println("   Salario: $" + getSalarioBase());
+        System.out.println("   Departamento: " + departamento);
+        System.out.println("   Equipo: " + equipo + " personas");
+    }
+}
+
+// Archivo: Vendedor.java (HIJA)
+public class Vendedor extends Empleado {
+    private double comision;
+    private int ventasMes;
+    
+    public Vendedor(String nombre, double salario, double comision) {
+        super(nombre, salario);
+        this.comision = comision;
+        this.ventasMes = 0;
+    }
+    
+    public void registrarVenta(double monto) {
+        ventasMes++;
+        System.out.println("✅ Venta registrada: $" + monto);
+    }
+    
+    @Override
+    public void mostrarInfo() {
+        System.out.println("💼 VENDEDOR: " + getNombre());
+        System.out.println("   Salario: $" + getSalarioBase());
+        System.out.println("   Comisión: " + comision + "%");
+        System.out.println("   Ventas del mes: " + ventasMes);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Gerente g1 = new Gerente("Ana", 3000, "Ventas", 5);
+        Vendedor v1 = new Vendedor("Luis", 1500, 10);
+        
+        g1.mostrarInfo();
+        System.out.println();
+        v1.mostrarInfo();
+        v1.registrarVenta(250);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Herencia + if: Cuenta Bancaria especializada" difficulty="medium">
+  Crea `CuentaBancaria` (padre) y `CuentaAhorro` e `CuentaCorriente` (hijas) con reglas diferentes.
+
+  <div slot="hint1">
+    `CuentaAhorro` gana interés. `CuentaCorriente` permite sobregiro.
+  </div>
+
+  <div slot="hint2">
+    Cada hija sobrescribe `retirar()` con sus reglas propias.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: CuentaBancaria.java (PADRE)
+public class CuentaBancaria {
+    private String titular;
+    protected double saldo;  // ← protected: hijas pueden acceder
+    
+    public CuentaBancaria(String titular, double saldoInicial) {
+        this.titular = titular;
+        this.saldo = saldoInicial;
+    }
+    
+    public String getTitular() { return this.titular; }
+    public double getSaldo() { return this.saldo; }
+    
+    public void depositar(double cantidad) {
+        if (cantidad > 0) {
+            saldo += cantidad;
+            System.out.println("✅ Depósito: $" + cantidad);
+        }
+    }
+    
+    public boolean retirar(double cantidad) {
+        if (cantidad > saldo) {
+            System.out.println("❌ Fondos insuficientes");
+            return false;
+        }
+        saldo -= cantidad;
+        System.out.println("✅ Retiro: $" + cantidad);
+        return true;
+    }
+    
+    public void mostrarEstado() {
+        System.out.println("🏦 " + titular + " | Saldo: $" + saldo);
+    }
+}
+
+// Archivo: CuentaAhorro.java (HIJA)
+public class CuentaAhorro extends CuentaBancaria {
+    private double tasaInteres;
+    
+    public CuentaAhorro(String titular, double saldo, double tasa) {
+        super(titular, saldo);
+        this.tasaInteres = tasa;
+    }
+    
+    public void aplicarInteres() {
+        double interes = saldo * tasaInteres;
+        saldo += interes;
+        System.out.println("💰 Interés aplicado: $" + interes);
+    }
+    
+    @Override
+    public void mostrarEstado() {
+        System.out.println("💰 CUENTA AHORRO: " + getTitular());
+        System.out.println("   Saldo: $" + saldo + " | Tasa: " + (tasaInteres * 100) + "%");
+    }
+}
+
+// Archivo: CuentaCorriente.java (HIJA)
+public class CuentaCorriente extends CuentaBancaria {
+    private double sobregiro;  // Límite extra
+    
+    public CuentaCorriente(String titular, double saldo, double sobregiro) {
+        super(titular, saldo);
+        this.sobregiro = sobregiro;
+    }
+    
+    @Override
+    public boolean retirar(double cantidad) {
+        double limite = saldo + sobregiro;
+        
+        if (cantidad > limite) {
+            System.out.println("❌ Excede límite (saldo + sobregiro: $" + limite + ")");
+            return false;
+        }
+        
+        saldo -= cantidad;
+        System.out.println("✅ Retiro: $" + cantidad + " | Saldo: $" + saldo);
+        return true;
+    }
+    
+    @Override
+    public void mostrarEstado() {
+        System.out.println("🏢 CUENTA CORRIENTE: " + getTitular());
+        System.out.println("   Saldo: $" + saldo + " | Sobregiro: $" + sobregiro);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        CuentaAhorro ca = new CuentaAhorro("Ana", 1000, 0.05);
+        CuentaCorriente cc = new CuentaCorriente("Luis", 500, 200);
+        
+        ca.mostrarEstado();
+        ca.aplicarInteres();
+        ca.mostrarEstado();
+        
+        System.out.println();
+        
+        cc.mostrarEstado();
+        cc.retirar(600);  // Usa sobregiro
+        cc.mostrarEstado();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Herencia + for: Sistema de figuras" difficulty="medium">
+  Crea `FiguraGeometrica` (padre) y `Circulo`, `Rectangulo`, `Triangulo` (hijas). Calcula áreas diferentes.
+
+  <div slot="hint1">
+    Padre tiene `String color`. Hijas agregan radio, base/altura, etc.
+  </div>
+
+  <div slot="hint2">
+    Cada hija sobrescribe `calcularArea()` con su fórmula.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: FiguraGeometrica.java (PADRE)
+public class FiguraGeometrica {
+    private String color;
+    
+    public FiguraGeometrica(String color) {
+        this.color = color;
+    }
+    
+    public String getColor() { return this.color; }
+    
+    public double calcularArea() {
+        return 0;  // Se sobrescribe en hijas
+    }
+    
+    public void mostrarInfo() {
+        System.out.println("🎨 Figura " + color + " | Área: " + calcularArea());
+    }
+}
+
+// Archivo: Circulo.java (HIJA)
+public class Circulo extends FiguraGeometrica {
+    private double radio;
+    
+    public Circulo(String color, double radio) {
+        super(color);
+        this.radio = radio;
+    }
+    
+    @Override
+    public double calcularArea() {
+        return Math.PI * radio * radio;
+    }
+    
+    @Override
+    public void mostrarInfo() {
+        System.out.println("⭕ CÍRCULO " + getColor());
+        System.out.println("   Radio: " + radio + " | Área: " + String.format("%.2f", calcularArea()));
+    }
+}
+
+// Archivo: Rectangulo.java (HIJA)
+public class Rectangulo extends FiguraGeometrica {
+    private double base;
+    private double altura;
+    
+    public Rectangulo(String color, double base, double altura) {
+        super(color);
+        this.base = base;
+        this.altura = altura;
+    }
+    
+    @Override
+    public double calcularArea() {
+        return base * altura;
+    }
+    
+    @Override
+    public void mostrarInfo() {
+        System.out.println("▭ RECTÁNGULO " + getColor());
+        System.out.println("   Base: " + base + " | Altura: " + altura);
+        System.out.println("   Área: " + calcularArea());
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Circulo c = new Circulo("Rojo", 5);
+        Rectangulo r = new Rectangulo("Azul", 10, 4);
+        
+        c.mostrarInfo();
+        System.out.println();
+        r.mostrarInfo();
+        
+        // Array de figuras (polimorfismo básico)
+        System.out.println("\n--- TODAS LAS FIGURAS ---\n");
+        FiguraGeometrica[] figuras = {c, r};
+        
+        for (FiguraGeometrica fig : figuras) {
+            fig.mostrarInfo();
+            System.out.println();
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Herencia + while: Sistema de transporte" difficulty="hard">
+  Crea `Vehiculo` (padre), `Autobus`, `Tren`, `Bicicleta` (hijas). Simula un día de trabajo.
+
+  <div slot="hint1">
+    Cada vehículo tiene `velocidad`, `pasajeros`, `destino` diferentes.
+  </div>
+
+  <div slot="hint2">
+    Método `trabajar()` simula viajes con `while` hasta cumplir meta.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Vehiculo.java (PADRE)
+public class Vehiculo {
+    protected String nombre;
+    protected int capacidad;
+    protected double velocidad;
+    protected int viajesRealizados;
+    
+    public Vehiculo(String nombre, int capacidad, double velocidad) {
+        this.nombre = nombre;
+        this.capacidad = capacidad;
+        this.velocidad = velocidad;
+        this.viajesRealizados = 0;
+    }
+    
+    public String getNombre() { return this.nombre; }
+    public int getViajesRealizados() { return this.viajesRealizados; }
+    
+    public void trabajar(int metaViajes) {
+        System.out.println("🚀 " + nombre + " INICIA TRABAJO");
+        System.out.println("   Meta: " + metaViajes + " viajes\n");
+        
+        while (viajesRealizados < metaViajes) {
+            viajesRealizados++;
+            System.out.println("   Viaje #" + viajesRealizados + " completado");
+        }
+        
+        System.out.println("✅ " + nombre + " terminó su turno!\n");
+    }
+    
+    public void mostrarInfo() {
+        System.out.println("🚗 " + nombre + " (Cap: " + capacidad + ", Vel: " + velocidad + " km/h)");
+        System.out.println("   Viajes realizados: " + viajesRealizados);
+    }
+}
+
+// Archivo: Autobus.java (HIJA)
+public class Autobus extends Vehiculo {
+    private String ruta;
+    
+    public Autobus(String nombre, int capacidad, double velocidad, String ruta) {
+        super(nombre, capacidad, velocidad);
+        this.ruta = ruta;
+    }
+    
+    @Override
+    public void trabajar(int metaViajes) {
+        System.out.println("🚌 AUTOBUS: " + nombre + " | Ruta: " + ruta);
+        System.out.println("   Capacidad: " + capacidad + " pasajeros");
+        System.out.println("   Meta: " + metaViajes + " viajes\n");
+        
+        while (viajesRealizados < metaViajes) {
+            viajesRealizados++;
+            int pasajeros = (int)(Math.random() * capacidad) + 1;
+            System.out.println("   Viaje #" + viajesRealizados + ": " + pasajeros + " pasajeros");
+        }
+        
+        System.out.println("✅ Autobus terminó su turno!\n");
+    }
+}
+
+// Archivo: Tren.java (HIJA)
+public class Tren extends Vehiculo {
+    private int vagones;
+    
+    public Tren(String nombre, int capacidad, double velocidad, int vagones) {
+        super(nombre, capacidad, velocidad);
+        this.vagones = vagones;
+    }
+    
+    @Override
+    public void trabajar(int metaViajes) {
+        System.out.println("🚂 TREN: " + nombre + " | Vagones: " + vagones);
+        
+        while (viajesRealizados < metaViajes) {
+            viajesRealizados++;
+            System.out.println("   Viaje #" + viajesRealizados + " (" + vagones + " vagones)");
+        }
+        
+        System.out.println("✅ Tren terminó!\n");
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Autobus a1 = new Autobus("Ruta 1", 50, 60, "Centro-Norte");
+        Tren t1 = new Tren("Expreso", 200, 120, 8);
+        
+        System.out.println("🚌 🚂 SISTEMA DE TRANSPORTE\n");
+        
+        a1.trabajar(5);
+        t1.trabajar(3);
+        
+        a1.mostrarInfo();
+        t1.mostrarInfo();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Herencia múltiple niveles: Videojuego RPG" difficulty="hard">
+  Crea `Personaje` → `Guerrero`/`Mago` → `Paladín`/`Hechicero` (3 niveles).
+
+  <div slot="hint1">
+    `Personaje` tiene `nombre`, `vida`, `nivel`. `Guerrero extends Personaje` agrega `fuerza`. `Paladin extends Guerrero` agrega `cura`.
+  </div>
+
+  <div slot="hint2">
+    Cada nivel agrega atributos y sobrescribe métodos.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Personaje.java (NIVEL 1)
+public class Personaje {
+    private String nombre;
+    private int vida;
+    private int nivel;
+    
+    public Personaje(String nombre, int vida, int nivel) {
+        this.nombre = nombre;
+        this.vida = vida;
+        this.nivel = nivel;
+    }
+    
+    public String getNombre() { return this.nombre; }
+    public int getVida() { return this.vida; }
+    public int getNivel() { return this.nivel; }
+    
+    public void atacar() {
+        System.out.println(nombre + " ataca!");
+    }
+    
+    public void mostrarStats() {
+        System.out.println("👤 " + nombre);
+        System.out.println("   ❤️ Vida: " + vida + " | ⭐ Nivel: " + nivel);
+    }
+}
+
+// Archivo: Guerrero.java (NIVEL 2)
+public class Guerrero extends Personaje {
+    private int fuerza;
+    
+    public Guerrero(String nombre, int vida, int nivel, int fuerza) {
+        super(nombre, vida, nivel);
+        this.fuerza = fuerza;
+    }
+    
+    public int getFuerza() { return this.fuerza; }
+    
+    @Override
+    public void atacar() {
+        System.out.println("⚔️ " + getNombre() + " ataca con espada! (Daño: " + fuerza + ")");
+    }
+}
+
+// Archivo: Mago.java (NIVEL 2)
+public class Mago extends Personaje {
+    private int mana;
+    private int poderMagico;
+    
+    public Mago(String nombre, int vida, int nivel, int mana, int poder) {
+        super(nombre, vida, nivel);
+        this.mana = mana;
+        this.poderMagico = poder;
+    }
+    
+    @Override
+    public void atacar() {
+        System.out.println("🔮 " + getNombre() + " lanza hechizo! (Daño: " + poderMagico + ")");
+    }
+}
+
+// Archivo: Paladin.java (NIVEL 3)
+public class Paladin extends Guerrero {
+    private int curacion;
+    
+    public Paladin(String nombre, int vida, int nivel, int fuerza, int curacion) {
+        super(nombre, vida, nivel, fuerza);
+        this.curacion = curacion;
+    }
+    
+    public void curar(Personaje objetivo) {
+        System.out.println("✨ " + getNombre() + " cura a " + objetivo.getNombre() + " (+ " + curacion + " HP)");
+    }
+    
+    @Override
+    public void mostrarStats() {
+        super.mostrarStats();
+        System.out.println("   💪 Fuerza: " + getFuerza() + " | 💚 Curación: " + curacion);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Paladin paladin = new Paladin("Arturo", 100, 5, 25, 30);
+        Mago mago = new Mago("Merlin", 80, 7, 50, 40);
+        
+        System.out.println("🎮 PERSONAJES RPG\n");
+        
+        paladin.mostrarStats();
+        paladin.atacar();
+        paladin.curar(mago);
+        
+        System.out.println();
+        
+        mago.mostrarStats();
+        mago.atacar();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={18}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué palabra clave usas para que una clase herede de otra?"
+    options={[
+      { text: 'inherits', correct: false },
+      { text: 'extends', correct: true },
+      { text: 'super', correct: false },
+      { text: 'implements', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="¿Qué hace `super()` en un constructor hijo?"
+    options={[
+      { text: 'Crea un nuevo objeto padre', correct: false },
+      { text: 'Llama al constructor de la clase padre', correct: true },
+      { text: 'Elimina el padre', correct: false },
+      { text: 'Copia los métodos del padre', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="¿Qué significa `@Override`?"
+    options={[
+      { text: 'El método es nuevo en el hijo', correct: false },
+      { text: 'El método reemplaza al del padre', correct: true },
+      { text: 'El método es static', correct: false },
+      { text: 'El método es private', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="Si `Auto extends Vehiculo`, ¿qué tiene Auto?"
+    options={[
+      { text: 'Solo sus propios atributos', correct: false },
+      { text: 'Solo los atributos de Vehiculo', correct: false },
+      { text: 'Los de Vehiculo + los suyos propios', correct: true },
+      { text: 'Nada', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="¿Puedes tener herencia de 3 niveles (A → B → C)?"
+    options={[
+      { text: 'No, solo 2 niveles', correct: false },
+      { text: 'Sí, C hereda de B que hereda de A', correct: true },
+      { text: 'Solo si todas son abstractas', correct: false },
+      { text: 'Solo en Java 8+', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo qué es herencia y para qué sirve',
+    'Puedo crear clases hijas con extends',
+    'Uso super() para llamar al constructor del padre',
+    'Puedo sobrescribir métodos con @Override',
+    'Completé el sistema de transporte con herencia',
+    'Completé el sistema RPG con 3 niveles de herencia',
+    'Entiendo que las hijas heredan atributos Y métodos',
+    'Puedo crear jerarquías de clases organizadas'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "constructor ... cannot be applied"
+
+**Problema**: No llamaste a `super()` correctamente.
+
+**Solución**: El constructor hijo DEBE llamar a `super()` con los parámetros del padre:
+```java
+public class Hijo extends Padre {
+    public Hijo(parametrosPadre, parametrosHijo) {
+        super(parametrosPadre);  // ← PRIMERA línea
+        // ...
+    }
+}
+```
+
+### Error: "has private access" en atributo del padre
+
+**Problema**: La hija no puede acceder a atributos `private` del padre.
+
+**Solución**: Usa `protected` en el padre para que las hijas puedan acceder:
+```java
+// Padre
+protected double saldo;  // ← Hijas pueden acceder
+
+// Hija
+public void metodo() {
+    saldo = 100;  // ✅ Funciona con protected
+}
+```
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 18. Ahora sabes:
+- ✅ Qué es herencia y cuándo usarla
+- ✅ Crear clases hijas con `extends`
+- ✅ Usar `super()` en constructores
+- ✅ Sobrescribir métodos con `@Override`
+- ✅ Crear jerarquías de 2-3 niveles
+- ✅ Sistemas de transporte, RPG, figuras, cuentas
+
+**Lo que viene**: Día 19 aprenderás **Polimorfismo e Interfaces** (el poder real de la POO).
+
+**¡Herencia dominada! 🎯** 🚀

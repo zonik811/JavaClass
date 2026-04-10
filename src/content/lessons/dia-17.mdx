@@ -1,9 +1,875 @@
 ---
 day: 17
 title: "Static vs Instancia"
-objective: "Diferenciar miembros estáticos de miembros de instancia"
-topics: ["static", "Métodos estáticos", "Variables estáticas"]
+objective: "Diferenciar static de instancia y combinar ambos en proyectos reales"
+topics: ["static", "Variables de clase", "Métodos estáticos", "Contadores", "Constantes", "this vs static"]
 miniProject: false
 ---
-# Día 17: Static
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy entenderás la diferencia entre **`static`** (de la clase) y **instancia** (del objeto). Aprenderás cuándo usar cada uno y combinarás todo: constructores, encapsulación, `if`, `for`, `while`.
+
+---
+
+## 📋 Antes de Empezar
+
+- **Ya sabes crear clases** con atributos y métodos
+- **Ya sabes usar constructores** y getters/setters
+- **El problema**: A veces quieres datos compartidos por TODOS los objetos
+- **La solución**: `static` (compartido) vs instancia (individual)
+
+---
+
+## 🤔 ¿Qué es `static`?
+
+### La analogía del edificio:
+
+**Instancia** (cada objeto tiene lo suyo):
+- Cada apartamento tiene su propia cocina
+- Cada uno tiene su color de paredes
+- Son independientes
+
+**Static** (compartido por todos):
+- El techo del edificio es de TODOS
+- La estructura es compartida
+- Si cambia el techo, afecta a todos
+
+### En código:
+
+```java
+public class Estudiante {
+    // INSTANCIA: Cada estudiante tiene lo suyo
+    private String nombre;
+    private int edad;
+    
+    // STATIC: Compartido por TODOS los estudiantes
+    private static String escuela = "Colegio Nacional";
+    private static int totalEstudiantes = 0;
+    
+    public Estudiante(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+        totalEstudiantes++;  // ← Compartido!
+    }
+}
+
+// Uso:
+Estudiante e1 = new Estudiante("Ana", 15);
+Estudiante e2 = new Estudiante("Luis", 16);
+
+// e1.nombre = "Ana" (individual)
+// e2.nombre = "Luis" (individual)
+// Pero ambos comparten: escuela = "Colegio Nacional"
+// Y: totalEstudiantes = 2 (compartido!)
+```
+
+---
+
+## 📦 Paso 1: Variables Static vs Instancia
+
+### Ejemplo visual paso a paso:
+
+```java
+public class CuentaBancaria {
+    // INSTANCIA: Cada cuenta tiene lo suyo
+    private String titular;
+    private double saldo;
+    private String numeroCuenta;
+    
+    // STATIC: Compartido por TODAS las cuentas
+    private static String banco = "Banco Nacional";
+    private static int totalCuentas = 0;
+    private static double tasaInteres = 0.05;  // 5%
+    
+    public CuentaBancaria(String titular, double saldoInicial) {
+        this.titular = titular;
+        this.saldo = saldoInicial;
+        this.numeroCuenta = "CUENTA-" + (totalCuentas + 1);
+        totalCuentas++;  // ← Compartido! Incrementa con cada cuenta
+    }
+    
+    // GETTERS de instancia
+    public String getTitular() { return this.titular; }
+    public double getSaldo() { return this.saldo; }
+    public String getNumeroCuenta() { return this.numeroCuenta; }
+    
+    // GETTERS de static (no necesitan this)
+    public static String getBanco() { return banco; }
+    public static int getTotalCuentas() { return totalCuentas; }
+    public static double getTasaInteres() { return tasaInteres; }
+    
+    // SETTER de static (cambia para TODOS)
+    public static void setTasaInteres(double nuevaTasa) {
+        if (nuevaTasa > 0 && nuevaTasa < 1) {
+            tasaInteres = nuevaTasa;
+            System.out.println("✅ Tasa actualizada: " + (tasaInteres * 100) + "%");
+        }
+    }
+    
+    // MÉTODO de instancia
+    public void depositar(double cantidad) {
+        if (cantidad > 0) {
+            saldo = saldo + cantidad;
+            System.out.println("✅ " + titular + " depositó $" + cantidad);
+        }
+    }
+    
+    // MÉTODO estático (no usa atributos de instancia)
+    public static double calcularInteres(double monto) {
+        return monto * tasaInteres;
+    }
+    
+    public void mostrarInfo() {
+        System.out.println("🏦 " + banco + " - " + numeroCuenta);
+        System.out.println("   Titular: " + titular);
+        System.out.println("   Saldo: $" + saldo);
+        System.out.println("   Tasa: " + (tasaInteres * 100) + "%");
+    }
+}
+```
+
+### Cómo se usa:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // Crear cuentas
+        CuentaBancaria c1 = new CuentaBancaria("Ana", 1000);
+        CuentaBancaria c2 = new CuentaBancaria("Luis", 2000);
+        CuentaBancaria c3 = new CuentaBancaria("Pedro", 1500);
+        
+        // Mostrar info (cada una tiene su saldo)
+        c1.mostrarInfo();
+        c2.mostrarInfo();
+        c3.mostrarInfo();
+        
+        // Static compartido
+        System.out.println("Total cuentas: " + CuentaBancaria.getTotalCuentas());  // 3
+        System.out.println("Banco: " + CuentaBancaria.getBanco());
+        
+        // Cambiar static (afecta a TODAS)
+        CuentaBancaria.setTasaInteres(0.08);  // 8%
+        System.out.println("\n--- Después de cambiar tasa ---\n");
+        
+        c1.mostrarInfo();  // Ahora muestra 8%
+        c2.mostrarInfo();  // También 8%
+        c3.mostrarInfo();  // También 8%
+        
+        // Método estático (no necesita objeto)
+        double interes = CuentaBancaria.calcularInteres(5000);
+        System.out.println("Interés de $5000: $" + interes);
+    }
+}
+```
+
+---
+
+## 🚀 Paso 2: Cuándo usar cada uno
+
+| Usa **INSTANCIA** cuando | Usa **STATIC** cuando |
+|---------------------------|------------------------|
+| Cada objeto tiene su valor | Todos comparten el valor |
+| Cambia por objeto | Es igual para todos |
+| Ejemplo: `nombre`, `saldo` | Ejemplo: `banco`, `totalCuentas` |
+
+---
+
+## 💪 Ejercicios Guiados (Combinando Todo)
+
+<ExerciseBlock id={1} title="Contador static de objetos" difficulty="easy">
+  Crea una clase `Producto` con `static int totalProductos` que cuente cuántos se han creado.
+
+  <div slot="hint1">
+    En el constructor: `totalProductos++;`
+  </div>
+
+  <div slot="hint2">
+    Getter static: `public static int getTotalProductos() { return totalProductos; }`
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Producto.java
+public class Producto {
+    private String nombre;
+    private double precio;
+    
+    // STATIC: Compartido por todos los productos
+    private static int totalProductos = 0;
+    
+    public Producto(String nombre, double precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+        totalProductos++;  // ← Contador compartido
+    }
+    
+    // GETTERS
+    public String getNombre() { return this.nombre; }
+    public double getPrecio() { return this.precio; }
+    
+    // GETTER STATIC
+    public static int getTotalProductos() {
+        return totalProductos;
+    }
+    
+    public void mostrarInfo() {
+        System.out.println("📦 " + nombre + " - $" + precio);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Total productos: " + Producto.getTotalProductos());
+        
+        Producto p1 = new Producto("Laptop", 999.99);
+        Producto p2 = new Producto("Mouse", 25.50);
+        Producto p3 = new Producto("Teclado", 75.00);
+        
+        System.out.println("Total productos: " + Producto.getTotalProductos());
+        
+        // También puedes llamar desde una instancia
+        System.out.println("Total: " + p1.getTotalProductos());
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Constante static final" difficulty="easy">
+  Crea una clase `Matematicas` con constantes `static final` para PI, E, y métodos estáticos.
+
+  <div slot="hint1">
+    `public static final double PI = 3.14159265359;`
+  </div>
+
+  <div slot="hint2">
+    Los métodos static no necesitan `this`: `public static double areaCirculo(double radio)`.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Matematicas.java
+public class Matematicas {
+    // CONSTANTES STATIC FINAL (no cambian nunca)
+    public static final double PI = 3.14159265359;
+    public static final double E = 2.71828182846;
+    public static final double PHI = 1.61803398875;
+    
+    // MÉTODOS STATIC (no necesitan objeto)
+    public static double areaCirculo(double radio) {
+        return PI * radio * radio;
+    }
+    
+    public static double circunferencia(double radio) {
+        return 2 * PI * radio;
+    }
+    
+    public static double areaRectangulo(double base, double altura) {
+        return base * altura;
+    }
+    
+    public static double promedio(double... numeros) {
+        double suma = 0;
+        for (double n : numeros) {
+            suma = suma + n;
+        }
+        return suma / numeros.length;
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Usar constantes
+        System.out.println("PI: " + Matematicas.PI);
+        System.out.println("E: " + Matematicas.E);
+        System.out.println("PHI: " + Matematicas.PHI);
+        
+        // Usar métodos static (sin crear objetos!)
+        System.out.println("\nÁrea círculo (radio 5): " + Matematicas.areaCirculo(5));
+        System.out.println("Circunferencia (radio 5): " + Matematicas.circunferencia(5));
+        System.out.println("Promedio: " + Matematicas.promedio(85, 92, 78, 95, 88));
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Static + if: Validador de emails" difficulty="medium">
+  Crea una clase `ValidadorEmail` con método static `esValido(String email)` que verifique si tiene @ y dominio.
+
+  <div slot="hint1">
+    Usa `email.contains("@")` y `email.indexOf('@')` para validar.
+  </div>
+
+  <div slot="hint2">
+    Cuenta válidos/inválidos con static counters.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: ValidadorEmail.java
+public class ValidadorEmail {
+    private static int validos = 0;
+    private static int invalidos = 0;
+    
+    public static boolean esValido(String email) {
+        // Debe tener @
+        if (!email.contains("@")) {
+            System.out.println("❌ " + email + " → No tiene @");
+            invalidos++;
+            return false;
+        }
+        
+        // @ no puede estar al inicio o final
+        int arrobaIndex = email.indexOf('@');
+        if (arrobaIndex == 0 || arrobaIndex == email.length() - 1) {
+            System.out.println("❌ " + email + " → @ en posición inválida");
+            invalidos++;
+            return false;
+        }
+        
+        // Debe tener un punto después de @
+        String dominio = email.substring(arrobaIndex + 1);
+        if (!dominio.contains(".")) {
+            System.out.println("❌ " + email + " → Dominio inválido");
+            invalidos++;
+            return false;
+        }
+        
+        System.out.println("✅ " + email + " → Válido");
+        validos++;
+        return true;
+    }
+    
+    public static void mostrarEstadisticas() {
+        System.out.println("\n📊 ESTADÍSTICAS DE VALIDACIÓN");
+        System.out.println("══════════════════");
+        System.out.println("✅ Válidos: " + validos);
+        System.out.println("❌ Inválidos: " + invalidos);
+        System.out.println("Total: " + (validos + invalidos));
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        ValidadorEmail.esValido("ana@email.com");
+        ValidadorEmail.esValido("luis@correo.org");
+        ValidadorEmail.esValido("invalido");
+        ValidadorEmail.esValido("@sininicio.com");
+        ValidadorEmail.esValido("sinfinal@");
+        ValidadorEmail.esValido("pedro@empresa.co");
+        
+        ValidadorEmail.mostrarEstadisticas();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Static + for: Generador de IDs únicos" difficulty="medium">
+  Crea una clase `Usuario` con `static int ultimoID` que genere IDs automáticos.
+
+  <div slot="hint1">
+    En el constructor: `this.id = ++ultimoID;` (pre-incremento).
+  </div>
+
+  <div slot="hint2">
+    Cada usuario tiene su `id` individual, pero `ultimoID` es compartido.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Usuario.java
+public class Usuario {
+    private String nombre;
+    private String email;
+    private int id;  // Individual
+    
+    // STATIC: Compartido para generar IDs únicos
+    private static int ultimoID = 0;
+    private static int totalUsuarios = 0;
+    
+    public Usuario(String nombre, String email) {
+        this.nombre = nombre;
+        this.email = email;
+        this.id = ++ultimoID;  // ← Pre-incremento compartido
+        totalUsuarios++;
+    }
+    
+    // GETTERS
+    public String getNombre() { return this.nombre; }
+    public String getEmail() { return this.email; }
+    public int getId() { return this.id; }
+    
+    public static int getTotalUsuarios() { return totalUsuarios; }
+    public static int getUltimoID() { return ultimoID; }
+    
+    public void mostrarInfo() {
+        System.out.println("👤 [" + id + "] " + nombre + " (" + email + ")");
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Usuario u1 = new Usuario("Ana", "ana@email.com");
+        Usuario u2 = new Usuario("Luis", "luis@email.com");
+        Usuario u3 = new Usuario("Pedro", "pedro@email.com");
+        
+        u1.mostrarInfo();
+        u2.mostrarInfo();
+        u3.mostrarInfo();
+        
+        System.out.println("\n📊 Estadísticas:");
+        System.out.println("Total usuarios: " + Usuario.getTotalUsuarios());
+        System.out.println("Último ID: " + Usuario.getUltimoID());
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Static + while: Sistema de turnos" difficulty="hard">
+  Crea una clase `Turno` con `static int numeroActual` y métodos para atender pacientes.
+
+  <div slot="hint1">
+    `static int numeroActual = 0` y `static int totalAtendidos = 0`.
+  </div>
+
+  <div slot="hint2">
+    `siguienteTurno()` incrementa y retorna número. `atender()` simula atención con `while`.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Turno.java
+public class Turno {
+    private String paciente;
+    private int numero;
+    private boolean atendido;
+    
+    // STATIC: Compartido por todos los turnos
+    private static int siguienteNumero = 1;
+    private static int totalAtendidos = 0;
+    private static int totalPacientes = 0;
+    
+    public Turno(String paciente) {
+        this.paciente = paciente;
+        this.numero = siguienteNumero++;  // ← Asigna y incrementa
+        this.atendido = false;
+        totalPacientes++;
+    }
+    
+    // GETTERS
+    public String getPaciente() { return this.paciente; }
+    public int getNumero() { return this.numero; }
+    public boolean isAtendido() { return this.atendido; }
+    
+    // STATIC GETTERS
+    public static int getSiguienteNumero() { return siguienteNumero; }
+    public static int getTotalAtendidos() { return totalAtendidos; }
+    public static int getTotalPacientes() { return totalPacientes; }
+    
+    // MÉTODOS
+    public void atender() {
+        if (!atendido) {
+            System.out.println("🏥 Atendiendo turno #" + numero + ": " + paciente);
+            
+            // Simular tiempo con while
+            int segundos = 3;
+            while (segundos > 0) {
+                System.out.println("   ⏱️ " + segundos + "...");
+                segundos--;
+            }
+            
+            this.atendido = true;
+            totalAtendidos++;
+            System.out.println("   ✅ Turno #" + numero + " completado\n");
+        }
+    }
+    
+    public static void mostrarEstadisticas() {
+        System.out.println("\n📊 ESTADÍSTICAS DEL DÍA");
+        System.out.println("══════════════════");
+        System.out.println("Total pacientes: " + totalPacientes);
+        System.out.println("Atendidos: " + totalAtendidos);
+        System.out.println("En espera: " + (totalPacientes - totalAtendidos));
+        System.out.println("Siguiente turno: #" + siguienteNumero);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Crear turnos
+        Turno t1 = new Turno("Ana García");
+        Turno t2 = new Turno("Luis Pérez");
+        Turno t3 = new Turno("María López");
+        Turno t4 = new Turno("Carlos Ruiz");
+        
+        System.out.println("🏥 CONSULTORIO MÉDICO\n");
+        System.out.println("Turnos asignados:");
+        System.out.println(t1.getPaciente() + " → #" + t1.getNumero());
+        System.out.println(t2.getPaciente() + " → #" + t2.getNumero());
+        System.out.println(t3.getPaciente() + " → #" + t3.getNumero());
+        System.out.println(t4.getPaciente() + " → #" + t4.getNumero());
+        
+        System.out.println("\n--- ATENCIÓN ---\n");
+        
+        // Atender uno por uno
+        t1.atender();
+        t2.atender();
+        t3.atender();
+        t4.atender();
+        
+        Turno.mostrarEstadisticas();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios Dinámicos (Proyectos Mini)
+
+<ExerciseBlock id={6} title="Mini-Proyecto: Sistema de votación con static" difficulty="hard">
+  Crea una clase `Candidato` con `static int totalVotos`. Cada candidato tiene su `votosRecibidos`.
+
+  <div slot="hint1">
+    `static int totalVotos` se incrementa cuando alguien vota por cualquier candidato.
+  </div>
+
+  <div slot="hint2">
+    `votar()` incrementa `votosRecibidos` individual y `totalVotos` compartido.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Candidato.java
+public class Candidato {
+    private String nombre;
+    private String partido;
+    private int votosRecibidos;
+    
+    // STATIC: Compartido por todos los candidatos
+    private static int totalVotos = 0;
+    
+    public Candidato(String nombre, String partido) {
+        this.nombre = nombre;
+        this.partido = partido;
+        this.votosRecibidos = 0;
+    }
+    
+    // GETTERS
+    public String getNombre() { return this.nombre; }
+    public String getPartido() { return this.partido; }
+    public int getVotosRecibidos() { return this.votosRecibidos; }
+    public static int getTotalVotos() { return totalVotos; }
+    
+    // MÉTODOS
+    public void votar() {
+        this.votosRecibidos++;
+        totalVotos++;
+    }
+    
+    public double getPorcentaje() {
+        if (totalVotos == 0) return 0;
+        return (double) this.votosRecibidos / totalVotos * 100;
+    }
+    
+    public void mostrarResultados() {
+        String barra = "";
+        int largoBarra = (int)(this.getPorcentaje() / 2);
+        for (int i = 0; i < largoBarra; i++) {
+            barra += "█";
+        }
+        
+        System.out.println(this.nombre + " (" + this.partido + ")");
+        System.out.println("  Votos: " + this.votosRecibidos + " (" + String.format("%.1f", this.getPorcentaje()) + "%) " + barra);
+        System.out.println("");
+    }
+    
+    public static void mostrarResumenFinal() {
+        System.out.println("\n📊 RESULTADOS FINALES");
+        System.out.println("══════════════════");
+        System.out.println("Total de votos: " + totalVotos);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Crear candidatos
+        Candidato c1 = new Candidato("Ana", "Partido A");
+        Candidato c2 = new Candidato("Luis", "Partido B");
+        Candidato c3 = new Candidato("Pedro", "Partido C");
+        
+        // Simular votación
+        int[] votosC1 = {45, 30, 25};
+        int[] votosC2 = {35, 40, 30};
+        int[] votosC3 = {20, 30, 45};
+        
+        System.out.println("🗳️ SIMULACIÓN DE VOTACIÓN\n");
+        
+        // Votos por zonas
+        String[] zonas = {"Zona Norte", "Zona Sur", "Zona Centro"};
+        
+        for (int z = 0; z < zonas.length; z++) {
+            System.out.println("--- " + zonas[z] + " ---");
+            
+            for (int i = 0; i < votosC1[z]; i++) c1.votar();
+            for (int i = 0; i < votosC2[z]; i++) c2.votar();
+            for (int i = 0; i < votosC3[z]; i++) c3.votar();
+            
+            System.out.println("Votos registrados: " + Candidato.getTotalVotos() + "\n");
+        }
+        
+        // Mostrar resultados
+        System.out.println("📊 RESULTADOS\n");
+        c1.mostrarResultados();
+        c2.mostrarResultados();
+        c3.mostrarResultados();
+        
+        Candidato.mostrarResumenFinal();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Mini-Proyecto: Conversor universal con static" difficulty="hard">
+  Crea una clase `ConversorMoneda` con tasas de cambio `static` y métodos para convertir.
+
+  <div slot="hint1">
+    `static double tasaDolar = 1.05`, `static double tasaEuro = 0.92`, etc.
+  </div>
+
+  <div slot="hint2">
+    Métodos static: `dolaresAEuros()`, `eurosADolares()`, etc.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: ConversorMoneda.java
+public class ConversorMoneda {
+    // STATIC: Tasas compartidas (todas las conversiones usan las mismas)
+    private static double tasaDolar = 1.05;  // 1€ = $1.05
+    private static double tasaEuro = 0.92;   // $1 = €0.92
+    private static double tasaLibra = 0.79;  // 1€ = £0.79
+    private static double tasaYen = 160.0;   // 1€ = ¥160
+    
+    private static int totalConversiones = 0;
+    
+    // MÉTODOS STATIC
+    public static double dolaresAEuros(double dolares) {
+        totalConversiones++;
+        return dolares * tasaEuro;
+    }
+    
+    public static double eurosADolares(double euros) {
+        totalConversiones++;
+        return euros * tasaDolar;
+    }
+    
+    public static double eurosALibras(double euros) {
+        totalConversiones++;
+        return euros * tasaLibra;
+    }
+    
+    public static double eurosAYen(double euros) {
+        totalConversiones++;
+        return euros * tasaYen;
+    }
+    
+    public static void actualizarTasa(String moneda, double nuevaTasa) {
+        switch (moneda) {
+            case "dolar":
+                tasaDolar = nuevaTasa;
+                break;
+            case "euro":
+                tasaEuro = nuevaTasa;
+                break;
+            case "libra":
+                tasaLibra = nuevaTasa;
+                break;
+            case "yen":
+                tasaYen = nuevaTasa;
+                break;
+            default:
+                System.out.println("❌ Moneda no válida");
+                return;
+        }
+        System.out.println("✅ Tasa de " + moneda + " actualizada");
+    }
+    
+    public static void mostrarInfo() {
+        System.out.println("\n💱 TASAS DE CAMBIO (1€ = )");
+        System.out.println("══════════════════");
+        System.out.println("$ Dólar: " + tasaDolar);
+        println("€ Euro: " + tasaEuro);
+        System.out.println("£ Libra: " + tasaLibra);
+        System.out.println("¥ Yen: " + tasaYen);
+        System.out.println("\nConversiones realizadas: " + totalConversiones);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("💱 CONVERSOR DE MONEDAS\n");
+        
+        // Conversiones
+        double euros = 100;
+        System.out.println(euros + "€ = $" + ConversorMoneda.eurosADolares(euros));
+        System.out.println(euros + "€ = £" + ConversorMoneda.eurosALibras(euros));
+        System.out.println(euros + "€ = ¥" + ConversorMoneda.eurosAYen(euros));
+        
+        // Reverse
+        double dolares = 100;
+        System.out.println("\n$" + dolares + " = " + ConversorMoneda.dolaresAEuros(dolares) + "€");
+        
+        // Mostrar info
+        ConversorMoneda.mostrarInfo();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={17}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué diferencia hay entre una variable `static` y una de instancia?"
+    options={[
+      { text: 'No hay diferencia', correct: false },
+      { text: 'Static es compartida por todos los objetos, instancia es individual', correct: true },
+      { text: 'Static es más lenta', correct: false },
+      { text: 'Instancia es compartida, static es individual', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="¿Cómo accedes a un método static `getTotal()` de la clase `Producto`?"
+    options={[
+      { text: 'p.getTotal() (desde un objeto)', correct: false },
+      { text: 'Producto.getTotal()', correct: true },
+      { text: 'new Producto.getTotal()', correct: false },
+      { text: 'getTotal.Producto()', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="Si cambias una variable static desde un objeto, ¿qué pasa?"
+    options={[
+      { text: 'Solo cambia para ese objeto', correct: false },
+      { text: 'Cambia para TODOS los objetos de esa clase', correct: true },
+      { text: 'Da error', correct: false },
+      { text: 'Se reinicia a 0', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="¿Para qué es bueno usar `static final`?"
+    options={[
+      { text: 'Contadores que cambian', correct: false },
+      { text: 'Constantes que nunca cambian (PI, E, etc.)', correct: true },
+      { text: 'Nombres de usuarios', correct: false },
+      { text: 'Saldos de cuentas', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="¿Un método static puede acceder atributos de instancia?"
+    options={[
+      { text: 'Sí, siempre', correct: false },
+      { text: 'No, porque no sabe de qué objeto hablar', correct: true },
+      { text: 'Solo si es public', correct: false },
+      { text: 'Solo en el constructor', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## 🎁 Reto Opcional: Sistema de Estadísticas de Juego
+
+**Desafío**: Crea una clase `Jugador` con:
+- Instancia: `nombre`, `puntos`, `vidas`, `nivel`
+- Static: `totalJugadores`, `puntuacionMaxima`, `mejorJugador`
+- Métodos: `jugar()`, `perderVida()`, `subirNivel()`, `mostrarStats()`
+
+Luego simula una partida con múltiples jugadores y muestra estadísticas al final.
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo la diferencia entre static e instancia',
+    'Puedo crear variables static compartidas',
+    'Puedo crear métodos static que no necesitan objeto',
+    'Uso static para contadores globales de clase',
+    'Uso static final para constantes',
+    'Completé el sistema de votación con static',
+    'Completé el conversor de monedas con static',
+    'Sé cuándo usar static y cuándo instancia'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "non-static variable cannot be referenced from static context"
+
+**Problema**: Intentas acceder a un atributo de instancia desde un método static.
+
+**Solución**: Los métodos static solo pueden acceder a variables static.
+
+### Error: Confundir cuándo usar static
+
+**Problema**: Haces todo static o nada static.
+
+**Solución**: Pregúntate: "¿Este dato es individual o compartido?"
+- Individual (nombre, saldo) → Instancia
+- Compartido (total, banco, tasa) → Static
+
+### Error: Modificar static desde getter
+
+**Problema**: Tu getter cambia el valor static.
+
+**Solución**: Los getters solo deben leer, nunca modificar.
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 17. Ahora sabes:
+- ✅ Qué es `static` y qué es instancia
+- ✅ Crear variables static compartidas
+- ✅ Crear métodos static sin necesidad de objeto
+- ✅ Usar static para contadores, constantes, utilidades
+- ✅ Combinar static con encapsulación y validaciones
+
+**Lo que viene**: Día 18 aprenderás sobre **Herencia Básica** (crear clases que heredan de otras).
+
+**¡Static bajo control! 🎯** 🚀

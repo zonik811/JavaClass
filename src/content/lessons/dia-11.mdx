@@ -1,9 +1,1122 @@
 ---
 day: 11
 title: "Métodos - Parte 2: Retorno y Parámetros"
-objective: "Crear métodos que devuelven valores y reciben múltiples parámetros"
-topics: ["return", "Parámetros múltiples", "Sobrecarga"]
+objective: "Crear métodos que devuelven resultados (return) combinando if, while, for"
+topics: ["return", "Parámetros múltiples", "Sobrecarga", "if", "while", "for"]
 miniProject: false
 ---
-# Día 11: Métodos Avanzados
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Ayer aprendiste métodos `void` (que solo hacen algo). Hoy darás el salto: métodos que **calculan y devuelven resultados** con `return`. Combinarás todo: `if`, `while`, `for` dentro de métodos con retorno.
+
+---
+
+## 📋 Antes de Empezar
+
+- **Ya sabes crear métodos `void`** con parámetros
+- **Ya conoces `if`, `while`, `for`**
+- **Hoy aprenderás `return`** (devolver valores)
+- **Cada ejercicio es pequeño** y tiene pasos claros
+
+---
+
+## 🔄 Repaso Rápido (2 minutos)
+
+### Void vs Retorno:
+
+```java
+// VOID: Solo HACE algo (imprime)
+public static void saludar(String nombre) {
+    System.out.println("Hola, " + nombre);
+}
+// Uso: saludar("Ana");  ← No guarda nada
+
+// RETORNO: CALCULA y DEVUELVE algo
+public static String generarSaludo(String nombre) {
+    return "Hola, " + nombre;
+}
+// Uso: String msg = generarSaludo("Ana");  ← Guarda el resultado
+```
+
+---
+
+## 🤔 ¿Qué es un Método con Retorno?
+
+### La analogía de la máquina expendedora:
+
+**Void**: Le das una moneda y la máquina hace algo (imprime un recibo). No recibes nada de vuelta.
+
+**Con retorno**: Le das monedas y la máquina **te devuelve** un producto + cambio.
+
+### La diferencia visual:
+
+**Método `void`** (ya lo sabes):
+```java
+public static void saludar(String nombre) {
+    System.out.println("Hola, " + nombre);  // Solo imprime
+}
+// Lo llamas: saludar("Oscar");
+// No te devuelve nada, solo imprime
+```
+
+**Método con retorno** (nuevo):
+```java
+public static String generarSaludo(String nombre) {
+    return "Hola, " + nombre;  // ← DEVUELVE el texto
+}
+// Lo llamas: String mensaje = generarSaludo("Oscar");
+// ¡Ahora tienes el valor guardado para usarlo después!
+```
+
+### 🗺️ Diagrama: ¿Cómo Funciona `return`?
+
+```
+┌─────────────────────────────────────────┐
+│  main() empieza                         │
+│    ↓                                    │
+│  int resultado = sumar(5, 3) ────────┐  │
+│    ↓                                 │  │
+│  (main se PAUSA, espera valor)       │  │
+│    ↓                                 │  │
+│                                ┌──────▼──────┐
+│                                │ sumar(5, 3) │
+│                                │ a=5, b=3    │
+│                                │   ↓         │
+│                                │ suma = 8    │
+│                                │   ↓         │
+│                                │ return 8 ───┼──┐
+│                                └─────────────┘  │
+│                                                 │
+│    ↓                                  ◄────────┘
+│  resultado = 8  (el valor REGRESÓ)
+│    ↓
+│  System.out.println("5+3=" + resultado)
+│    ↓
+│  Imprime: "5+3=8"
+└─────────────────────────────────────────┘
+```
+
+### La fórmula mágica:
+
+```java
+public static TIPO_DE_RETORNO nombreDelMetodo(parámetros) {
+    // Tu código
+    return valor;  // ← Devuelve algo del TIPO que declaraste
+}
+```
+
+### Ejemplo paso a paso:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // Paso 1: LLAMAS al método y GUARDAS el resultado
+        int resultado = sumar(5, 3);
+
+        // Paso 2: USAS el resultado
+        System.out.println("5 + 3 = " + resultado);
+
+        // Paso 3: También puedes usarlo directamente
+        System.out.println("10 + 7 = " + sumar(10, 7));
+    }
+
+    // Aquí defines el método con RETORNO
+    public static int sumar(int a, int b) {
+        int suma = a + b;
+        return suma;  // ← Devuelve el valor a quien llamó
+    }
+}
+```
+
+### 🔍 TRAZA PASO A PASO:
+
+```
+sumar(5, 3):
+  → a = 5, b = 3
+  → suma = 5 + 3 = 8
+  → return 8  ← El valor 8 REGRESA a main()
+  → resultado = 8
+  → Imprime "5 + 3 = 8"
+
+sumar(10, 7):
+  → a = 10, b = 7
+  → suma = 10 + 7 = 17
+  → return 17  ← El valor 17 REGRESA directamente al println
+  → Imprime "10 + 7 = 17"
+```
+
+---
+
+## 🚀 Paso 2: Múltiples `return` con `if`
+
+Un método puede tener **varios `return`**, pero **solo se ejecuta uno**:
+
+```java
+public static String verificarEdad(int edad) {
+    if (edad >= 18) {
+        return "✅ Mayor de edad";  // ← Si entra aquí, SALE
+    } else {
+        return "❌ Menor de edad";  // ← Si entra aquí, SALE
+    }
+    // Nunca llega aquí porque ya retornó
+}
+```
+
+### 🔍 TRAZA PASO A PASO:
+
+```
+verificarEdad(20):
+  → edad = 20
+  → 20 >= 18 ✅ → entra al if
+  → return "✅ Mayor de edad"  ← SALE INMEDIATAMENTE
+  → El valor REGRESA a quien llamó
+
+verificarEdad(15):
+  → edad = 15
+  → 15 >= 18 ❌ → salta al else
+  → return "❌ Menor de edad"  ← SALE INMEDIATAMENTE
+  → El valor REGRESA a quien llamó
+```
+
+### ⚠️ Regla importante:
+
+**Cuando Java ejecuta un `return`, SALE del método inmediatamente.** Todo código después del `return` NUNCA se ejecuta.
+
+```java
+// ❌ Mal - código inalcanzable
+public static int ejemplo(int x) {
+    return x * 2;
+    System.out.println("Esto nunca se ejecuta");  // ERROR!
+}
+
+// ✅ Bien
+public static int ejemplo(int x) {
+    System.out.println("Esto SÍ se ejecuta");
+    return x * 2;
+}
+```
+
+---
+
+## 💪 Ejercicios Guiados (Combinando Todo)
+
+<ExerciseBlock id={1} title="Método con retorno + if: Calcular nota literal" difficulty="easy">
+  Crea un método `notaLiteral(int nota)` que devuelva:
+  - `nota >= 90` → `"A (Excelente)"`
+  - `nota >= 80` → `"B (Muy bien)"`
+  - `nota >= 70` → `"C (Aprobado)"`
+  - `nota < 70` → `"F (Reprobado)"`
+
+  <div slot="hint1">
+    Usa `if`, `else if`, `else` y un `return` en cada bloque.
+  </div>
+
+  <div slot="hint2">
+    ```java
+    if (nota >= 90) {
+        return "A (Excelente)";
+    } else if (nota >= 80) {
+        return "B (Muy bien)";
+    } // ... continúa
+    ```
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("95 → " + notaLiteral(95));
+        System.out.println("85 → " + notaLiteral(85));
+        System.out.println("72 → " + notaLiteral(72));
+        System.out.println("60 → " + notaLiteral(60));
+    }
+
+    public static String notaLiteral(int nota) {
+        if (nota >= 90) {
+            return "A (Excelente)";
+        } else if (nota >= 80) {
+            return "B (Muy bien)";
+        } else if (nota >= 70) {
+            return "C (Aprobado)";
+        } else {
+            return "F (Reprobado)";
+        }
+    }
+}
+```
+
+**🔍 TRAZA PASO A PASO**:
+```
+notaLiteral(95):
+  → 95 >= 90 ✅ → return "A (Excelente)" → SALE
+
+notaLiteral(85):
+  → 85 >= 90 ❌ → salta
+  → 85 >= 80 ✅ → return "B (Muy bien)" → SALE
+
+notaLiteral(72):
+  → 72 >= 90 ❌ → salta
+  → 72 >= 80 ❌ → salta
+  → 72 >= 70 ✅ → return "C (Aprobado)" → SALE
+
+notaLiteral(60):
+  → 60 >= 90 ❌ → salta
+  → 60 >= 80 ❌ → salta
+  → 60 >= 70 ❌ → salta
+  → else → return "F (Reprobado)" → SALE
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Método + for: Sumar rango de números" difficulty="easy">
+  Crea un método `sumarRango(int desde, int hasta)` que devuelva la suma de todos los números desde `desde` hasta `hasta`.
+
+  Ejemplo: `sumarRango(1, 5)` → `1+2+3+4+5 = 15`
+
+  <div slot="hint1">
+    Usa `int total = 0;` y un `for (int i = desde; i <= hasta; i++)`.
+  </div>
+
+  <div slot="hint2">
+    Dentro del for: `total = total + i;` y al final `return total;`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Suma 1 a 5: " + sumarRango(1, 5));
+        System.out.println("Suma 1 a 10: " + sumarRango(1, 10));
+        System.out.println("Suma 10 a 20: " + sumarRango(10, 20));
+    }
+
+    public static int sumarRango(int desde, int hasta) {
+        int total = 0;
+        for (int i = desde; i <= hasta; i++) {
+            total = total + i;
+        }
+        return total;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Método + while: Contar dígitos" difficulty="medium">
+  Crea un método `contarDigitos(int numero)` que devuelva cuántos dígitos tiene un número.
+
+  Ejemplo: `contarDigitos(12345)` → `5`
+
+  <div slot="hint1">
+    Usa `while (numero > 0)` y divide `numero = numero / 10;` en cada vuelta.
+  </div>
+
+  <div slot="hint2">
+    Cuenta las vueltas con un contador. Al final `return contador;`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("12345 tiene " + contarDigitos(12345) + " dígitos");
+        System.out.println("7 tiene " + contarDigitos(7) + " dígito");
+        System.out.println("100000 tiene " + contarDigitos(100000) + " dígitos");
+    }
+
+    public static int contarDigitos(int numero) {
+        if (numero == 0) return 1;  // Caso especial
+
+        int contador = 0;
+        while (numero > 0) {
+            numero = numero / 10;  // Quita el último dígito
+            contador = contador + 1;
+        }
+        return contador;
+    }
+}
+```
+
+**🔍 TRAZA PASO A PASO**:
+```
+contarDigitos(12345):
+  → numero = 12345, contador = 0
+  → 12345 > 0 ✅ → numero = 1234, contador = 1
+  → 1234 > 0 ✅  → numero = 123, contador = 2
+  → 123 > 0 ✅   → numero = 12, contador = 3
+  → 12 > 0 ✅    → numero = 1, contador = 4
+  → 1 > 0 ✅     → numero = 0, contador = 5
+  → 0 > 0 ❌     → SALE del while
+  → return 5
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Método + for + if: Contar pares en rango" difficulty="medium">
+  Crea un método `contarParesEnRango(int desde, int hasta)` que devuelva cuántos números pares hay entre `desde` y `hasta`.
+
+  Ejemplo: `contarParesEnRango(1, 10)` → `5` (2, 4, 6, 8, 10)
+
+  <div slot="hint1">
+    Usa `for` del `desde` al `hasta` y un `if (i % 2 == 0)` para contar.
+  </div>
+
+  <div slot="hint2">
+    Acumula en `contador` y retorna al final.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Pares de 1 a 10: " + contarParesEnRango(1, 10));
+        System.out.println("Pares de 1 a 20: " + contarParesEnRango(1, 20));
+        System.out.println("Pares de 5 a 15: " + contarParesEnRango(5, 15));
+    }
+
+    public static int contarParesEnRango(int desde, int hasta) {
+        int contador = 0;
+        for (int i = desde; i <= hasta; i++) {
+            if (i % 2 == 0) {
+                contador = contador + 1;
+            }
+        }
+        return contador;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Método + while + if: Primer divisor" difficulty="medium">
+  Crea un método `primerDivisor(int numero)` que devuelva el primer número (mayor que 1) que divide exactamente al `numero`.
+
+  Ejemplo: `primerDivisor(15)` → `3` (porque 15 ÷ 3 = 5, exacto)
+
+  <div slot="hint1">
+    Usa `int candidato = 2;` y un `while` hasta encontrarlo.
+  </div>
+
+  <div slot="hint2">
+    Dentro: `if (numero % candidato == 0)` → encontraste, `return candidato;`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Primer divisor de 15: " + primerDivisor(15));
+        System.out.println("Primer divisor de 17: " + primerDivisor(17));
+        System.out.println("Primer divisor de 20: " + primerDivisor(20));
+    }
+
+    public static int primerDivisor(int numero) {
+        int candidato = 2;
+        while (candidato <= numero) {
+            if (numero % candidato == 0) {
+                return candidato;  // ← Encontrado! SALE inmediatamente
+            }
+            candidato = candidato + 1;
+        }
+        return numero;  // Si no encuentra, es primo
+    }
+}
+```
+
+**🔍 TRAZA PASO A PASO**:
+```
+primerDivisor(15):
+  → candidato = 2
+  → 2 <= 15 ✅ → 15 % 2 = 1 ❌ → candidato = 3
+  → 3 <= 15 ✅ → 15 % 3 = 0 ✅ → return 3 → SALE
+
+primerDivisor(17):
+  → candidato = 2
+  → 17%2=1 ❌ → 17%3=2 ❌ → 17%4=1 ❌
+  → 17%5=2 ❌ → 17%6=5 ❌ → ... → 17%17=0 ✅ → return 17 (es primo!)
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios Dinámicos (Combinaciones Avanzadas)
+
+<ExerciseBlock id={6} title="Método + for: Generar tabla de multiplicar como String" difficulty="medium">
+  Crea un método `generarTabla(int numero)` que devuelva un String con toda la tabla de multiplicar del 1 al 10.
+
+  Ejemplo de retorno:
+  ```
+  Tabla del 7:
+  7 x 1 = 7
+  7 x 2 = 14
+  7 x 3 = 21
+  ...
+  ```
+
+  <div slot="hint1">
+    Usa `String resultado = "Tabla del " + numero + ":\n";` y un `for` para agregar líneas.
+  </div>
+
+  <div slot="hint2">
+    Dentro del for: `resultado += numero + " x " + i + " = " + (numero * i) + "\n";`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(generarTabla(7));
+        System.out.println(generarTabla(12));
+    }
+
+    public static String generarTabla(int numero) {
+        String resultado = "Tabla del " + numero + ":\n";
+
+        for (int i = 1; i <= 10; i++) {
+            resultado += numero + " x " + i + " = " + (numero * i) + "\n";
+        }
+
+        return resultado;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Método + while: Potencia sin Math.pow" difficulty="medium">
+  Crea un método `potencia(int base, int exponente)` que calcule `base^exponente` usando solo `while`.
+
+  Ejemplo: `potencia(2, 3)` → `8` (2 × 2 × 2)
+
+  <div slot="hint1">
+    Usa `int resultado = 1;` y un `while` que multiplique `exponente` veces.
+  </div>
+
+  <div slot="hint2">
+    Dentro: `resultado = resultado * base;` y `exponente = exponente - 1;`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("2^3 = " + potencia(2, 3));
+        System.out.println("5^2 = " + potencia(5, 2));
+        System.out.println("3^4 = " + potencia(3, 4));
+    }
+
+    public static int potencia(int base, int exponente) {
+        int resultado = 1;
+        while (exponente > 0) {
+            resultado = resultado * base;
+            exponente = exponente - 1;
+        }
+        return resultado;
+    }
+}
+```
+
+**🔍 TRAZA PASO A PASO**:
+```
+potencia(2, 3):
+  → resultado = 1, exponente = 3
+  → 3 > 0 ✅ → resultado = 1*2 = 2, exponente = 2
+  → 2 > 0 ✅ → resultado = 2*2 = 4, exponente = 1
+  → 1 > 0 ✅ → resultado = 4*2 = 8, exponente = 0
+  → 0 > 0 ❌ → SALE del while
+  → return 8
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="🐛 DEBUG MENTAL: Encuentra el error en métodos con retorno" difficulty="hard">
+  Este código tiene **3 errores**. ¿Puedes encontrarlos?
+
+  ```java
+  // ❌ ESTE CÓDIGO NO FUNCIONA
+  public class Main {
+      public static void main(String[] args) {
+          System.out.println(doble(5));
+      }
+
+      public static int doble(int x) {
+          if (x > 0) {
+              return x * 2;
+          }
+          // Error 1: ¿Qué pasa si x <= 0?
+      }
+
+      public static String comparar(int a, int b) {
+          if (a > b)
+              return a + " es mayor";
+          else if (a < b)
+              return b + " es mayor";
+          // Error 2: ¿Y si a == b?
+
+      }
+
+      public static void saludar() {
+          return "Hola";  // Error 3: ¿void puede retornar String?
+      }
+  }
+  ```
+
+  <div slot="hint1">
+    Error 1: Si x es negativo, no hay return. Error 2: Falta el caso a==b. Error 3: void no puede retornar valor.
+  </div>
+
+  <div slot="hint2">
+    Cada método necesita un return para TODOS los caminos posibles. Y el tipo de return debe coincidir con la declaración.
+  </div>
+
+  <div slot="solution">
+```java
+// ✅ CÓDIGO CORREGIDO
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Doble de 5: " + doble(5));
+        System.out.println("Doble de -3: " + doble(-3));
+        System.out.println(comparar(5, 3));
+        System.out.println(comparar(3, 3));
+    }
+
+    // Error 1 corregido: agregar return para el caso negativo
+    public static int doble(int x) {
+        if (x > 0) {
+            return x * 2;
+        }
+        return 0;  // ← Return por defecto para negativos
+    }
+
+    // Error 2 corregido: agregar caso a == b
+    public static String comparar(int a, int b) {
+        if (a > b)
+            return a + " es mayor";
+        else if (a < b)
+            return b + " es mayor";
+        else
+            return "Son iguales";  // ← Caso faltante
+    }
+
+    // Error 3 corregido: cambiar void a String
+    public static String saludar() {
+        return "Hola";
+    }
+}
+```
+
+**Explicación de los errores**:
+1. **Falta return** → Si `x <= 0`, el método no retorna nada. Java exige `return` en TODOS los caminos.
+2. **Caso faltante** → Si `a == b`, ninguno de los `if` se ejecuta. Necesitas un `return` final.
+3. **Tipo incorrecto** → `void` significa "no retorna nada". Si pones `return "Hola"`, el método debe ser `String`.
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Método + for + if: Generar patrón de estrellas" difficulty="medium">
+  Crea un método `generarTriangulo(int filas)` que devuelva un String con un triángulo de estrellas.
+
+  Ejemplo: `generarTriangulo(4)` devuelve:
+  ```
+  *
+  **
+  ***
+  ****
+  ```
+
+  <div slot="hint1">
+    Usa un `for` para las filas y otro `for` interno para las estrellas.
+  </div>
+
+  <div slot="hint2">
+    Acumula en un String y usa `"\n"` para saltos de línea.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(generarTriangulo(4));
+        System.out.println(generarTriangulo(6));
+    }
+
+    public static String generarTriangulo(int filas) {
+        String resultado = "";
+
+        for (int fila = 1; fila <= filas; fila++) {
+            for (int j = 1; j <= fila; j++) {
+                resultado += "*";
+            }
+            resultado += "\n";
+        }
+
+        return resultado;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={10} title="Método + for + if: Generar lista de primos" difficulty="hard">
+  Crea un método `generarPrimos(int hasta)` que devuelva un String con todos los números primos desde 2 hasta `hasta`.
+
+  Ejemplo: `generarPrimos(20)` → `"2, 3, 5, 7, 11, 13, 17, 19"`
+
+  <div slot="hint1">
+    Usa un `for` del 2 al `hasta`. Para cada número, verifica si es primo con otro método `esPrimo(n)`.
+  </div>
+
+  <div slot="hint2">
+    Crea `esPrimo(int n)` que use un `for` para verificar divisores. Si es primo, agrega al String resultado.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Primos hasta 20:");
+        System.out.println(generarPrimos(20));
+
+        System.out.println("\nPrimos hasta 50:");
+        System.out.println(generarPrimos(50));
+    }
+
+    public static String generarPrimos(int hasta) {
+        String resultado = "";
+
+        for (int num = 2; num <= hasta; num++) {
+            if (esPrimo(num)) {
+                if (!resultado.isEmpty()) {
+                    resultado += ", ";
+                }
+                resultado += num;
+            }
+        }
+
+        return resultado;
+    }
+
+    public static boolean esPrimo(int n) {
+        for (int i = 2; i < n; i++) {
+            if (n % i == 0) {
+                return false;  // ← No es primo
+            }
+        }
+        return true;  // ← Es primo
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios Extra: Simulaciones Reales
+
+<ExerciseBlock id={11} title="Simulador de tienda: calcularTotal()" difficulty="medium">
+  Crea un método `calcularTotal(double[] precios, int[] cantidades)` que devuelva el total de una compra.
+
+  <div slot="hint1">
+    Usa `for` para recorrer ambos arrays: `total += precios[i] * cantidades[i];`
+  </div>
+
+  <div slot="hint2">
+    Al final `return total;`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        double[] precios = {999.99, 25.50, 75.00};
+        int[] cantidades = {1, 2, 1};
+
+        double total = calcularTotal(precios, cantidades);
+        System.out.println("💰 Total de compra: $" + total);
+    }
+
+    public static double calcularTotal(double[] precios, int[] cantidades) {
+        double total = 0;
+
+        for (int i = 0; i < precios.length; i++) {
+            double subtotal = precios[i] * cantidades[i];
+            total = total + subtotal;
+        }
+
+        return total;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={12} title="Simulador de juego: calcularDaño()" difficulty="medium">
+  Crea un método `simularBatalla(int vidaHeroe, int vidaMonstruo, int dañoHeroe, int dañoMonstruo)` que devuelva quién gana y en cuántos turnos.
+
+  <div slot="hint1">
+    Usa `while (vidaHeroe > 0 && vidaMonstruo > 0)` para los turnos.
+  </div>
+
+  <div slot="hint2">
+    En cada turno: ambos se atacan. Cuenta turnos y retorna ganador.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        String resultado = simularBatalla(100, 80, 15, 20);
+        System.out.println(resultado);
+    }
+
+    public static String simularBatalla(int vidaHeroe, int vidaMonstruo, int dañoHeroe, int dañoMonstruo) {
+        int turnos = 0;
+
+        while (vidaHeroe > 0 && vidaMonstruo > 0) {
+            turnos++;
+            vidaMonstruo = vidaMonstruo - dañoHeroe;
+            vidaHeroe = vidaHeroe - dañoMonstruo;
+        }
+
+        if (vidaMonstruo <= 0) {
+            return "🎉 Héroe gana en " + turnos + " turnos!";
+        } else {
+            return "👾 Monstruo gana en " + turnos + " turnos!";
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={13} title="Conversor inteligente con if" difficulty="medium">
+  Crea un método `convertirTemperatura(double valor, String unidad)` que convierta:
+  - Si `unidad = "C"` → convierte Celsius a Fahrenheit: `(C × 9/5) + 32`
+  - Si `unidad = "F"` → convierte Fahrenheit a Celsius: `(F - 32) × 5/9`
+  - Devuelve el resultado formateado: `"X°C = Y°F"` o `"X°F = Y°C"`
+
+  <div slot="hint1">
+    Usa `if (unidad.equals("C"))` y `else if (unidad.equals("F"))`.
+  </div>
+
+  <div slot="hint2">
+    Retorna el String con el formato: `"25°C = 77°F"`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(convertirTemperatura(25, "C"));
+        System.out.println(convertirTemperatura(77, "F"));
+        System.out.println(convertirTemperatura(100, "C"));
+        System.out.println(convertirTemperatura(32, "F"));
+    }
+
+    public static String convertirTemperatura(double valor, String unidad) {
+        if (unidad.equals("C")) {
+            double fahrenheit = (valor * 9.0 / 5.0) + 32;
+            return valor + "°C = " + fahrenheit + "°F";
+        } else if (unidad.equals("F")) {
+            double celsius = (valor - 32) * 5.0 / 9.0;
+            return valor + "°F = " + celsius + "°C";
+        } else {
+            return "❌ Unidad no válida. Usa 'C' o 'F'";
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={14} title="Generador de contraseña aleatoria" difficulty="hard">
+  Crea un método `generarPassword(int longitud)` que devuelva un String con caracteres aleatorios entre `a-z` y `0-9`.
+
+  <div slot="hint1">
+    Usa un String con todos los caracteres posibles: `"abcdefghijklmnopqrstuvwxyz0123456789"`
+  </div>
+
+  <div slot="hint2">
+    Usa `for` de 0 a `longitud`. Genera índice aleatorio con `(int)(Math.random() * caracteres.length())`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Password 8 chars: " + generarPassword(8));
+        System.out.println("Password 12 chars: " + generarPassword(12));
+        System.out.println("Password 16 chars: " + generarPassword(16));
+    }
+
+    public static String generarPassword(int longitud) {
+        String caracteres = "abcdefghijklmnopqrstuvwxyz0123456789";
+        String resultado = "";
+
+        for (int i = 0; i < longitud; i++) {
+            int indice = (int)(Math.random() * caracteres.length());
+            resultado += caracteres.charAt(indice);
+        }
+
+        return resultado;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={15} title="Analizador de texto completo" difficulty="hard">
+  Crea un método `analizarTexto(String texto)` que devuelva un reporte con:
+  - Número de caracteres
+  - Número de palabras (count espacios + 1)
+  - Número de vocales
+  - Número de consonantes
+
+  <div slot="hint1">
+    Usa un `for` para recorrer el texto y varios `if` para contar cada tipo.
+  </div>
+
+  <div slot="hint2">
+    Acumula en variables separadas y retorna un String formateado con todo.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(analizarTexto("Hola Mundo Java"));
+        System.out.println(analizarTexto("Programar es divertido"));
+    }
+
+    public static String analizarTexto(String texto) {
+        int caracteres = texto.length();
+        int palabras = 1;  // Asumimos al menos una palabra
+        int vocales = 0;
+        int consonantes = 0;
+
+        for (int i = 0; i < texto.length(); i++) {
+            char c = texto.charAt(i);
+
+            if (c == ' ') {
+                palabras++;
+            } else if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
+                       c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+                vocales++;
+            } else if (c != ' ') {
+                consonantes++;
+            }
+        }
+
+        return "📊 Análisis de texto:\n" +
+               "   Caracteres: " + caracteres + "\n" +
+               "   Palabras: " + palabras + "\n" +
+               "   Vocales: " + vocales + "\n" +
+               "   Consonantes: " + consonantes;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={11}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué palabra clave usas para devolver un valor desde un método?"
+    options={[
+      { text: 'void', correct: false },
+      { text: 'send', correct: false },
+      { text: 'return', correct: true },
+      { text: 'output', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="Si un método devuelve un `double`, ¿qué tipo de retorno debe tener?"
+    options={[
+      { text: 'void', correct: false },
+      { text: 'int', correct: false },
+      { text: 'double', correct: true },
+      { text: 'String', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="¿Puede un método tener más de un `return`?"
+    options={[
+      { text: 'No, solo se permite uno', correct: false },
+      { text: 'Sí, pero solo se ejecuta uno (ej: dentro de if/else)', correct: true },
+      { text: 'Solo si el método es void', correct: false },
+      { text: 'Solo si no tiene parámetros', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="¿Qué pasa cuando se ejecuta un `return`?"
+    options={[
+      { text: 'El método continúa ejecutándose', correct: false },
+      { text: 'El método se detiene inmediatamente y devuelve el valor', correct: true },
+      { text: 'Se ejecuta el siguiente return también', correct: false },
+      { text: 'El programa se cierra', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="Si un método `void` tiene `return "hola"`, ¿qué pasa?"
+    options={[
+      { text: 'Funciona normal', correct: false },
+      { text: 'Error de compilación: void no puede retornar valor', correct: true },
+      { text: 'Retorna null', correct: false },
+      { text: 'Imprime "hola"', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## 🎁 Reto Opcional: Simulador de Batalla Avanzado
+
+**Desafío**: Crea un método `simularBatallaAvanzada(String heroe, String monstruo, int vidaHeroe, int vidaMonstruo, int dañoMinHeroe, int dañoMaxHeroe, int dañoMinMonstruo, int dañoMaxMonstruo)` que:
+
+- Use `while` para los turnos
+- Calcule daño aleatorio con `Math.random()` entre min y max
+- Devuelva un String con el reporte completo de la batalla
+- Incluya cada turno y quién ganó
+
+**Ejemplo de retorno**:
+```
+⚔️ BATALLA: Caballero vs Dragón
+────────────────────────────────
+Turno 1: Caballero ataca! (-18 HP) | Dragón: 82/100
+Turno 1: Dragón ataca! (-12 HP) | Caballero: 88/100
+Turno 2: Caballero ataca! (-15 HP) | Dragón: 67/100
+Turno 2: Dragón ataca! (-20 HP) | Caballero: 68/100
+...
+🎉 ¡Caballero gana en 7 turnos!
+```
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo la diferencia entre void y return',
+    'Puedo crear métodos con retorno de int, double, String, boolean',
+    'Uso if con return para devolver diferentes valores',
+    'Uso for con return para calcular/acumular resultados',
+    'Uso while con return para búsquedas y simulaciones',
+    'Puedo encontrar errores en métodos con retorno',
+    'Entiendo que return SALE del método inmediatamente',
+    'Completé el simulador de batalla',
+    'Completé el conversor de temperatura'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "missing return statement"
+
+**Problema**: Java no encuentra un `return` en algún camino del método.
+
+**Solución**: Asegúrate de que **todos los caminos** llegen a un `return`:
+```java
+// ❌ Mal
+public static int ejemplo(int x) {
+    if (x > 0) {
+        return x;
+    }
+    // Si x <= 0, no hay return!
+}
+
+// ✅ Bien
+public static int ejemplo(int x) {
+    if (x > 0) {
+        return x;
+    }
+    return -1;  // ← Caso por defecto
+}
+```
+
+### Error: "incompatible types" en return
+
+**Problema**: Declaraste `int` pero retornas `double`.
+
+**Solución**: Asegúrate de que el tipo del `return` coincida con la declaración.
+
+### Error: "unreachable statement" después de return
+
+**Problema**: Pusiste código después de un `return` (nunca se ejecutará).
+
+**Solución**: Mueve el código **antes** del `return`.
+
+### Error: Bucle infinito en método con return
+
+**Problema**: El `while` nunca encuentra la condición para hacer `return`.
+
+**Solución**: Verifica que la variable de control cambie: `i = i + 1;`
+
+---
+
+## 📖 ¿Qué Aprendimos Hoy? (Resumen Visual)
+
+```
+┌─────────────────────────────────────────────────┐
+│        🎯 DÍA 11: MÉTODOS CON RETORNO           │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  📦 FÓRMULA:                                    │
+│  public static TIPO nombre(params) {            │
+│      // código                                  │
+│      return valor;  ← DEVUELVE al que llamó     │
+│  }                                              │
+│                                                 │
+│  🔄 FLUJO:                                      │
+│  main() → llama → método calcula                │
+│         → return valor → main() recibe valor    │
+│                                                 │
+│  🔀 COMBINACIONES:                              │
+│  return + if     → múltiples salidas            │
+│  return + for    → acumular y retornar          │
+│  return + while  → buscar y retornar            │
+│                                                 │
+│  ⚠️ REGLAS:                                     │
+│  • return SALE inmediatamente                   │
+│  • Todos los caminos deben tener return         │
+│  • Tipo de return debe coincidir                │
+│  • void NO puede retornar valor                 │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 11. Ahora sabes:
+- ✅ Qué es `return` y cómo devolver valores
+- ✅ Métodos con retorno de `int`, `double`, `String`, `boolean`
+- ✅ Combinar `if` con `return` para múltiples salidas
+- ✅ Combinar `for` con `return` para cálculos y acumuladores
+- ✅ Combinar `while` con `return` para búsquedas y simulaciones
+- ✅ Crear sistemas completos con métodos que calculan y reportan
+- ✅ Encontrar errores en métodos con retorno
+
+**Lo que viene**: Día 12 aprenderás sobre **Arrays (Arreglos)** para almacenar múltiples datos y manipularlos con métodos.
+
+**¡Tus métodos ya piensan y calculan! 🎯** 🚀

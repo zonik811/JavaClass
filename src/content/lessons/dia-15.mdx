@@ -1,10 +1,924 @@
 ---
 day: 15
 title: "Atributos, Métodos y Constructores"
-objective: "Definir propiedades y comportamientos de objetos"
-topics: ["Atributos", "Métodos de instancia", "Constructores", "this"]
+objective: "Usar constructores para inicializar objetos y crear el Simulador de Robot"
+topics: ["Constructores", "this", "Atributos", "Métodos de instancia", "Encapsulación básica"]
 miniProject: true
 projectTitle: "Simulador de Robot"
 ---
-# Día 15: POO Completo + Simulador de Robot
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy aprenderás a usar **constructores** para crear objetos con valores iniciales de una vez. Combinarás todo: métodos, `if`, `for`, `while`. **Al final del día, construirás un Simulador de Robot**.
+
+---
+
+## 📋 Antes de Empezar
+
+- **Ya sabes crear clases** con atributos y métodos
+- **Ya sabes instanciar** con `new Clase()`
+- **El problema**: Dar valores a cada atributo uno por uno es lento
+- **La solución**: El **constructor** te permite dar valores al crear
+
+---
+
+## 🤔 ¿Qué es un Constructor?
+
+### El problema (sin constructor):
+
+```java
+// Así lo hacías antes (lento)
+Robot r = new Robot();
+r.nombre = "R2D2";
+r.bateria = 100;
+r.movimientos = 0;
+r.nivel = 1;
+// ¡4 líneas solo para inicializar! 😩
+```
+
+### La solución (con constructor):
+
+```java
+// Así lo harás hoy (rápido)
+Robot r = new Robot("R2D2", 100);
+// ¡Una sola línea! 😎
+```
+
+### La fórmula mágica:
+
+```java
+public class NombreClase {
+    public tipo atributo1;
+    public tipo atributo2;
+    
+    // CONSTRUCTOR (mismo nombre que la clase, sin return)
+    public NombreClase(tipo valor1, tipo valor2) {
+        this.atributo1 = valor1;
+        this.atributo2 = valor2;
+    }
+}
+```
+
+---
+
+## 📦 Paso 1: Tu Primer Constructor
+
+### Ejemplo paso a paso: Clase `Robot` con constructor
+
+```java
+// Archivo: Robot.java
+public class Robot {
+    // ATRIBUTOS
+    public String nombre;
+    public int bateria;
+    public int movimientos;
+    public int nivel;
+    
+    // CONSTRUCTOR
+    public Robot(String nombre, int bateriaInicial) {
+        this.nombre = nombre;           // ← El nombre de ESTE robot
+        this.bateria = bateriaInicial;  // ← La batería de ESTE robot
+        this.movimientos = 0;           // ← Valor por defecto
+        this.nivel = 1;                 // ← Valor por defecto
+    }
+    
+    // MÉTODO: Saludar
+    public void saludar() {
+        System.out.println("🤖 Soy " + nombre);
+        System.out.println("   Batería: " + bateria + "% | Nivel: " + nivel);
+        System.out.println("   Movimientos: " + movimientos);
+        System.out.println("");
+    }
+    
+    // MÉTODO: Moverse (gasta batería)
+    public void mover() {
+        if (bateria >= 10) {
+            bateria = bateria - 10;
+            movimientos = movimientos + 1;
+            System.out.println(nombre + " se movió. Bateria: " + bateria + "%");
+        } else {
+            System.out.println(nombre + ": ❌ Batería baja! (" + bateria + "%)");
+        }
+    }
+    
+    // MÉTODO: Cargar batería
+    public void cargarBateria(int cantidad) {
+        bateria = bateria + cantidad;
+        
+        if (bateria > 100) {
+            bateria = 100;  // No puede pasar de 100
+        }
+        
+        System.out.println(nombre + " cargó " + cantidad + "%. Batería: " + bateria + "%");
+    }
+}
+```
+
+### 📖 Paso a paso del constructor:
+
+1. **`public Robot(String nombre, int bateriaInicial)`**
+   - Mismo nombre que la clase
+   - Sin `void`, sin `return`
+   - Con parámetros
+
+2. **`this.nombre = nombre;`**
+   - `this.nombre` = el atributo de ESTE objeto
+   - `nombre` = el parámetro que recibiste
+
+3. **Valores por defecto**: `movimientos = 0`, `nivel = 1`
+   - No los pasas como parámetro, los inicializas dentro
+
+### Cómo se usa:
+
+```java
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Crear robots CON constructor (una línea cada uno)
+        Robot r1 = new Robot("R2D2", 100);
+        Robot r2 = new Robot("Wall-E", 80);
+        Robot r3 = new Robot("BB-8", 60);
+        
+        r1.saludar();
+        r2.saludar();
+        r3.saludar();
+        
+        // Usar métodos
+        r1.mover();
+        r2.mover();
+        r3.cargarBateria(20);
+    }
+}
+```
+
+---
+
+## 🚀 Paso 2: Múltiples Constructores (Sobrecarga)
+
+Puedes tener **varios constructores** con diferentes parámetros:
+
+```java
+public class Robot {
+    public String nombre;
+    public int bateria;
+    public int nivel;
+    
+    // Constructor con todo
+    public Robot(String nombre, int bateria, int nivel) {
+        this.nombre = nombre;
+        this.bateria = bateria;
+        this.nivel = nivel;
+    }
+    
+    // Constructor simple (solo nombre, batería por defecto)
+    public Robot(String nombre) {
+        this.nombre = nombre;
+        this.bateria = 100;  // ← Valor por defecto
+        this.nivel = 1;      // ← Valor por defecto
+    }
+}
+
+// Uso:
+Robot r1 = new Robot("R2D2", 100, 5);  // Constructor completo
+Robot r2 = new Robot("Wall-E");         // Constructor simple
+```
+
+---
+
+## 💪 Ejercicios Guiados (Combinando Todo)
+
+<ExerciseBlock id={1} title="Constructor de Estudiante" difficulty="easy">
+  Crea una clase `Estudiante` con constructor que reciba `nombre`, `edad`, `grado`.
+
+  <div slot="hint1">
+    El constructor es `public Estudiante(String nombre, int edad, int grado)`.
+  </div>
+
+  <div slot="hint2">
+    Usa `this.nombre = nombre;` para cada atributo.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Estudiante.java
+public class Estudiante {
+    public String nombre;
+    public int edad;
+    public int grado;
+    public double promedio;
+    
+    public Estudiante(String nombre, int edad, int grado) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.grado = grado;
+        this.promedio = 0;  // Por defecto
+    }
+    
+    public void presentarse() {
+        System.out.println("👋 Soy " + nombre + ", tengo " + edad + " años y estoy en " + grado + "° grado");
+    }
+    
+    public void setPromedio(double promedio) {
+        if (promedio >= 0 && promedio <= 100) {
+            this.promedio = promedio;
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Estudiante e1 = new Estudiante("Ana", 15, 10);
+        e1.setPromedio(92.5);
+        e1.presentarse();
+        System.out.println("   Promedio: " + e1.promedio);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Constructor + for: Inventario inicial" difficulty="medium">
+  Crea una clase `Tienda` con constructor que reciba `String[] productos`, `double[] precios`, `int[] stock`. Agrega método `mostrarInventario()`.
+
+  <div slot="hint1">
+    El constructor guarda los arrays: `this.productos = productos;`
+  </div>
+
+  <div slot="hint2">
+    `mostrarInventario()` usa `for` para recorrer y mostrar todo.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Tienda.java
+public class Tienda {
+    public String nombre;
+    public String[] productos;
+    public double[] precios;
+    public int[] stock;
+    
+    public Tienda(String nombre, String[] productos, double[] precios, int[] stock) {
+        this.nombre = nombre;
+        this.productos = productos;
+        this.precios = precios;
+        this.stock = stock;
+    }
+    
+    public void mostrarInventario() {
+        System.out.println("🏪 TIENDA: " + nombre);
+        System.out.println("══════════════════\n");
+        
+        double totalValor = 0;
+        
+        for (int i = 0; i < productos.length; i++) {
+            double valor = precios[i] * stock[i];
+            totalValor = totalValor + valor;
+            
+            System.out.println("[" + (i + 1) + "] " + productos[i]);
+            System.out.println("    Precio: $" + precios[i] + " | Stock: " + stock[i]);
+            System.out.println("    Valor: $" + valor);
+            
+            if (stock[i] == 0) {
+                System.out.println("    ⚠️ AGOTADO");
+            }
+            System.out.println("");
+        }
+        
+        System.out.println("──────────────────────");
+        System.out.println("💰 Valor total del inventario: $" + totalValor);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        String[] productos = {"Laptop", "Mouse", "Teclado", "Monitor"};
+        double[] precios = {999.99, 25.50, 75.00, 350.00};
+        int[] stock = {10, 50, 30, 0};
+        
+        Tienda miTienda = new Tienda("Tech Store", productos, precios, stock);
+        miTienda.mostrarInventario();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Constructor + while: Cuenta regresiva del cohete" difficulty="medium">
+  Crea una clase `Cohete` con constructor que reciba `nombre` y `combustible`. Método `despegar()` que cuente hacia atrás.
+
+  <div slot="hint1">
+    Constructor: `public Cohete(String nombre, int combustible)`
+  </div>
+
+  <div slot="hint2">
+    `despegar()` usa `while (combustible > 0)` con decremento.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Cohete.java
+public class Cohete {
+    public String nombre;
+    public int combustible;
+    public boolean despegado;
+    
+    public Cohete(String nombre, int combustible) {
+        this.nombre = nombre;
+        this.combustible = combustible;
+        this.despegado = false;
+    }
+    
+    public void despegar() {
+        System.out.println("🚀 " + nombre + " - SECUENCIA DE DESPEGUE");
+        System.out.println("══════════════════");
+        
+        while (combustible > 0) {
+            System.out.println("Combustible: " + combustible + "%");
+            
+            if (combustible == 50) {
+                System.out.println("⚡ ¡Mitad del tanque!");
+            }
+            if (combustible <= 20 && combustible > 0) {
+                System.out.println("⚠️ ¡Nivel crítico!");
+            }
+            
+            combustible = combustible - 10;
+        }
+        
+        this.despegado = true;
+        System.out.println("🎉 ¡DESPegue exitoso!");
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Cohete saturno = new Cohete("Saturno V", 100);
+        saturno.despegar();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Constructor con validación if" difficulty="medium">
+  Crea una clase `CuentaBancaria` con constructor que valide: `saldo` no puede ser negativo, `titular` no puede estar vacío.
+
+  <div slot="hint1">
+    En el constructor usa `if (saldo < 0)` para validar.
+  </div>
+
+  <div slot="hint2">
+    Si es inválido, pon un valor por defecto: `this.saldo = 0;`
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: CuentaBancaria.java
+public class CuentaBancaria {
+    public String titular;
+    public double saldo;
+    public String numeroCuenta;
+    
+    public CuentaBancaria(String titular, double saldoInicial, String numeroCuenta) {
+        this.numeroCuenta = numeroCuenta;
+        
+        // Validar titular
+        if (titular == null || titular.isEmpty()) {
+            System.out.println("❌ Titular inválido. Usando 'Desconocido'");
+            this.titular = "Desconocido";
+        } else {
+            this.titular = titular;
+        }
+        
+        // Validar saldo
+        if (saldoInicial < 0) {
+            System.out.println("❌ Saldo no puede ser negativo. Usando 0");
+            this.saldo = 0;
+        } else {
+            this.saldo = saldoInicial;
+        }
+    }
+    
+    public void mostrarInfo() {
+        System.out.println("🏦 CUENTA: " + numeroCuenta);
+        System.out.println("   Titular: " + titular);
+        System.out.println("   Saldo: $" + saldo);
+    }
+    
+    public void depositar(double cantidad) {
+        if (cantidad > 0) {
+            saldo = saldo + cantidad;
+            System.out.println("✅ Depósito: $" + cantidad + " | Nuevo saldo: $" + saldo);
+        } else {
+            System.out.println("❌ Cantidad inválida");
+        }
+    }
+    
+    public void retirar(double cantidad) {
+        if (cantidad > saldo) {
+            System.out.println("❌ Fondos insufuentes. Disponible: $" + saldo);
+        } else if (cantidad > 0) {
+            saldo = saldo - cantidad;
+            System.out.println("✅ Retiro: $" + cantidad + " | Nuevo saldo: $" + saldo);
+        } else {
+            System.out.println("❌ Cantidad inválida");
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        CuentaBancaria c1 = new CuentaBancaria("Ana García", 1000, "ES1234");
+        c1.mostrarInfo();
+        c1.depositar(500);
+        c1.retirar(200);
+        
+        System.out.println();
+        
+        // Prueba de validación
+        CuentaBancaria c2 = new CuentaBancaria("", -100, "ES5678");
+        c2.mostrarInfo();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Múltiples constructores: Vehículo" difficulty="medium">
+  Crea una clase `Vehiculo` con DOS constructores: uno completo y uno simplificado.
+
+  <div slot="hint1">
+    Constructor 1: `public Vehiculo(String marca, String modelo, int anio, double precio)`
+  </div>
+
+  <div slot="hint2">
+    Constructor 2: `public Vehiculo(String marca, String modelo)` con valores por defecto.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Vehiculo.java
+public class Vehiculo {
+    public String marca;
+    public String modelo;
+    public int anio;
+    public double precio;
+    
+    // Constructor completo
+    public Vehiculo(String marca, String modelo, int anio, double precio) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.anio = anio;
+        this.precio = precio;
+    }
+    
+    // Constructor simplificado (solo marca y modelo)
+    public Vehiculo(String marca, String modelo) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.anio = 2024;       // ← Año por defecto
+        this.precio = 0;        // ← Precio por defecto
+    }
+    
+    public void mostrarInfo() {
+        System.out.println("🚗 " + marca + " " + modelo);
+        System.out.println("   Año: " + anio + " | Precio: $" + precio);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Constructor completo
+        Vehiculo v1 = new Vehiculo("Toyota", "Corolla", 2023, 25000);
+        v1.mostrarInfo();
+        
+        // Constructor simplificado
+        Vehiculo v2 = new Vehiculo("Honda", "Civic");
+        v2.mostrarInfo();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Mini-Proyecto: Simulador de Robot
+
+Ahora construirás un **simulador completo de robot** con constructores, métodos, `if`, `for`, `while`.
+
+<ExerciseBlock id={6} title="Paso 1: Clase Robot con constructor" difficulty="easy">
+  Crea la clase `Robot` con constructor que reciba `nombre`, `bateria`, `nivel`.
+
+  <div slot="hint1">
+    Atributos: `nombre`, `bateria`, `nivel`, `misionesCompletadas`, `inventario` (String[]).
+  </div>
+
+  <div slot="hint2">
+    Constructor inicializa todo con valores pasados o por defecto.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Robot.java
+public class Robot {
+    public String nombre;
+    public int bateria;
+    public int nivel;
+    public int misionesCompletadas;
+    public String[] inventario;
+    public int itemsInventario;
+    
+    public Robot(String nombre, int bateria, int nivel) {
+        this.nombre = nombre;
+        this.bateria = bateria;
+        this.nivel = nivel;
+        this.misionesCompletadas = 0;
+        this.inventario = new String[10];  // Capacidad máxima
+        this.itemsInventario = 0;
+    }
+    
+    public void mostrarEstado() {
+        System.out.println("🤖 " + nombre);
+        System.out.println("   🔋 Batería: " + bateria + "%");
+        System.out.println("   ⭐ Nivel: " + nivel);
+        System.out.println("   ✅ Misiones: " + misionesCompletadas);
+        System.out.println("   🎒 Inventario: " + itemsInventario + "/10");
+        System.out.println("");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Paso 2: Métodos de movimiento y energía" difficulty="medium">
+  Agrega métodos: `mover(distancia)`, `cargarBateria(cantidad)`, `escanear(area)` que gasten batería.
+
+  <div slot="hint1">
+    Cada método verifica `if (bateria >= costo)` antes de ejecutar.
+  </div>
+
+  <div slot="hint2">
+    `mover()` gasta 5 por km, `escanear()` gasta 10 fijo.
+  </div>
+
+  <div slot="solution">
+```java
+// Agrega a la clase Robot.java
+
+    public void mover(int distanciaKm) {
+        int costo = distanciaKm * 5;
+        
+        if (bateria >= costo) {
+            bateria = bateria - costo;
+            System.out.println(nombre + " se movió " + distanciaKm + " km. Bateria: " + bateria + "%");
+        } else {
+            System.out.println(nombre + ": ❌ Batería insuficiente para mover " + distanciaKm + " km (necesita " + costo + "%)");
+        }
+    }
+    
+    public void cargarBateria(int cantidad) {
+        bateria = bateria + cantidad;
+        if (bateria > 100) bateria = 100;
+        System.out.println(nombre + " cargó " + cantidad + "%. Bateria: " + bateria + "%");
+    }
+    
+    public void escanear(String area) {
+        int costo = 10;
+        if (bateria >= costo) {
+            bateria = bateria - costo;
+            System.out.println("📡 " + nombre + " escaneó: " + area);
+            System.out.println("   📊 Resultados: 3 objetos encontrados");
+            System.out.println("   🔋 Batería restante: " + bateria + "%");
+        } else {
+            System.out.println(nombre + ": ❌ Batería insuficiente para escanear");
+        }
+    }
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="Paso 3: Método recolectar con if + for" difficulty="medium">
+  Agrega método `recolectar(objeto)` que agregue al inventario si hay espacio.
+
+  <div slot="hint1">
+    Usa `if (itemsInventario < inventario.length)` para validar espacio.
+  </div>
+
+  <div slot="hint2">
+    Para mostrar inventario, usa `for (int i = 0; i < itemsInventario; i++)`.
+  </div>
+
+  <div slot="solution">
+```java
+// Agrega a la clase Robot.java
+
+    public boolean recolectar(String objeto) {
+        if (itemsInventario < inventario.length) {
+            inventario[itemsInventario] = objeto;
+            itemsInventario++;
+            System.out.println(nombre + " recolectó: " + objeto);
+            return true;
+        } else {
+            System.out.println(nombre + ": ❌ Inventario lleno!");
+            return false;
+        }
+    }
+    
+    public void mostrarInventario() {
+        System.out.println("🎒 INVENTARIO DE " + nombre.toUpperCase());
+        System.out.println("══════════════════");
+        
+        if (itemsInventario == 0) {
+            System.out.println("   (vacío)");
+        } else {
+            for (int i = 0; i < itemsInventario; i++) {
+                System.out.println("   [" + (i + 1) + "] " + inventario[i]);
+            }
+        }
+        System.out.println("   Capacidad: " + itemsInventario + "/10");
+    }
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Paso 4: Método misión con while" difficulty="medium">
+  Agrega método `ejecutarMision()` que simule una misión gastando batería paso a paso.
+
+  <div slot="hint1">
+    Usa `while (energia > 0)` para simular pasos de la misión.
+  </div>
+
+  <div slot="hint2">
+    En cada paso: gasta energía aleatoria, muestra progreso.
+  </div>
+
+  <div slot="solution">
+```java
+// Agrega a la clase Robot.java
+
+    public void ejecutarMision(String nombreMision, int dificultad) {
+        System.out.println("\n🎯 MISIÓN: " + nombreMision);
+        System.out.println("   Dificultad: " + dificultad + "/10");
+        System.out.println("══════════════════");
+        
+        int energia = bateria;
+        int pasos = 0;
+        
+        while (energia > 0) {
+            pasos++;
+            int gasto = (int)(Math.random() * dificultad) + 5;
+            energia = energia - gasto;
+            
+            if (energia < 0) energia = 0;
+            
+            System.out.println("Paso " + pasos + ": -" + gasto + "% energia | Restante: " + energia + "%");
+            
+            if (energia <= 20 && energia > 0) {
+                System.out.println("⚠️ ¡Energía crítica!");
+            }
+        }
+        
+        // Actualizar batería real
+        this.bateria = energia;
+        
+        if (pasos >= 5) {
+            this.misionesCompletadas++;
+            System.out.println("🎉 ¡Misión completada en " + pasos + " pasos!");
+        } else {
+            System.out.println("❌ Misión fallida (muy poca energía)");
+        }
+    }
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={10} title="Paso 5: Subir de nivel con if" difficulty="medium">
+  Agrega método `verificarNivel()` que suba de nivel si cumplió misiones.
+
+  <div slot="hint1">
+    `if (misionesCompletadas >= nivel * 3)` → sube de nivel.
+  </div>
+
+  <div slot="hint2">
+    Al subir: `nivel++` y muestra mensaje de celebración.
+  </div>
+
+  <div slot="solution">
+```java
+// Agrega a la clase Robot.java
+
+    public void verificarNivel() {
+        int misionesNecesarias = nivel * 3;
+        
+        if (misionesCompletadas >= misionesNecesarias) {
+            nivel++;
+            System.out.println("🎉 ¡" + nombre + " subió al nivel " + nivel + "!");
+            System.out.println("   🎁 Recompensa: Batería restaurada al 100%");
+            bateria = 100;
+        } else {
+            System.out.println(nombre + ": Necesitas " + misionesNecesarias + " misiones para subir de nivel (tienes " + misionesCompletadas + ")");
+        }
+    }
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={11} title="Paso 6: ¡Juntar todo en Main!" difficulty="hard">
+  Crea el `main()` que simule un día completo de trabajo del robot.
+
+  <div slot="hint1">
+    Orden: crear robot → mostrar estado → mover → escanear → recolectar → misión → verificar nivel.
+  </div>
+
+  <div slot="hint2">
+    Simula 2-3 misiones para ver subir de nivel al robot.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("🤖 ═══════════════════════════");
+        System.out.println("   SIMULADOR DE ROBOT v1.0");
+        System.out.println("═══════════════════════════\n");
+        
+        // Crear robot con constructor
+        Robot r2d2 = new Robot("R2-D2", 100, 1);
+        r2d2.mostrarEstado();
+        
+        // Explorar zona
+        System.out.println("--- EXPLORACIÓN ---\n");
+        r2d2.mover(5);
+        r2d2.escanear("Zona Alfa");
+        r2d2.recolectar("Chip de memoria");
+        r2d2.recolectar("Cable de cobre");
+        r2d2.recolectar("Batería vieja");
+        
+        System.out.println();
+        r2d2.mostrarInventario();
+        
+        // Ejecutar misiones
+        System.out.println("\n--- MISIONES ---\n");
+        r2d2.ejecutarMision("Reparar sistema", 5);
+        r2d2.cargarBateria(30);
+        r2d2.ejecutarMision("Explorar cueva", 7);
+        r2d2.cargarBateria(30);
+        r2d2.ejecutarMision("Rescatar datos", 3);
+        
+        // Verificar nivel
+        System.out.println("\n--- VERIFICANDO NIVEL ---\n");
+        r2d2.verificarNivel();
+        
+        // Estado final
+        System.out.println("\n--- ESTADO FINAL ---\n");
+        r2d2.mostrarEstado();
+        r2d2.mostrarInventario();
+        
+        System.out.println("\n🎉 ¡Fin de la simulación!");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={15}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué es un constructor en POO?"
+    options={[
+      { text: 'Un método que devuelve valores', correct: false },
+      { text: 'Un método especial que inicializa objetos al crearlos', correct: true },
+      { text: 'Un atributo de la clase', correct: false },
+      { text: 'Una variable global', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="¿Cómo se llama un constructor?"
+    options={[
+      { text: 'init()', correct: false },
+      { text: 'constructor()', correct: false },
+      { text: 'Igual que la clase, sin return', correct: true },
+      { text: 'new()', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="¿Qué significa `this.nombre = nombre` en un constructor?"
+    options={[
+      { text: 'Copia el parámetro en el atributo de este objeto', correct: true },
+      { text: 'Crea una nueva variable', correct: false },
+      { text: 'Elimina el atributo', correct: false },
+      { text: 'Nada, es opcional', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="¿Puedes tener múltiples constructores en una clase?"
+    options={[
+      { text: 'No, solo uno', correct: false },
+      { text: 'Sí, con diferentes parámetros (sobrecarga)', correct: true },
+      { text: 'Solo si la clase es abstracta', correct: false },
+      { text: 'Solo en Java 8+', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="Si `Robot r = new Robot("R2D2", 100)`, ¿qué se ejecuta?"
+    options={[
+      { text: 'El método main()', correct: false },
+      { text: 'El constructor Robot(String, int)', correct: true },
+      { text: 'El método toString()', correct: false },
+      { text: 'Nada, solo declara la variable', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo qué es un constructor y para qué sirve',
+    'Puedo crear constructores con parámetros',
+    'Uso this para distinguir atributo de parámetro',
+    'Puedo crear múltiples constructores (sobrecarga)',
+    'Valido datos en el constructor con if',
+    'Completé el Simulador de Robot con constructor',
+    'El robot tiene inventario, misiones y niveles',
+    'Combiné constructor + métodos + if + for + while'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "constructor ... cannot be applied to given types"
+
+**Problema**: Pasaste parámetros incorrectos al constructor.
+
+**Solución**:
+```java
+// ❌ Mal
+Robot r = new Robot("R2D2");  // Si el constructor pide 3 parámetros
+
+// ✅ Bien
+Robot r = new Robot("R2D2", 100, 1);
+```
+
+### Error: "return type required" en constructor
+
+**Problema**: Pusiste `void` en el constructor.
+
+**Solución**: Los constructores **NO** tienen tipo de retorno:
+```java
+// ❌ Mal
+public void Robot(String nombre) { }
+
+// ✅ Bien
+public Robot(String nombre) { }
+```
+
+### Error: this.nombre no funciona
+
+**Problema**: No hay atributo con ese nombre.
+
+**Solución**: Verifica que `nombre` esté declarado como atributo de la clase.
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 15 y tu **Mini-Proyecto: Simulador de Robot**. Ahora sabes:
+- ✅ Qué es un constructor y cómo usarlo
+- ✅ Inicializar objetos con valores desde el inicio
+- ✅ Usar `this` para distinguir atributo de parámetro
+- ✅ Crear múltiples constructores (sobrecarga)
+- ✅ Validar datos en constructores
+- ✅ Construir un Simulador de Robot completo
+
+**Lo que viene**: Día 16 aprenderás sobre **Encapsulación** (private, public, getters/setters) para proteger tus datos.
+
+**¡Tu robot está operativo! 🤖** 🚀

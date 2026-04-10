@@ -1,9 +1,876 @@
 ---
 day: 19
 title: "Polimorfismo e Interfaces"
-objective: "Usar interfaces y sobrescribir métodos para polimorfismo"
-topics: ["interface", "implements", "Polimorfismo", "@Override"]
+objective: "Usar interfaces con implements y polimorfismo para escribir código flexible"
+topics: ["interface", "implements", "Polimorfismo", "@Override", "Arrays de objetos polimórficos"]
 miniProject: false
 ---
-# Día 19: Polimorfismo e Interfaces
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy aprenderás **Polimorfismo** (mismo método, comportamientos diferentes) e **Interfaces** (contratos que las clases deben cumplir). Combinarás todo: herencia, `@Override`, `if`, `for`, arrays.
+
+---
+
+## 📋 Antes de Empezar
+
+- **Ya sabes herencia** (`extends`, `super`, `@Override`)
+- **Ya sabes crear clases** con constructores y métodos
+- **El problema**: Quieres tratar objetos diferentes de forma uniforme
+- **La solución**: Interfaces + Polimorfismo
+
+---
+
+## 🤔 ¿Qué es el Polimorfismo?
+
+### La analogía del control remoto:
+
+Tienes un botón "Encender" que funciona en:
+- TV → Enciende la pantalla
+- Radio → Enciende el audio
+- DVD → Enciende el lector
+
+**Mismo botón, diferentes comportamientos** = Polimorfismo
+
+### En código:
+
+```java
+// Sin polimorfismo (código feo)
+if (objeto instanceof TV) {
+    ((TV) objeto).encenderTV();
+} else if (objeto instanceof Radio) {
+    ((Radio) objeto).encenderRadio();
+}
+
+// Con polimorfismo (código limpio)
+objeto.encender();  // ← Cada uno sabe cómo encenderse
+```
+
+---
+
+## 📦 Paso 1: Interfaces
+
+### ¿Qué es una Interface?
+
+Es un **contrato** que dice "si me implementas, DEBES tener estos métodos".
+
+### La fórmula mágica:
+
+```java
+// Definir la interfaz (el contrato)
+public interface NombreInterfaz {
+    // Métodos SIN cuerpo (solo firma)
+    void metodo1();
+    void metodo2(parametros);
+}
+
+// Implementar la interfaz
+public class MiClase implements NombreInterfaz {
+    // DEBES implementar todos los métodos
+    @Override
+    public void metodo1() {
+        // Tu código aquí
+    }
+    
+    @Override
+    public void metodo2(parametros) {
+        // Tu código aquí
+    }
+}
+```
+
+---
+
+## 💪 Ejercicios Guiados (Combinando Todo)
+
+<ExerciseBlock id={1} title="Interfaz básica: Dibujable" difficulty="easy">
+  Crea una interfaz `Dibujable` con método `dibujar()`. Luego clases `Circulo`, `Cuadrado`, `Triangulo` que la implementen.
+
+  <div slot="hint1">
+    `public interface Dibujable { void dibujar(); }`
+  </div>
+
+  <div slot="hint2">
+    Cada clase `implements Dibujable` y sobrescribe `dibujar()`.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Dibujable.java
+public interface Dibujable {
+    void dibujar();
+}
+
+// Archivo: Circulo.java
+public class Circulo implements Dibujable {
+    private double radio;
+    
+    public Circulo(double radio) {
+        this.radio = radio;
+    }
+    
+    @Override
+    public void dibujar() {
+        System.out.println("⭕ Dibujando círculo (radio: " + radio + ")");
+        for (int i = 0; i < (int)radio * 2; i++) {
+            System.out.print("● ");
+        }
+        System.out.println();
+    }
+}
+
+// Archivo: Cuadrado.java
+public class Cuadrado implements Dibujable {
+    private int lado;
+    
+    public Cuadrado(int lado) {
+        this.lado = lado;
+    }
+    
+    @Override
+    public void dibujar() {
+        System.out.println("▭ Dibujando cuadrado (lado: " + lado + ")");
+        for (int i = 0; i < lado; i++) {
+            for (int j = 0; j < lado; j++) {
+                System.out.print("■ ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Polimorfismo: todos son Dibujable
+        Dibujable[] formas = {
+            new Circulo(5),
+            new Cuadrado(4),
+            new Circulo(3)
+        };
+        
+        for (Dibujable forma : formas) {
+            forma.dibujar();  // ← Cada uno dibuja diferente
+            System.out.println();
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Interfaz + if: Sistema de pagos" difficulty="medium">
+  Crea interfaz `Pagos` con `procesarPago(monto)`. Implementa `PagoTarjeta`, `PagoPayPal`, `PagoBitcoin`.
+
+  <div slot="hint1">
+    Interfaz: `boolean procesarPago(double monto)` retorna true/false.
+  </div>
+
+  <div slot="hint2">
+    Cada implementación valida diferente: tarjeta valida límite, PayPal valida saldo, Bitcoin valida confirmaciones.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Pagos.java
+public interface Pagos {
+    boolean procesarPago(double monto);
+    String getNombreMetodo();
+}
+
+// Archivo: PagoTarjeta.java
+public class PagoTarjeta implements Pagos {
+    private String numeroTarjeta;
+    private double limite;
+    
+    public PagoTarjeta(String numero, double limite) {
+        this.numeroTarjeta = numero;
+        this.limite = limite;
+    }
+    
+    @Override
+    public boolean procesarPago(double monto) {
+        if (monto > limite) {
+            System.out.println("❌ Excede límite de tarjeta ($" + limite + ")");
+            return false;
+        }
+        System.out.println("✅ Pago con tarjeta #$numeroTarjeta: $" + monto);
+        return true;
+    }
+    
+    @Override
+    public String getNombreMetodo() {
+        return "💳 Tarjeta";
+    }
+}
+
+// Archivo: PagoPayPal.java
+public class PagoPayPal implements Pagos {
+    private String email;
+    private double saldo;
+    
+    public PagoPayPal(String email, double saldo) {
+        this.email = email;
+        this.saldo = saldo;
+    }
+    
+    @Override
+    public boolean procesarPago(double monto) {
+        if (monto > saldo) {
+            System.out.println("❌ Saldo PayPal insuficiente ($" + saldo + ")");
+            return false;
+        }
+        saldo -= monto;
+        System.out.println("✅ Pago con PayPal (" + email + "): $" + monto);
+        System.out.println("   Saldo restante: $" + saldo);
+        return true;
+    }
+    
+    @Override
+    public String getNombreMetodo() {
+        return "🅿️ PayPal";
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Polimorfismo: todos son Pagos
+        Pagos[] metodos = {
+            new PagoTarjeta("1234-5678", 5000),
+            new PagoPayPal("ana@email.com", 1000)
+        };
+        
+        System.out.println("💰 PROCESANDO PAGOS\n");
+        
+        double[] montos = {250, 800, 6000, 500};
+        
+        for (double monto : montos) {
+            System.out.println("\nIntentando pagar: $" + monto);
+            
+            for (Pagos metodo : metodos) {
+                System.out.print(metodo.getNombreMetodo() + ": ");
+                metodo.procesarPago(monto);
+            }
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Polimorfismo + for: Sistema de notificaciones" difficulty="medium">
+  Crea interfaz `Notificacion` con `enviar()`, `getTipo()`. Implementa `Email`, `SMS`, `PushNotification`.
+
+  <div slot="hint1">
+    Cada implementación tiene su propio `enviar()` con lógica diferente.
+  </div>
+
+  <div slot="hint2">
+    En main(), usa un array de `Notificacion` y recórrelo con for-each.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Notificacion.java
+public interface Notificacion {
+    void enviar(String mensaje, String destinatario);
+    String getTipo();
+}
+
+// Archivo: Email.java
+public class Email implements Notificacion {
+    private String asunto;
+    
+    public Email(String asunto) {
+        this.asunto = asunto;
+    }
+    
+    @Override
+    public void enviar(String mensaje, String destinatario) {
+        System.out.println("📧 EMAIL a: " + destinatario);
+        System.out.println("   Asunto: " + asunto);
+        System.out.println("   Mensaje: " + mensaje);
+        System.out.println("   ✅ Enviado\n");
+    }
+    
+    @Override
+    public String getTipo() { return "Email"; }
+}
+
+// Archivo: SMS.java
+public class SMS implements Notificacion {
+    private int longitudMaxima = 160;
+    
+    @Override
+    public void enviar(String mensaje, String destinatario) {
+        if (mensaje.length() > longitudMaxima) {
+            System.out.println("❌ SMS muy largo (máx " + longitudMaxima + " chars)");
+            return;
+        }
+        System.out.println("📱 SMS a: " + destinatario);
+        System.out.println("   " + mensaje);
+        System.out.println("   ✅ Enviado\n");
+    }
+    
+    @Override
+    public String getTipo() { return "SMS"; }
+}
+
+// Archivo: PushNotification.java
+public class PushNotification implements Notificacion {
+    private String app;
+    
+    public PushNotification(String app) {
+        this.app = app;
+    }
+    
+    @Override
+    public void enviar(String mensaje, String destinatario) {
+        System.out.println("🔔 PUSH (" + app + ") a: " + destinatario);
+        System.out.println("   " + mensaje);
+        System.out.println("   ✅ Notificación enviada\n");
+    }
+    
+    @Override
+    public String getTipo() { return "Push"; }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Polimorfismo: array de notificaciones
+        Notificacion[] notificaciones = {
+            new Email("Oferta Especial"),
+            new SMS(),
+            new PushNotification("MiApp")
+        };
+        
+        System.out.println("📬 SISTEMA DE NOTIFICACIONES\n");
+        
+        String mensaje = "¡Tu pedido ha sido enviado!";
+        String usuario = "usuario@email.com";
+        
+        // Enviar a todos polimórficamente
+        for (Notificacion notif : notificaciones) {
+            notif.enviar(mensaje, usuario);
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Múltiples interfaces: Robot trabajador" difficulty="hard">
+  Crea interfaces `Trabajador`, `Caminante`, `Volador`. Un `RobotAvanzado` implementa las 3.
+
+  <div slot="hint1">
+    Una clase puede implementar múltiples interfaces: `implements A, B, C`.
+  </div>
+
+  <div slot="hint2">
+    Cada interfaz tiene métodos diferentes. La clase debe implementar TODOS.
+  </div>
+
+  <div slot="solution">
+```java
+// Interfaces
+public interface Trabajador {
+    void trabajar();
+}
+
+public interface Caminante {
+    void caminar(double distancia);
+}
+
+public interface Volador {
+    void volar(double altura);
+}
+
+// Archivo: RobotAvanzado.java
+public class RobotAvanzado implements Trabajador, Caminante, Volador {
+    private String nombre;
+    private int bateria;
+    
+    public RobotAvanzado(String nombre, int bateria) {
+        this.nombre = nombre;
+        this.bateria = bateria;
+    }
+    
+    @Override
+    public void trabajar() {
+        if (bateria >= 10) {
+            bateria -= 10;
+            System.out.println("🔧 " + nombre + " está trabajando. Batería: " + bateria + "%");
+        } else {
+            System.out.println("❌ " + nombre + ": Batería insuficiente para trabajar");
+        }
+    }
+    
+    @Override
+    public void caminar(double distancia) {
+        if (bateria >= 5) {
+            bateria -= 5;
+            System.out.println("🚶 " + nombre + " caminó " + distancia + " km. Batería: " + bateria + "%");
+        } else {
+            System.out.println("❌ " + nombre + ": Batería insuficiente para caminar");
+        }
+    }
+    
+    @Override
+    public void volar(double altura) {
+        if (bateria >= 20) {
+            bateria -= 20;
+            System.out.println("🚁 " + nombre + " voló a " + altura + " m. Batería: " + bateria + "%");
+        } else {
+            System.out.println("❌ " + nombre + ": Batería insuficiente para volar");
+        }
+    }
+    
+    public void mostrarEstado() {
+        System.out.println("🤖 " + nombre + " | 🔋 " + bateria + "%");
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        RobotAvanzado r = new RobotAvanzado("R2D2", 100);
+        
+        System.out.println("🤖 ROBOT AVANZADO\n");
+        r.mostrarEstado();
+        
+        // Usar como Trabajador
+        Trabajador t = r;
+        System.out.println("\n--- Modo Trabajador ---");
+        t.trabajar();
+        
+        // Usar como Caminante
+        Caminante c = r;
+        System.out.println("\n--- Modo Caminante ---");
+        c.caminar(5);
+        
+        // Usar como Volador
+        Volador v = r;
+        System.out.println("\n--- Modo Volador ---");
+        v.volar(100);
+        
+        System.out.println();
+        r.mostrarEstado();
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Polimorfismo + while: Juego de combate" difficulty="hard">
+  Crea interfaz `Luchador` con `atacar()`, `defender()`, `getVida()`. Crea 3 personajes y simula una batalla.
+
+  <div slot="hint1">
+    Cada luchador implementa los métodos con diferentes valores de daño/defensa.
+  </div>
+
+  <div slot="hint2">
+    En main(), usa `while` para que luchen hasta que uno quede sin vida.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Luchador.java
+public interface Luchador {
+    int atacar();
+    int defender(int daño);
+    String getNombre();
+    int getVida();
+    boolean estaVivo();
+}
+
+// Archivo: Caballero.java
+public class Caballero implements Luchador {
+    private String nombre;
+    private int vida;
+    private int ataque;
+    private int defensa;
+    
+    public Caballero(String nombre, int vida, int ataque, int defensa) {
+        this.nombre = nombre;
+        this.vida = vida;
+        this.ataque = ataque;
+        this.defensa = defensa;
+    }
+    
+    @Override
+    public int atacar() {
+        int daño = (int)(Math.random() * ataque) + 10;
+        System.out.println("⚔️ " + nombre + " ataca con espada! (Daño: " + daño + ")");
+        return daño;
+    }
+    
+    @Override
+    public int defender(int daño) {
+        int reducido = Math.max(0, daño - defensa);
+        vida -= reducido;
+        System.out.println("🛡️ " + nombre + " bloquea! Daño recibido: " + reducido + " (Vida: " + Math.max(0, vida) + ")");
+        return Math.max(0, vida);
+    }
+    
+    @Override public String getNombre() { return nombre; }
+    @Override public int getVida() { return Math.max(0, vida); }
+    @Override public boolean estaVivo() { return vida > 0; }
+}
+
+// Archivo: Mago.java
+public class Mago implements Luchador {
+    private String nombre;
+    private int vida;
+    private int poderMagico;
+    
+    public Mago(String nombre, int vida, int poder) {
+        this.nombre = nombre;
+        this.vida = vida;
+        this.poderMagico = poder;
+    }
+    
+    @Override
+    public int atacar() {
+        int daño = (int)(Math.random() * poderMagico) + 20;
+        System.out.println("🔮 " + nombre + " lanza hechizo! (Daño: " + daño + ")");
+        return daño;
+    }
+    
+    @Override
+    public int defender(int daño) {
+        int reducido = daño;  // Mago tiene poca defensa
+        vida -= reducido;
+        System.out.println("🛡️ " + nombre + " recibe daño: " + reducido + " (Vida: " + Math.max(0, vida) + ")");
+        return Math.max(0, vida);
+    }
+    
+    @Override public String getNombre() { return nombre; }
+    @Override public int getVida() { return Math.max(0, vida); }
+    @Override public boolean estaVivo() { return vida > 0; }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Luchador caballero = new Caballero("Arturo", 100, 25, 10);
+        Luchador mago = new Mago("Merlin", 80, 35);
+        
+        System.out.println("⚔️ BATALLA: " + caballero.getNombre() + " vs " + mago.getNombre());
+        System.out.println("══════════════════════════\n");
+        
+        int turno = 1;
+        Luchador atacante = caballero;
+        Luchador defensor = mago;
+        
+        while (caballero.estaVivo() && mago.estaVivo()) {
+            System.out.println("--- Turno " + turno + " ---");
+            
+            int daño = atacante.atacar();
+            defensor.defender(daño);
+            
+            // Intercambiar roles
+            Luchador temp = atacante;
+            atacante = defensor;
+            defensor = temp;
+            
+            turno++;
+            System.out.println();
+        }
+        
+        System.out.println("══════════════════════════");
+        if (caballero.estaVivo()) {
+            System.out.println("🎉 ¡" + caballero.getNombre() + " GANA!");
+        } else {
+            System.out.println("🎉 ¡" + mago.getNombre() + " GANA!");
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios Dinámicos (Proyectos Mini)
+
+<ExerciseBlock id={6} title="Mini-Proyecto: Reproductor multimedia polimórfico" difficulty="hard">
+  Crea interfaz `Reproducible` con `reproducir()`, `pausar()`, `detener()`. Implementa `Audio`, `Video`, `Podcast`.
+
+  <div slot="hint1">
+    Cada tipo tiene comportamiento diferente: Video muestra frames, Audio visualiza ondas, Podcast guarda progreso.
+  </div>
+
+  <div slot="hint2">
+    Crea un `Reproductor` que tenga un array de `Reproducible[]` y pueda manejarlos a todos.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Reproducible.java
+public interface Reproducible {
+    void reproducir();
+    void pausar();
+    void detener();
+    String getTitulo();
+}
+
+// Archivo: Audio.java
+public class Audio implements Reproducible {
+    private String titulo;
+    private String artista;
+    private boolean reproduciendo;
+    
+    public Audio(String titulo, String artista) {
+        this.titulo = titulo;
+        this.artista = artista;
+        this.reproduciendo = false;
+    }
+    
+    @Override
+    public void reproducir() {
+        reproduciendo = true;
+        System.out.println("🎵 Reproduciendo: " + titulo + " - " + artista);
+        System.out.println("   ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪");
+    }
+    
+    @Override
+    public void pausar() {
+        reproduciendo = false;
+        System.out.println("⏸️ Audio pausado");
+    }
+    
+    @Override
+    public void detener() {
+        reproduciendo = false;
+        System.out.println("⏹️ Audio detenido");
+    }
+    
+    @Override
+    public String getTitulo() { return titulo; }
+}
+
+// Archivo: Video.java
+public class Video implements Reproducible {
+    private String titulo;
+    private int duracion;
+    private boolean reproduciendo;
+    
+    public Video(String titulo, int duracion) {
+        this.titulo = titulo;
+        this.duracion = duracion;
+        this.reproduciendo = false;
+    }
+    
+    @Override
+    public void reproducir() {
+        reproduciendo = true;
+        System.out.println("🎬 Reproduciendo: " + titulo + " (" + duracion + "s)");
+        System.out.println("   ▶️  [████████░░] 80%");
+    }
+    
+    @Override
+    public void pausar() {
+        reproduciendo = false;
+        System.out.println("⏸️ Video pausado");
+    }
+    
+    @Override
+    public void detener() {
+        reproduciendo = false;
+        System.out.println("⏹️ Video detenido");
+    }
+    
+    @Override
+    public String getTitulo() { return titulo; }
+}
+
+// Archivo: Podcast.java
+public class Podcast implements Reproducible {
+    private String titulo;
+    private int episodio;
+    private int progreso;
+    
+    public Podcast(String titulo, int episodio) {
+        this.titulo = titulo;
+        this.episodio = episodio;
+        this.progreso = 0;
+    }
+    
+    @Override
+    public void reproducir() {
+        System.out.println("🎙️ Podcast: " + titulo + " - Ep. " + episodio);
+        progreso = 100;
+        System.out.println("   Progreso: " + progreso + "%");
+    }
+    
+    @Override
+    public void pausar() {
+        System.out.println("⏸️ Podcast pausado en " + progreso + "%");
+    }
+    
+    @Override
+    public void detener() {
+        progreso = 0;
+        System.out.println("⏹️ Podcast reiniciado");
+    }
+    
+    @Override
+    public String getTitulo() { return titulo; }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Reproducible[] playlist = {
+            new Audio("Bohemian Rhapsody", "Queen"),
+            new Video("Tutorial Java", 300),
+            new Podcast("Tech Talk", 42)
+        };
+        
+        System.out.println("🎮 REPRODUCTOR MULTIMEDIA\n");
+        
+        for (Reproducible item : playlist) {
+            item.reproducir();
+            System.out.println();
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={19}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué es una interfaz en Java?"
+    options={[
+      { text: 'Una clase normal', correct: false },
+      { text: 'Un contrato con métodos sin implementar', correct: true },
+      { text: 'Un tipo de variable', correct: false },
+      { text: 'Una clase abstracta', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="¿Qué palabra clave usas para implementar una interfaz?"
+    options={[
+      { text: 'extends', correct: false },
+      { text: 'implements', correct: true },
+      { text: 'inherits', correct: false },
+      { text: 'uses', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="¿Qué es el polimorfismo?"
+    options={[
+      { text: 'Tener muchas variables', correct: false },
+      { text: 'Tratar objetos diferentes de forma uniforme con el mismo método', correct: true },
+      { text: 'Heredar de múltiples clases', correct: false },
+      { text: 'Crear interfaces', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="Si `Audio implements Reproducible`, ¿qué DEBE tener Audio?"
+    options={[
+      { text: 'Solo sus propios métodos', correct: false },
+      { text: 'Todos los métodos de Reproducible implementados', correct: true },
+      { text: 'Un constructor especial', correct: false },
+      { text: 'Nada especial', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="¿Puede una clase implementar múltiples interfaces?"
+    options={[
+      { text: 'No, solo una', correct: false },
+      { text: 'Sí: class A implements B, C, D', correct: true },
+      { text: 'Solo si son abstractas', correct: false },
+      { text: 'Solo 2 como máximo', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo qué es una interfaz y para qué sirve',
+    'Puedo crear interfaces con métodos sin implementar',
+    'Puedo implementar interfaces con implements',
+    'Entiendo qué es polimorfismo y cómo usarlo',
+    'Puedo crear arrays de objetos polimórficos',
+    'Completé el sistema de pagos con polimorfismo',
+    'Completé el juego de combate con interfaces',
+    'Puedo implementar múltiples interfaces en una clase'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "class ... must implement inherited abstract method"
+
+**Problema**: No implementaste todos los métodos de la interfaz.
+
+**Solución**: Implementa TODOS los métodos declarados en la interfaz.
+
+### Error: Confundir `extends` con `implements`
+
+**Problema**: Usas `extends` para interfaces o `implements` para clases.
+
+**Solución**:
+- `extends` → Clase hija hereda de clase padre
+- `implements` → Clase implementa interfaz
+
+### Error: Métodos de interfaz con cuerpo
+
+**Problema**: Pusiste código en los métodos de la interfaz.
+
+**Solución**: En la interfaz, solo declara la firma:
+```java
+// ✅ Bien
+public interface Ejemplo {
+    void metodo();  // ← Sin cuerpo
+}
+
+// ❌ Mal
+public interface Ejemplo {
+    void metodo() { System.out.println("..."); }  // ← No en interfaz básica
+}
+```
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 19. Ahora sabes:
+- ✅ Qué es una interfaz y cómo crearla
+- ✅ Implementar interfaces con `implements`
+- ✅ Polimorfismo: tratar objetos diferentes uniformemente
+- ✅ Arrays de objetos polimórficos
+- ✅ Múltiples interfaces en una clase
+- ✅ Sistemas de pagos, notificaciones, combate, multimedia
+
+**Lo que viene**: Día 20 es el gran final → **Excepciones + Proyecto Final: Juego de Aventura**.
+
+**¡Polimorfismo dominado! 🎯** 🚀

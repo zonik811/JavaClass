@@ -1,9 +1,955 @@
 ---
 day: 16
 title: "Encapsulación: private, public, getters/setters"
-objective: "Proteger datos con private y acceder con métodos"
-topics: ["Encapsulación", "private", "public", "getters", "setters"]
+objective: "Proteger datos con private y acceder con getters/setters combinando métodos, if, for"
+topics: ["Encapsulación", "private", "public", "getters", "setters", "Validación"]
 miniProject: false
 ---
-# Día 16: Encapsulación
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy aprenderás **Encapsulación**: proteger los datos de tus objetos para que nadie los modifique directamente. Usarás `private`, `public`, **getters** y **setters** con validaciones `if`.
+
+---
+
+## 📋 Antes de Empezar
+
+- **Ya sabes crear clases** con constructores
+- **Ya sabes usar métodos** con `if`, `for`, `while`
+- **El problema**: Con `public`, cualquiera puede poner datos inválidos
+- **La solución**: `private` + getters/setters (control total)
+
+---
+
+## 🤔 ¿Por qué Encapsular?
+
+### El problema (sin encapsulación):
+
+```java
+// Cualquiera puede hacer esto:
+CuentaBancaria cuenta = new CuentaBancaria("Ana", 1000);
+cuenta.saldo = -5000;  // ¡¡¡SALDO NEGATIVO!!! 😱
+cuenta.titular = "";   // ¡Titular vacío!
+```
+
+### La solución (con encapsulación):
+
+```java
+CuentaBancaria cuenta = new CuentaBancaria("Ana", 1000);
+// cuenta.saldo = -5000;  // ❌ ERROR! No se puede acceder directo
+cuenta.retirar(500);      // ✅ El método VALIDA antes
+```
+
+---
+
+## 📦 Paso 1: `private` vs `public`
+
+### La diferencia:
+
+| Modificador | ¿Quién puede acceder? |
+|-------------|----------------------|
+| `public` | **Todos** (cualquier código) |
+| `private` | **Solo la propia clase** |
+
+### Ejemplo visual:
+
+```java
+public class CuentaBancaria {
+    // PRIVATE: Solo esta clase puede modificar
+    private String titular;
+    private double saldo;
+    private String numeroCuenta;
+    
+    // PUBLIC: Todos pueden llamar
+    public void mostrarInfo() {
+        System.out.println(titular + ": $" + saldo);
+    }
+}
+```
+
+### Qué pasa si intentas acceder:
+
+```java
+CuentaBancaria cuenta = new CuentaBancaria("Ana", 1000);
+
+// ❌ ERROR! Son private
+cuenta.saldo = 5000;
+cuenta.titular = "Luis";
+
+// ✅ OK! Llamas al método public
+cuenta.mostrarInfo();
+```
+
+---
+
+## 🚀 Paso 2: Getters y Setters
+
+### ¿Qué son?
+
+- **Getter**: Método que **devuelve** el valor de un atributo privado
+- **Setter**: Método que **asigna** el valor con validación `if`
+
+### La fórmula mágica:
+
+```java
+// GETTER (solo leer)
+public tipo getNombre() {
+    return this.nombre;
+}
+
+// SETTER (cambiar con validación)
+public void setNombre(tipo nuevoValor) {
+    if (nuevoValor es válido) {
+        this.nombre = nuevoValor;
+    } else {
+        System.out.println("❌ Valor inválido");
+    }
+}
+```
+
+---
+
+## 💪 Ejercicios Guiados (Combinando Todo)
+
+<ExerciseBlock id={1} title="Getters y Setters básicos" difficulty="easy">
+  Crea una clase `Persona` con atributos `private nombre`, `private edad`. Agrega getters y setters con validación.
+
+  <div slot="hint1">
+    `getNombre()` retorna `this.nombre`. `setNombre(String)` valida que no sea vacío.
+  </div>
+
+  <div slot="hint2">
+    `setEdad(int)` valida que sea mayor a 0 y menor a 150.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Persona.java
+public class Persona {
+    private String nombre;
+    private int edad;
+    
+    public Persona(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+    
+    // GETTERS
+    public String getNombre() {
+        return this.nombre;
+    }
+    
+    public int getEdad() {
+        return this.edad;
+    }
+    
+    // SETTERS con validación
+    public void setNombre(String nombre) {
+        if (nombre != null && !nombre.isEmpty()) {
+            this.nombre = nombre;
+        } else {
+            System.out.println("❌ Nombre no puede estar vacío");
+        }
+    }
+    
+    public void setEdad(int edad) {
+        if (edad > 0 && edad < 150) {
+            this.edad = edad;
+        } else {
+            System.out.println("❌ Edad inválida: " + edad);
+        }
+    }
+    
+    public void presentarse() {
+        System.out.println("👋 Soy " + nombre + " y tengo " + edad + " años");
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Persona p = new Persona("Ana", 15);
+        p.presentarse();
+        
+        // ✅ Cambiar con validación
+        p.setEdad(16);
+        System.out.println("Nueva edad: " + p.getEdad());
+        
+        // ❌ Intentar valor inválido
+        p.setEdad(-5);
+        p.setNombre("");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Cuenta Bancaria con validación if" difficulty="medium">
+  Crea una clase `CuentaBancaria` con `private saldo`. Métodos: `depositar()`, `retirar()`, `getSaldo()`.
+
+  <div slot="hint1">
+    `depositar()` valida que cantidad > 0. `retirar()` valida que haya saldo suficiente.
+  </div>
+
+  <div slot="hint2">
+    NO hay `setSaldo()`. El saldo solo cambia con depositar/retirar.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: CuentaBancaria.java
+public class CuentaBancaria {
+    private String titular;
+    private double saldo;
+    private String numeroCuenta;
+    
+    public CuentaBancaria(String titular, double saldoInicial, String numeroCuenta) {
+        this.titular = titular;
+        this.numeroCuenta = numeroCuenta;
+        
+        if (saldoInicial >= 0) {
+            this.saldo = saldoInicial;
+        } else {
+            this.saldo = 0;
+            System.out.println("❌ Saldo inicial inválido. Usando 0");
+        }
+    }
+    
+    // GETTERS (solo lectura)
+    public String getTitular() { return this.titular; }
+    public double getSaldo() { return this.saldo; }
+    public String getNumeroCuenta() { return this.numeroCuenta; }
+    
+    // MÉTODOS (no hay setSaldo!)
+    public void depositar(double cantidad) {
+        if (cantidad > 0) {
+            saldo = saldo + cantidad;
+            System.out.println("✅ Depósito: $" + cantidad + " | Saldo: $" + saldo);
+        } else {
+            System.out.println("❌ Cantidad inválida");
+        }
+    }
+    
+    public void retirar(double cantidad) {
+        if (cantidad > saldo) {
+            System.out.println("❌ Fondos insuficientes. Disponible: $" + saldo);
+        } else if (cantidad > 0) {
+            saldo = saldo - cantidad;
+            System.out.println("✅ Retiro: $" + cantidad + " | Saldo: $" + saldo);
+        } else {
+            System.out.println("❌ Cantidad inválida");
+        }
+    }
+    
+    public void mostrarEstado() {
+        System.out.println("🏦 " + titular + " (" + numeroCuenta + ")");
+        System.out.println("   Saldo: $" + saldo);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        CuentaBancaria cuenta = new CuentaBancaria("Ana García", 1000, "ES1234");
+        cuenta.mostrarEstado();
+        
+        System.out.println("\n--- Operaciones ---\n");
+        cuenta.depositar(500);
+        cuenta.retirar(200);
+        cuenta.retirar(2000);  // Debería fallar
+        cuenta.depositar(-100); // Debería fallar
+        
+        // ❌ Esto da error (saldo es private)
+        // cuenta.saldo = 999999;  // ¡NO SE PUEDE!
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Producto con stock controlado" difficulty="medium">
+  Crea una clase `Producto` con `private stock`. Métodos: `vender()`, `reabastecer()`, `getStock()`.
+
+  <div slot="hint1">
+    `vender(cantidad)` verifica `if (cantidad <= stock)`.
+  </div>
+
+  <div slot="hint2">
+    `reabastecer(cantidad)` verifica `if (cantidad > 0)`.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Producto.java
+public class Producto {
+    private String nombre;
+    private double precio;
+    private int stock;
+    
+    public Producto(String nombre, double precio, int stock) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.setStock(stock);  // Usa el setter con validación
+    }
+    
+    // GETTERS
+    public String getNombre() { return this.nombre; }
+    public double getPrecio() { return this.precio; }
+    public int getStock() { return this.stock; }
+    
+    // SETTERS con validación
+    public void setStock(int stock) {
+        if (stock >= 0) {
+            this.stock = stock;
+        } else {
+            System.out.println("❌ Stock no puede ser negativo");
+        }
+    }
+    
+    public void setPrecio(double precio) {
+        if (precio > 0) {
+            this.precio = precio;
+        } else {
+            System.out.println("❌ Precio debe ser positivo");
+        }
+    }
+    
+    // MÉTODOS
+    public boolean vender(int cantidad) {
+        if (cantidad <= 0) {
+            System.out.println("❌ Cantidad inválida");
+            return false;
+        }
+        
+        if (cantidad > stock) {
+            System.out.println("❌ Stock insuficiente. Disponible: " + stock);
+            return false;
+        }
+        
+        stock = stock - cantidad;
+        double ingreso = precio * cantidad;
+        System.out.println("✅ Vendido: " + nombre + " x" + cantidad + " → $" + ingreso);
+        System.out.println("   Stock restante: " + stock);
+        return true;
+    }
+    
+    public void reabastecer(int cantidad) {
+        if (cantidad > 0) {
+            stock = stock + cantidad;
+            System.out.println("✅ Reabastecido: " + nombre + " +" + cantidad + " unidades");
+            System.out.println("   Stock actual: " + stock);
+        } else {
+            System.out.println("❌ Cantidad inválida");
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Producto laptop = new Producto("Laptop", 999.99, 10);
+        
+        System.out.println("--- VENTAS ---\n");
+        laptop.vender(3);
+        laptop.vender(8);  // Debería fallar (solo quedan 7)
+        laptop.vender(2);
+        
+        System.out.println("\n--- REABASTECER ---\n");
+        laptop.reabastecer(15);
+        
+        // ❌ Esto da error (stock es private)
+        // laptop.stock = 999;  // ¡NO SE PUEDE!
+        laptop.setStock(50);   // ✅ Pero con setter SÍ (con validación)
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Estudiante con notas protegidas" difficulty="medium">
+  Crea una clase `Estudiante` con `private double[] notas`. Solo se pueden modificar con método `setNota()`.
+
+  <div slot="hint1">
+    `setNota(int materia, double nota)` valida índice y rango (0-100).
+  </div>
+
+  <div slot="hint2">
+    `getPromedio()` recorre el array con `for` y devuelve el promedio.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Estudiante.java
+public class Estudiante {
+    private String nombre;
+    private String[] materias;
+    private double[] notas;
+    
+    public Estudiante(String nombre, String[] materias) {
+        this.nombre = nombre;
+        this.materias = materias;
+        this.notas = new double[materias.length];  // Todas en 0 al inicio
+    }
+    
+    // GETTERS
+    public String getNombre() { return this.nombre; }
+    public String[] getMaterias() { return this.materias; }
+    public double getNota(int indice) {
+        if (indice >= 0 && indice < notas.length) {
+            return notas[indice];
+        }
+        return -1;
+    }
+    
+    public double getPromedio() {
+        double suma = 0;
+        for (double nota : notas) {
+            suma = suma + nota;
+        }
+        if (notas.length > 0) {
+            return suma / notas.length;
+        }
+        return 0;
+    }
+    
+    // SETTER con validación
+    public boolean setNota(int indice, double nota) {
+        if (indice < 0 || indice >= notas.length) {
+            System.out.println("❌ Índice inválido");
+            return false;
+        }
+        
+        if (nota < 0 || nota > 100) {
+            System.out.println("❌ Nota inválida: " + nota);
+            return false;
+        }
+        
+        notas[indice] = nota;
+        System.out.println("✅ " + materias[indice] + ": " + nota);
+        return true;
+    }
+    
+    public void mostrarBoletin() {
+        System.out.println("📊 BOLETÍN: " + nombre);
+        System.out.println("══════════════════");
+        
+        for (int i = 0; i < materias.length; i++) {
+            String estado = notas[i] >= 70 ? "✅" : "❌";
+            System.out.println(estado + " " + materias[i] + ": " + notas[i]);
+        }
+        
+        double promedio = getPromedio();
+        System.out.println("──────────────────────");
+        System.out.println("Promedio: " + String.format("%.1f", promedio));
+        System.out.println(promedio >= 70 ? "✅ APROBADO" : "❌ REPROBADO");
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        String[] materias = {"Mate", "Ciencia", "Historia", "Inglés"};
+        Estudiante e = new Estudiante("Ana", materias);
+        
+        // Asignar notas (con validación)
+        e.setNota(0, 85);
+        e.setNota(1, 92);
+        e.setNota(2, 78);
+        e.setNota(3, 95);
+        
+        // Intentos inválidos
+        e.setNota(-1, 50);   // Índice inválido
+        e.setNota(0, 150);   // Nota inválida
+        e.setNota(10, 80);   // Índice fuera de rango
+        
+        System.out.println();
+        e.mostrarBoletin();
+        
+        // ❌ Esto da error (notas es private)
+        // e.notas[0] = 999;  // ¡NO SE PUEDE!
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Inventario con acceso controlado" difficulty="hard">
+  Crea una clase `Inventario` con `private String[] nombres`, `private double[] precios`, `private int[] cantidades`. Solo modifica con métodos.
+
+  <div slot="hint1">
+    NO hay setters para los arrays. Solo `agregarProducto()`, `actualizarPrecio()`, `vender()`.
+  </div>
+
+  <div slot="hint2">
+    Cada método valida antes de modificar.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Inventario.java
+public class Inventario {
+    private String nombreTienda;
+    private String[] nombres;
+    private double[] precios;
+    private int[] cantidades;
+    private int totalProductos;
+    
+    public Inventario(String nombreTienda, int capacidad) {
+        this.nombreTienda = nombreTienda;
+        this.nombres = new String[capacidad];
+        this.precios = new double[capacidad];
+        this.cantidades = new int[capacidad];
+        this.totalProductos = 0;
+    }
+    
+    // GETTERS
+    public String getNombreTienda() { return this.nombreTienda; }
+    public int getTotalProductos() { return this.totalProductos; }
+    
+    public double getPrecio(int indice) {
+        if (indice >= 0 && indice < totalProductos) {
+            return precios[indice];
+        }
+        return 0;
+    }
+    
+    public int getCantidad(int indice) {
+        if (indice >= 0 && indice < totalProductos) {
+            return cantidades[indice];
+        }
+        return 0;
+    }
+    
+    // MÉTODOS (no setters directos!)
+    public boolean agregarProducto(String nombre, double precio, int cantidad) {
+        if (totalProductos >= nombres.length) {
+            System.out.println("❌ Inventario lleno!");
+            return false;
+        }
+        
+        if (precio <= 0 || cantidad < 0) {
+            System.out.println("❌ Datos inválidos");
+            return false;
+        }
+        
+        nombres[totalProductos] = nombre;
+        precios[totalProductos] = precio;
+        cantidades[totalProductos] = cantidad;
+        totalProductos++;
+        
+        System.out.println("✅ Producto agregado: " + nombre);
+        return true;
+    }
+    
+    public boolean actualizarPrecio(int indice, double nuevoPrecio) {
+        if (indice < 0 || indice >= totalProductos) {
+            System.out.println("❌ Índice inválido");
+            return false;
+        }
+        
+        if (nuevoPrecio <= 0) {
+            System.out.println("❌ Precio inválido");
+            return false;
+        }
+        
+        precios[indice] = nuevoPrecio;
+        System.out.println("✅ Precio actualizado: " + nombres[indice]);
+        return true;
+    }
+    
+    public boolean vender(int indice, int cantidad) {
+        if (indice < 0 || indice >= totalProductos) {
+            System.out.println("❌ Producto no encontrado");
+            return false;
+        }
+        
+        if (cantidad > cantidades[indice]) {
+            System.out.println("❌ Stock insuficiente: " + nombres[indice]);
+            return false;
+        }
+        
+        cantidades[indice] = cantidades[indice] - cantidad;
+        double ingreso = precios[indice] * cantidad;
+        System.out.println("✅ Vendido: " + nombres[indice] + " x" + cantidad + " → $" + ingreso);
+        return true;
+    }
+    
+    public void mostrarInventario() {
+        System.out.println("🏪 INVENTARIO: " + nombreTienda);
+        System.out.println("══════════════════\n");
+        
+        double valorTotal = 0;
+        
+        for (int i = 0; i < totalProductos; i++) {
+            double valor = precios[i] * cantidades[i];
+            valorTotal = valorTotal + valor;
+            
+            System.out.println("[" + (i + 1) + "] " + nombres[i]);
+            System.out.println("    Precio: $" + precios[i] + " | Stock: " + cantidades[i]);
+            System.out.println("    Valor: $" + valor);
+            System.out.println("");
+        }
+        
+        System.out.println("──────────────────────");
+        System.out.println("💰 Valor total: $" + valorTotal);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Inventario inv = new Inventario("Tech Store", 10);
+        
+        System.out.println("--- AGREGANDO ---\n");
+        inv.agregarProducto("Laptop", 999.99, 10);
+        inv.agregarProducto("Mouse", 25.50, 50);
+        inv.agregarProducto("Teclado", 75.00, 0);
+        
+        System.out.println("\n--- ACTUALIZAR ---\n");
+        inv.actualizarPrecio(0, 899.99);
+        
+        System.out.println("\n--- VENDER ---\n");
+        inv.vender(0, 3);
+        inv.vender(2, 5);  // Debería fallar (stock 0)
+        
+        System.out.println("\n--- ESTADO FINAL ---\n");
+        inv.mostrarInventario();
+        
+        // ❌ Esto da error (todo es private)
+        // inv.nombres[0] = "Hackeado";  // ¡NO SE PUEDE!
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios Dinámicos (Simulaciones)
+
+<ExerciseBlock id={6} title="Simulador: Sistema de login con contraseñas" difficulty="hard">
+  Crea una clase `Usuario` con `private String contraseña`. Métodos: `cambiarContraseña()`, `verificarContraseña()`.
+
+  <div slot="hint1">
+    La contraseña es private y solo se cambia con validación (mínimo 8 chars).
+  </div>
+
+  <div slot="hint2">
+    `verificarContraseña(String)` retorna `boolean` si coincide.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Usuario.java
+public class Usuario {
+    private String nombre;
+    private String email;
+    private String contraseña;
+    private int intentosFallidos;
+    
+    public Usuario(String nombre, String email, String contraseña) {
+        this.nombre = nombre;
+        this.email = email;
+        this.setContraseña(contraseña);
+        this.intentosFallidos = 0;
+    }
+    
+    // GETTERS
+    public String getNombre() { return this.nombre; }
+    public String getEmail() { return this.email; }
+    // NO hay getContraseña()!
+    
+    // SETTER con validación
+    public boolean setContraseña(String nueva) {
+        if (nueva.length() < 8) {
+            System.out.println("❌ La contraseña debe tener al menos 8 caracteres");
+            return false;
+        }
+        
+        boolean tieneMayuscula = false;
+        boolean tieneNumero = false;
+        
+        for (int i = 0; i < nueva.length(); i++) {
+            char c = nueva.charAt(i);
+            if (c >= 'A' && c <= 'Z') tieneMayuscula = true;
+            if (c >= '0' && c <= '9') tieneNumero = true;
+        }
+        
+        if (!tieneMayuscula || !tieneNumero) {
+            System.out.println("❌ Necesita mayúscula y número");
+            return false;
+        }
+        
+        this.contraseña = nueva;
+        System.out.println("✅ Contraseña actualizada");
+        return true;
+    }
+    
+    // MÉTODOS
+    public boolean verificarContraseña(String pass) {
+        if (this.contraseña.equals(pass)) {
+            intentosFallidos = 0;  // Resetear intentos
+            return true;
+        } else {
+            intentosFallidos++;
+            System.out.println("❌ Contraseña incorrecta (intento " + intentosFallidos + ")");
+            
+            if (intentosFallidos >= 3) {
+                System.out.println("🔒 Cuenta bloqueada por seguridad");
+            }
+            
+            return false;
+        }
+    }
+    
+    public void mostrarInfo() {
+        System.out.println("👤 " + nombre + " (" + email + ")");
+        System.out.println("   Intentos fallidos: " + intentosFallidos);
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Usuario user = new Usuario("Ana", "ana@email.com", "Secure1Pass");
+        user.mostrarInfo();
+        
+        System.out.println("\n--- VERIFICANDO ---\n");
+        user.verificarContraseña("wrong");
+        user.verificarContraseña("wrong2");
+        user.verificarContraseña("Secure1Pass");  // Correcta
+        
+        System.out.println("\n--- CAMBIANDO ---\n");
+        user.setContraseña("123");         // Muy corta
+        user.setContraseña("sinmayuscula");  // Sin mayúscula
+        user.setContraseña("NuevaPass1");    // ✅ Válida
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Simulador: Semáforo con estados protegidos" difficulty="hard">
+  Crea una clase `Semaforo` con `private int estado` (0=rojo, 1=amarillo, 2=verde). Método `cambiar()` que cicla automáticamente.
+
+  <div slot="hint1">
+    `getEstado()` retorna String: "Rojo", "Amarillo", "Verde".
+  </div>
+
+  <div slot="hint2">
+    `cambiar()` incrementa estado con `if` para ciclar: si llega a 3, vuelve a 0.
+  </div>
+
+  <div slot="solution">
+```java
+// Archivo: Semaforo.java
+public class Semaforo {
+    private String ubicacion;
+    private int estado;  // 0=Rojo, 1=Amarillo, 2=Verde
+    private int ciclos;
+    
+    public Semaforo(String ubicacion) {
+        this.ubicacion = ubicacion;
+        this.estado = 0;  // Empieza en Rojo
+        this.ciclos = 0;
+    }
+    
+    // GETTERS
+    public String getUbicacion() { return this.ubicacion; }
+    public int getCiclos() { return this.ciclos; }
+    
+    public String getEstado() {
+        switch (estado) {
+            case 0: return "🔴 Rojo";
+            case 1: return "🟡 Amarillo";
+            case 2: return "🟢 Verde";
+            default: return "⚫ Error";
+        }
+    }
+    
+    // NO hay setEstado() directo!
+    
+    // MÉTODOS
+    public void cambiar() {
+        estado++;
+        
+        if (estado > 2) {
+            estado = 0;  // Ciclar
+            ciclos++;
+        }
+        
+        System.out.println(getUbicacion() + ": " + getEstado() + " (ciclo " + ciclos + ")");
+    }
+    
+    public void simular(int duracion) {
+        System.out.println("🚦 SEMÁFORO: " + ubicacion);
+        System.out.println("══════════════════\n");
+        
+        for (int i = 0; i < duracion; i++) {
+            cambiar();
+        }
+    }
+}
+
+// Archivo: Main.java
+public class Main {
+    public static void main(String[] args) {
+        Semaforo s1 = new Semaforo("Calle 5ta y Principal");
+        s1.simular(10);
+        
+        System.out.println("\n📊 Resumen:");
+        System.out.println("Ciclos completos: " + s1.getCiclos());
+        
+        // ❌ Esto da error (estado es private)
+        // s1.estado = 999;  // ¡NO SE PUEDE!
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={16}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué significa que un atributo sea `private`?"
+    options={[
+      { text: 'Cualquier código puede acceder', correct: false },
+      { text: 'Solo la propia clase puede acceder', correct: true },
+      { text: 'Es invisible para todos incluido la clase', correct: false },
+      { text: 'Es estático', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="¿Qué es un getter?"
+    options={[
+      { text: 'Un método que modifica un atributo', correct: false },
+      { text: 'Un método que devuelve el valor de un atributo private', correct: true },
+      { text: 'Un constructor especial', correct: false },
+      { text: 'Una variable global', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="¿Por qué usamos setters en lugar de modificar atributos directamente?"
+    options={[
+      { text: 'Porque es más rápido', correct: false },
+      { text: 'Para validar los datos antes de asignarlos', correct: true },
+      { text: 'Porque Java lo requiere', correct: false },
+      { text: 'No hay diferencia', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="Si `saldo` es private en `CuentaBancaria`, ¿cómo lo consultamos?"
+    options={[
+      { text: 'cuenta.saldo', correct: false },
+      { text: 'cuenta.getSaldo()', correct: true },
+      { text: 'cuenta->saldo', correct: false },
+      { text: 'No se puede consultar', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="¿Deberíamos crear getters para todo?"
+    options={[
+      { text: 'Sí, siempre', correct: false },
+      { text: 'No, solo para datos que necesites consultar desde fuera', correct: true },
+      { text: 'Nunca', correct: false },
+      { text: 'Solo para Strings', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## 🎁 Reto Opcional: Sistema de Biblioteca
+
+**Desafío**: Crea una clase `Libro` con:
+- Atributos private: `titulo`, `autor`, `anio`, `prestado`, `fechaDevolucion`
+- Métodos: `prestar()`, `devolver()`, `estaPrestado()`, `getInfo()`
+
+Y una clase `Biblioteca` con:
+- `private Libro[] libros`
+- Métodos: `agregarLibro()`, `buscarLibro(titulo)`, `prestarLibro()`, `devolverLibro()`, `mostrarCatalogo()`
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo la diferencia entre private y public',
+    'Puedo crear getters para leer atributos private',
+    'Puedo crear setters con validación if',
+    'Protejo datos sensibles (saldo, contraseña, stock)',
+    'Los objetos solo se modifican por métodos controlados',
+    'Completé el simulador de login con contraseñas',
+    'Completé el simulador de semáforo',
+    'Entiendo por qué encapsular es importante'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "has private access in"
+
+**Problema**: Intentaste acceder a un atributo private desde fuera de la clase.
+
+**Solución**: Usa el getter: `objeto.getAtributo()` en lugar de `objeto.atributo`.
+
+### Error: El setter no valida
+
+**Problema**: Tu setter acepta cualquier valor.
+
+**Solución**: Agrega `if` para validar antes de asignar:
+```java
+public void setEdad(int edad) {
+    if (edad > 0 && edad < 150) {  // ← Validación
+        this.edad = edad;
+    } else {
+        System.out.println("❌ Edad inválida");
+    }
+}
+```
+
+### Error: Getter modifica datos
+
+**Problema**: Tu getter devuelve una referencia mutable (como un array).
+
+**Solución**: Devuelve una copia:
+```java
+public int[] getNotas() {
+    return notas.clone();  // ← Copia, no referencia directa
+}
+```
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 16. Ahora sabes:
+- ✅ Qué es encapsulación y por qué es importante
+- ✅ Usar `private` para proteger atributos
+- ✅ Crear getters y setters con validación
+- ✅ Controlar acceso a datos sensibles
+- ✅ Simulaciones realistas con datos protegidos
+
+**Lo que viene**: Día 17 aprenderás sobre **Static vs Instancia** (variables y métodos de clase vs objeto).
+
+**¡Tus datos están blindados! 🔒** 🚀

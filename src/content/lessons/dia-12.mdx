@@ -1,9 +1,901 @@
 ---
 day: 12
 title: "Arreglos (Arrays)"
-objective: "Declarar y usar arrays para almacenar múltiples valores"
-topics: ["Arrays", "Declaración", "Inicialización", "Acceso por índice"]
+objective: "Declarar, recorrer y manipular arrays combinando métodos, if, while, for"
+topics: ["Arrays", "Declaración", "Recorrer con for/while", "if con arrays", "Métodos + arrays"]
 miniProject: false
 ---
-# Día 12: Arreglos
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy aprenderás a usar **Arrays (arreglos)** para almacenar múltiples datos en una sola variable. Combinarás todo: métodos con `return`, `if`, `while`, `for` para manipularlos.
+
+---
+
+## 🔄 Repaso Rápido (2 minutos)
+
+### Lo que ya sabes:
+```java
+// Variables sueltas
+int edad = 15;
+String nombre = "Ana";
+
+// Métodos con return
+public static int sumar(int a, int b) {
+    return a + b;
+}
+
+// if, for, while
+if (edad >= 18) { ... }
+for (int i = 0; i < 5; i++) { ... }
+while (edad < 18) { ... }
+```
+
+### Hoy aprenderás:
+- **Arrays**: Múltiples valores en UNA variable
+- **Recorrer**: Usar `for` y `while` con arrays
+- **Buscar**: Usar `if` para encontrar elementos
+- **Métodos + Arrays**: Combinar todo
+
+---
+
+## 🤔 ¿Qué es un Array?
+
+### La analogía del casillero escolar:
+
+**Sin array** (una variable por dato):
+```java
+String estudiante1 = "Ana";
+String estudiante2 = "Luis";
+String estudiante3 = "Pedro";
+String estudiante4 = "María";
+String estudiante5 = "Carlos";
+// ¡Necesitas 5 variables! 😱
+```
+
+**Con array** (una variable para todo):
+```java
+String[] estudiantes = {"Ana", "Luis", "Pedro", "María", "Carlos"};
+// ¡Una sola variable! 😎
+```
+
+### 🗺️ Diagrama: Cómo se ve por dentro
+
+```
+Índice:    [0]      [1]     [2]      [3]       [4]
+         ┌─────┬────────┬────────┬────────┬────────┐
+         │ Ana │  Luis  │ Pedro  │ María  │ Carlos │
+         └─────┴────────┴────────┴────────┴────────┘
+```
+
+**¡OJO!** Los índices empiezan en **0**, no en 1.
+
+---
+
+## 📦 Paso 1: Declarar y Acceder
+
+### La fórmula mágica:
+
+```java
+// Declarar + crear + llenar (todo en uno)
+TIPO[] nombre = {valor1, valor2, valor3};
+
+// Acceder a un valor
+nombre[índice]
+```
+
+### Ejemplo paso a paso:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // Paso 1: CREAR el array
+        String[] frutas = {"Manzana", "Banana", "Cereza", "Durazno"};
+
+        // Paso 2: VER cómo se ve
+        System.out.println("Índice 0: " + frutas[0]);  // Manzana
+        System.out.println("Índice 1: " + frutas[1]);  // Banana
+        System.out.println("Índice 2: " + frutas[2]);  // Cereza
+        System.out.println("Índice 3: " + frutas[3]);  // Durazno
+
+        // Paso 3: SABER cuántos tiene
+        System.out.println("Total: " + frutas.length);  // 4
+    }
+}
+```
+
+### 📖 Paso a paso:
+
+1. **`frutas`** es el nombre del array
+2. **`frutas[0]`** → accede al primer elemento (Manzana)
+3. **`frutas[1]`** → accede al segundo (Banana)
+4. **`frutas.length`** → te dice cuántos hay (4)
+
+---
+
+## 🚀 Paso 2: Recorrer con `for`
+
+### La fórmula mágica:
+
+```java
+for (int i = 0; i < array.length; i++) {
+    // array[i] es el elemento actual
+}
+```
+
+### Ejemplo paso a paso:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        int[] notas = {85, 92, 78, 95, 88};
+
+        // Vuelta 1: i=0, notas[0]=85
+        // Vuelta 2: i=1, notas[1]=92
+        // Vuelta 3: i=2, notas[2]=78
+        // Vuelta 4: i=3, notas[3]=95
+        // Vuelta 5: i=4, notas[4]=88
+        // i=5 → 5 < 5 es falso → SALE
+
+        for (int i = 0; i < notas.length; i++) {
+            System.out.println("Nota " + (i + 1) + ": " + notas[i]);
+        }
+    }
+}
+```
+
+**Salida**:
+```
+Nota 1: 85
+Nota 2: 92
+Nota 3: 78
+Nota 4: 95
+Nota 5: 88
+```
+
+---
+
+## 💪 Ejercicios Guiados (Combinando Todo)
+
+<ExerciseBlock id={1} title="Array + for: Sumar todos los elementos" difficulty="easy">
+  Crea un método `sumarArray(int[] numeros)` que devuelva la suma de todos los elementos.
+
+  <div slot="hint1">
+    Usa `int total = 0;` y un `for (int i = 0; i < numeros.length; i++)`.
+  </div>
+
+  <div slot="hint2">
+    Dentro: `total = total + numeros[i];` y al final `return total;`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        int[] ventas = {100, 200, 150, 300, 250};
+        System.out.println("Total vendido: $" + sumarArray(ventas));
+    }
+
+    public static int sumarArray(int[] numeros) {
+        int total = 0;
+        for (int i = 0; i < numeros.length; i++) {
+            total = total + numeros[i];
+        }
+        return total;
+    }
+}
+```
+
+**🔍 TRAZA PASO A PASO**:
+```
+sumarArray({100, 200, 150, 300, 250}):
+  → total = 0
+  → i=0: total = 0 + 100 = 100
+  → i=1: total = 100 + 200 = 300
+  → i=2: total = 300 + 150 = 450
+  → i=3: total = 450 + 300 = 750
+  → i=4: total = 750 + 250 = 1000
+  → i=5: 5 < 5 ❌ → SALE
+  → return 1000
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Array + for + if: Encontrar el máximo" difficulty="easy">
+  Crea un método `encontrarMaximo(int[] numeros)` que devuelva el número más grande del array.
+
+  <div slot="hint1">
+    Empieza con `int maximo = numeros[0];` y compara con cada elemento.
+  </div>
+
+  <div slot="hint2">
+    Dentro del for: `if (numeros[i] > maximo) { maximo = numeros[i]; }`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        int[] temperaturas = {22, 18, 25, 30, 19, 28, 24};
+        System.out.println("Temperatura más alta: " + encontrarMaximo(temperaturas) + "°C");
+    }
+
+    public static int encontrarMaximo(int[] numeros) {
+        int maximo = numeros[0];  // Empezamos con el primero
+
+        for (int i = 1; i < numeros.length; i++) {
+            if (numeros[i] > maximo) {
+                maximo = numeros[i];  // ← Nuevo máximo!
+            }
+        }
+
+        return maximo;
+    }
+}
+```
+
+**🔍 TRAZA PASO A PASO**:
+```
+encontrarMaximo({22, 18, 25, 30, 19, 28, 24}):
+  → maximo = 22
+  → i=1: 18 > 22 ❌ → maximo = 22
+  → i=2: 25 > 22 ✅ → maximo = 25
+  → i=3: 30 > 25 ✅ → maximo = 30
+  → i=4: 19 > 30 ❌ → maximo = 30
+  → i=5: 28 > 30 ❌ → maximo = 30
+  → i=6: 24 > 30 ❌ → maximo = 30
+  → return 30
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Array + for + if: Contar aprobados" difficulty="medium">
+  Crea un método `contarAprobados(int[] notas)` que devuelva cuántos estudiantes aprobaron (nota >= 70).
+
+  <div slot="hint1">
+    Usa `int aprobados = 0;` y un `for` para revisar cada nota.
+  </div>
+
+  <div slot="hint2">
+    Dentro: `if (notas[i] >= 70) { aprobados = aprobados + 1; }`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        int[] notas = {85, 62, 78, 45, 92, 70, 55, 88};
+        System.out.println("Aprobados: " + contarAprobados(notas) + " de " + notas.length);
+    }
+
+    public static int contarAprobados(int[] notas) {
+        int aprobados = 0;
+
+        for (int i = 0; i < notas.length; i++) {
+            if (notas[i] >= 70) {
+                aprobados = aprobados + 1;
+                System.out.println("✅ Estudiante " + (i + 1) + ": " + notas[i]);
+            } else {
+                System.out.println("❌ Estudiante " + (i + 1) + ": " + notas[i]);
+            }
+        }
+
+        return aprobados;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Array + while: Búsqueda lineal" difficulty="medium">
+  Crea un método `buscarNumero(int[] numeros, int buscado)` que devuelva la posición del número o `-1` si no está.
+
+  <div slot="hint1">
+    Usa `int i = 0;` y un `while (i < numeros.length)`.
+  </div>
+
+  <div slot="hint2">
+    Dentro: `if (numeros[i] == buscado) return i;`. Si sale del while, `return -1;`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        int[] codigos = {101, 205, 303, 407, 502};
+
+        int pos1 = buscarNumero(codigos, 303);
+        System.out.println("303 está en posición: " + pos1);
+
+        int pos2 = buscarNumero(codigos, 999);
+        System.out.println("999 está en posición: " + pos2);
+    }
+
+    public static int buscarNumero(int[] numeros, int buscado) {
+        int i = 0;
+        while (i < numeros.length) {
+            if (numeros[i] == buscado) {
+                return i;  // ← Encontrado!
+            }
+            i = i + 1;
+        }
+        return -1;  // ← No encontrado
+    }
+}
+```
+
+**🔍 TRAZA PASO A PASO**:
+```
+buscarNumero({101, 205, 303, 407, 502}, 303):
+  → i=0: 101 == 303 ❌ → i=1
+  → i=1: 205 == 303 ❌ → i=2
+  → i=2: 303 == 303 ✅ → return 2
+
+buscarNumero({101, 205, 303, 407, 502}, 999):
+  → i=0: 101 == 999 ❌ → i=1
+  → i=1: 205 == 999 ❌ → i=2
+  → i=2: 303 == 999 ❌ → i=3
+  → i=3: 407 == 999 ❌ → i=4
+  → i=4: 502 == 999 ❌ → i=5
+  → 5 < 5 ❌ → SALE del while
+  → return -1
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Array + for: Generar reporte de ventas" difficulty="medium">
+  Crea un método `generarReporteVentas(String[] vendedores, double[] ventas)` que devuelva un String con el reporte completo.
+
+  <div slot="hint1">
+    Usa `String reporte = "";` y un `for` para agregar líneas.
+  </div>
+
+  <div slot="hint2">
+    Cada línea: `reporte += vendedores[i] + ": $" + ventas[i] + "\n";`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        String[] vendedores = {"Ana", "Luis", "Pedro", "María"};
+        double[] ventas = {5000.00, 3200.50, 7800.25, 4500.75};
+
+        System.out.println(generarReporteVentas(vendedores, ventas));
+    }
+
+    public static String generarReporteVentas(String[] vendedores, double[] ventas) {
+        String reporte = "📊 REPORTE DE VENTAS\n";
+        reporte += "══════════════════════\n\n";
+
+        double totalGeneral = 0;
+
+        for (int i = 0; i < vendedores.length; i++) {
+            reporte += vendedores[i] + ": $" + ventas[i] + "\n";
+            totalGeneral = totalGeneral + ventas[i];
+        }
+
+        reporte += "\n──────────────────────\n";
+        reporte += "TOTAL: $" + totalGeneral;
+
+        return reporte;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios Dinámicos (Combinaciones Avanzadas)
+
+<ExerciseBlock id={6} title="Array + for + if: Filtrar números" difficulty="medium">
+  Crea un método `filtrarPositivos(int[] numeros)` que devuelva un String con solo los números positivos, separados por coma.
+
+  <div slot="hint1">
+    Usa `String resultado = "";` y un `for` para revisar cada número.
+  </div>
+
+  <div slot="hint2">
+    Dentro: `if (numeros[i] > 0)` → agrega al String con coma si no es el primero.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        int[] datos = {-5, 10, -3, 8, 0, 15, -2, 7};
+        System.out.println("Positivos: " + filtrarPositivos(datos));
+    }
+
+    public static String filtrarPositivos(int[] numeros) {
+        String resultado = "";
+
+        for (int i = 0; i < numeros.length; i++) {
+            if (numeros[i] > 0) {
+                if (!resultado.isEmpty()) {
+                    resultado += ", ";
+                }
+                resultado += numeros[i];
+            }
+        }
+
+        return resultado;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Array + while + if: Eliminar duplicados" difficulty="hard">
+  Crea un método `sinDuplicados(int[] numeros)` que devuelva un String con los números sin repetir.
+
+  <div slot="hint1">
+    Usa `String resultado = "";` y para cada número, verifica si ya está en el resultado.
+  </div>
+
+  <div slot="hint2">
+    Crea un método auxiliar `yaEstaEn(resultado, numero)` que verifique si el número ya está en el String.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        int[] datos = {5, 3, 5, 8, 3, 1, 8, 9, 1};
+        System.out.println("Original: 5, 3, 5, 8, 3, 1, 8, 9, 1");
+        System.out.println("Sin duplicados: " + sinDuplicados(datos));
+    }
+
+    public static String sinDuplicados(int[] numeros) {
+        String resultado = "";
+
+        for (int i = 0; i < numeros.length; i++) {
+            if (!yaEstaEn(resultado, numeros[i])) {
+                if (!resultado.isEmpty()) {
+                    resultado += ", ";
+                }
+                resultado += numeros[i];
+            }
+        }
+
+        return resultado;
+    }
+
+    public static boolean yaEstaEn(String texto, int numero) {
+        // Verifica si el número ya está en el texto
+        return texto.contains(String.valueOf(numero));
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="Array + for + if: Invertir array" difficulty="medium">
+  Crea un método `invertirArray(int[] numeros)` que devuelva un nuevo array con los elementos al revés.
+
+  <div slot="hint1">
+    Crea un nuevo array del mismo tamaño. Usa un `for` para copiar desde el final al inicio.
+  </div>
+
+  <div slot="hint2">
+    `nuevo[nuevo.length - 1 - i] = numeros[i];`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        int[] original = {1, 2, 3, 4, 5};
+        int[] invertido = invertirArray(original);
+
+        System.out.println("Original: " + arrayAString(original));
+        System.out.println("Invertido: " + arrayAString(invertido));
+    }
+
+    public static int[] invertirArray(int[] numeros) {
+        int[] invertido = new int[numeros.length];
+
+        for (int i = 0; i < numeros.length; i++) {
+            invertido[invertido.length - 1 - i] = numeros[i];
+        }
+
+        return invertido;
+    }
+
+    public static String arrayAString(int[] array) {
+        String resultado = "";
+        for (int i = 0; i < array.length; i++) {
+            if (i > 0) resultado += ", ";
+            resultado += array[i];
+        }
+        return resultado;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Array + for + if: Calcular promedio y desviación" difficulty="hard">
+  Crea un método `analizarNotas(double[] notas)` que devuelva un String con:
+  - Promedio
+  - Nota más alta
+  - Nota más baja
+  - Cuántos arriba y abajo del promedio
+
+  <div slot="hint1">
+    Primero calcula el promedio con un `for`. Luego recorre otra vez para contar.
+  </div>
+
+  <div slot="hint2">
+    Usa variables: `suma`, `maximo`, `minimo`, `arriba`, `abajo`.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        double[] notas = {85.5, 92.0, 78.3, 95.7, 88.2, 70.1, 99.0};
+        System.out.println(analizarNotas(notas));
+    }
+
+    public static String analizarNotas(double[] notas) {
+        double suma = 0;
+        double maximo = notas[0];
+        double minimo = notas[0];
+        int arriba = 0;
+        int abajo = 0;
+
+        // Primera vuelta: calcular promedio, máximo, mínimo
+        for (int i = 0; i < notas.length; i++) {
+            suma = suma + notas[i];
+
+            if (notas[i] > maximo) {
+                maximo = notas[i];
+            }
+
+            if (notas[i] < minimo) {
+                minimo = notas[i];
+            }
+        }
+
+        double promedio = suma / notas.length;
+
+        // Segunda vuelta: contar arriba/abajo
+        for (int i = 0; i < notas.length; i++) {
+            if (notas[i] >= promedio) {
+                arriba++;
+            } else {
+                abajo++;
+            }
+        }
+
+        return "📊 ANÁLISIS DE NOTAS\n" +
+               "══════════════════\n" +
+               "Promedio: " + String.format("%.1f", promedio) + "\n" +
+               "Más alta: " + maximo + "\n" +
+               "Más baja: " + minimo + "\n" +
+               "Arriba del promedio: " + arriba + " estudiantes\n" +
+               "Abajo del promedio: " + abajo + " estudiantes";
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={10} title="Array + for + if: Simular carrito de compras" difficulty="hard">
+  Crea un método `simularCarrito(String[] productos, double[] precios, int[] cantidades)` que devuelva un ticket completo con subtotal por producto y total.
+
+  <div slot="hint1">
+    Usa `String ticket = "";` y un `for` para cada producto.
+  </div>
+
+  <div slot="hint2">
+    Calcula subtotal: `double subtotal = precios[i] * cantidades[i];` y acumula el total.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        String[] productos = {"Laptop", "Mouse", "Teclado", "Monitor", "Audífonos"};
+        double[] precios = {999.99, 25.50, 75.00, 350.00, 120.00};
+        int[] cantidades = {1, 2, 1, 1, 3};
+
+        System.out.println(simularCarrito(productos, precios, cantidades));
+    }
+
+    public static String simularCarrito(String[] productos, double[] precios, int[] cantidades) {
+        String ticket = "🛒 TICKET DE COMPRA\n";
+        ticket += "══════════════════════════════\n\n";
+
+        double totalGeneral = 0;
+        int totalArticulos = 0;
+
+        for (int i = 0; i < productos.length; i++) {
+            double subtotal = precios[i] * cantidades[i];
+            totalGeneral = totalGeneral + subtotal;
+            totalArticulos = totalArticulos + cantidades[i];
+
+            ticket += productos[i] + "\n";
+            ticket += "  $" + precios[i] + " x " + cantidades[i];
+            ticket += " = $" + String.format("%.2f", subtotal) + "\n\n";
+        }
+
+        ticket += "──────────────────────────────\n";
+        ticket += "Total de artículos: " + totalArticulos + "\n";
+        ticket += "TOTAL: $" + String.format("%.2f", totalGeneral) + "\n";
+        ticket += "══════════════════════════════\n";
+        ticket += "¡Gracias por tu compra! 🎉";
+
+        return ticket;
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🐛 DEBUG MENTAL: Encuentra el error
+
+<ExerciseBlock id={11} title="🐛 ¿Qué está mal en este código?" difficulty="medium">
+  Este código tiene **3 errores**. ¿Puedes encontrarlos ANTES de mirar la solución?
+
+  ```java
+  // ❌ ESTE CÓDIGO NO FUNCIONA
+  public class Main {
+      public static void main(String[] args) {
+          int[] numeros = {1, 2, 3, 4, 5};
+
+          // Error 1
+          for (int i = 0; i <= numeros.length; i++) {
+              System.out.println(numeros[i]);
+          }
+
+          // Error 2
+          int[] copia = numeros;
+          copia[0] = 999;
+          System.out.println(numeros[0]); // ¿Qué imprime?
+
+          // Error 3
+          String[] nombres = {"Ana", "Luis", "Pedro"};
+          System.out.println(nombres[3]);
+      }
+  }
+  ```
+
+  <div slot="hint1">
+    Error 1: ¿Qué pasa con `<=` en el for? Error 2: ¿`copia` es realmente una copia? Error 3: ¿Existe índice 3?
+  </div>
+
+  <div slot="hint2">
+    Error 1: `i <= length` accede fuera del array. Error 2: `copia = numeros` no copia, solo referencia. Error 3: Índices 0,1,2 → no hay 3.
+  </div>
+
+  <div slot="solution">
+```java
+// ✅ CÓDIGO CORREGIDO
+public class Main {
+    public static void main(String[] args) {
+        int[] numeros = {1, 2, 3, 4, 5};
+
+        // Error 1 corregido: usa < no <=
+        for (int i = 0; i < numeros.length; i++) {
+            System.out.println(numeros[i]);
+        }
+
+        // Error 2 corregido: crear copia real
+        int[] copia = new int[numeros.length];
+        for (int i = 0; i < numeros.length; i++) {
+            copia[i] = numeros[i];
+        }
+        copia[0] = 999;
+        System.out.println(numeros[0]); // Imprime 1 (no 999)
+
+        // Error 3 corregido: índice válido
+        String[] nombres = {"Ana", "Luis", "Pedro"};
+        System.out.println(nombres[2]); // Pedro (índice 2, no 3)
+    }
+}
+```
+
+**Explicación de los errores**:
+1. **`<=` en lugar de `<`** → `i` llega a `length` que no existe. Usa siempre `<`.
+2. **`copia = numeros`** → No copia el array, solo copia la referencia. Ambos apuntan al mismo array.
+3. **`nombres[3]`** → Solo hay índices 0, 1, 2. El índice 3 no existe.
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={12}>
+  <QuizQuestion
+    id={1}
+    question="¿En qué índice empieza un array?"
+    options={[
+      { text: '1', correct: false },
+      { text: '0', correct: true },
+      { text: '-1', correct: false },
+      { text: 'Depende del array', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="¿Cómo accedes al tercer elemento de un array llamado `datos`?"
+    options={[
+      { text: 'datos[3]', correct: false },
+      { text: 'datos(3)', correct: false },
+      { text: 'datos[2]', correct: true },
+      { text: 'datos.3', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="¿Qué propiedad usas para saber cuántos elementos tiene un array?"
+    options={[
+      { text: 'datos.size()', correct: false },
+      { text: 'datos.length', correct: true },
+      { text: 'datos.count', correct: false },
+      { text: 'datos.length()', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="Si tienes `int[] notas = {85, 92, 78}` y haces `notas[1] = 100`, ¿cómo queda el array?"
+    options={[
+      { text: '{100, 92, 78}', correct: false },
+      { text: '{85, 100, 78}', correct: true },
+      { text: '{85, 92, 100}', correct: false },
+      { text: 'Error', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="¿Qué pasa si accedes a `array[10]` pero el array solo tiene 5 elementos?"
+    options={[
+      { text: 'Devuelve null', correct: false },
+      { text: 'Devuelve 0', correct: false },
+      { text: 'ArrayIndexOutOfBoundsException', correct: true },
+      { text: 'No pasa nada', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## 🎁 Reto Opcional: Sistema de Calificaciones Completo
+
+**Desafío**: Crea un método `sistemaCalificaciones(String[] estudiantes, double[][] notas)` donde cada fila es un estudiante y cada columna es una materia. Devuelve un reporte con:
+- Promedio por estudiante
+- Promedio por materia
+- Mejor estudiante
+- Materia más difícil
+
+**Ejemplo**:
+```java
+String[] nombres = {"Ana", "Luis", "Pedro"};
+double[][] notas = {
+    {85, 90, 78},  // Ana: Mate, Ciencia, Historia
+    {92, 88, 95},  // Luis: Mate, Ciencia, Historia
+    {70, 85, 80}   // Pedro: Mate, Ciencia, Historia
+};
+```
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo qué es un array y para qué sirve',
+    'Puedo declarar y acceder a arrays por índice',
+    'Puedo recorrer arrays con for y while',
+    'Uso if dentro de for para filtrar/buscar en arrays',
+    'Puedo crear métodos que devuelven arrays nuevos',
+    'Puedo crear métodos que generan reportes desde arrays',
+    'Completé el simulador de carrito de compras',
+    'Completé el simulador de votación',
+    'Entiendo que los índices empiezan en 0'
+  ]}
+/>
+
+---
+
+## 📖 ¿Qué Aprendimos Hoy? (Resumen Visual)
+
+```
+┌─────────────────────────────────────────────────┐
+│           🎯 DÍA 12: ARRAYS                     │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  📦 DECLARAR:                                   │
+│  int[] numeros = {1, 2, 3, 4, 5};               │
+│                                                 │
+│  🔍 ACCEDER:                                    │
+│  numeros[0] → primer elemento                   │
+│  numeros[numeros.length - 1] → último           │
+│                                                 │
+│  🔄 RECORRER:                                   │
+│  for (int i = 0; i < array.length; i++) {       │
+│      // array[i] es el elemento actual          │
+│  }                                              │
+│                                                 │
+│  🔀 COMBINACIONES:                              │
+│  array + for     → recorrer y sumar             │
+│  array + for + if → filtrar y buscar            │
+│  array + while   → búsqueda lineal              │
+│                                                 │
+│  ⚠️ ERRORES COMUNES:                            │
+│  • Usar <= en lugar de <                        │
+│  • Acceder a índices que no existen             │
+│  • Creer que copia = new copia (referencia)     │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "ArrayIndexOutOfBoundsException"
+
+**Problema**: Accediste a un índice que no existe.
+
+**Solución**:
+```java
+// ❌ Mal
+for (int i = 0; i <= array.length; i++) {  // ← Usa < no <=
+    System.out.println(array[i]);
+}
+
+// ✅ Bien
+for (int i = 0; i < array.length; i++) {
+    System.out.println(array[i]);
+}
+```
+
+### Error: "incompatible types" al asignar array
+
+**Problema**: Intentas guardar un tipo en un array de otro tipo.
+
+**Solución**: `int[]` solo acepta `int`, `String[]` solo acepta `String`.
+
+### Error: Array no se modifica
+
+**Problema**: Estás modificando una copia, no el original.
+
+**Solución**: Modifica directamente `array[i] = nuevoValor;` dentro del método.
+
+### Error: NullPointerException con arrays
+
+**Problema**: Intentas usar un array que no fue creado.
+
+**Solución**: Asegúrate de inicializar: `int[] datos = new int[5];` o `int[] datos = {1, 2, 3};`
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 12. Ahora sabes:
+- ✅ Qué es un array y cómo declararlo
+- ✅ Acceder a elementos por índice
+- ✅ Recorrer arrays con `for` y `while`
+- ✅ Combinar `if` con arrays para filtrar y buscar
+- ✅ Crear métodos que devuelven arrays y reportes
+- ✅ Simular sistemas reales: carrito, votación, inventario
+
+**Lo que viene**: Día 13 aprenderás a **recorrer arrays con métodos avanzados** y hacer **búsquedas eficientes**.
+
+**¡Tus arrays están bajo control! 🎯** 🚀

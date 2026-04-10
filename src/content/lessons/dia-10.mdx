@@ -1,10 +1,1392 @@
 ---
 day: 10
 title: "Métodos (Funciones) - Parte 1"
-objective: "Crear métodos sin retorno (void) para organizar código"
-topics: ["Métodos", "void", "Parámetros básicos"]
+objective: "Crear métodos sin retorno (void) combinando if, while, for para organizar código"
+topics: ["Métodos", "void", "Parámetros", "if", "while", "for"]
 miniProject: true
 projectTitle: "Sistema de Inventario Simple"
 ---
-# Día 10: Métodos + Mini-Proyecto Inventario
-*[Contenido a desarrollar]*
+
+import ExerciseBlock from '../../components/ExerciseBlock.astro';
+import QuizBlock from '../../components/QuizBlock.astro';
+import QuizQuestion from '../../components/QuizQuestion.astro';
+import Checklist from '../../components/Checklist.astro';
+
+## 🎯 Objetivo del Día
+
+Hoy vas a aprender a **crear métodos (funciones)** y a **combinarlos con `if`, `while` y `for`** que ya conoces. Vas a dividir tu código en partes pequeñas y reutilizables. **Al final del día, construirás un Sistema de Inventario Simple**.
+
+---
+
+## 📋 Antes de Empezar
+
+- **Ya sabes usar `if`, `while`, `for` y `System.out.println()`**
+- **Los métodos son "cajas de código"** que puedes reutilizar
+- **Cada ejercicio tiene pasos pequeños** (solo sigue el ritmo)
+- **Este día tiene mini-proyecto** (¡vas a construir algo real!)
+
+---
+
+## 🔄 Repaso Rápido (2 minutos)
+
+Antes de empezar, recordemos las 3 herramientas que ya conoces:
+
+### 🔀 if / else if / else
+```java
+if (edad >= 18) {
+    System.out.println("Mayor de edad");
+} else {
+    System.out.println("Menor de edad");
+}
+```
+**Para qué sirve**: Tomar decisiones (SI pasa algo → haz esto, SINO → haz esto otro)
+
+### 🔁 for
+```java
+for (int i = 1; i <= 5; i++) {
+    System.out.println("Vuelta " + i);
+}
+```
+**Para qué sirve**: Repetir algo un **número conocido** de veces (1, 2, 3, 4, 5)
+
+### 🔁 while
+```java
+int energia = 100;
+while (energia > 0) {
+    energia = energia - 10;
+    System.out.println("Energía: " + energia);
+}
+```
+**Para qué sirve**: Repetir algo **mientras se cumpla una condición** (no sabes cuántas vueltas)
+
+---
+
+## 🤔 ¿Qué es un Método?
+
+### Piensa en esto como controles de videojuego:
+
+**Sin métodos**: Escribes TODO el código del juego en un solo archivo (¡imposible de mantener!)
+
+**Con métodos**: Separas en funciones:
+- `moverPersonaje()` ← este hace una cosa
+- `mostrarPuntaje()` ← este hace otra
+- `verificarColision()` ← este hace otra más
+
+### En código:
+
+**Sin métodos** (un desastre):
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== MENÚ ===");
+        System.out.println("1. Agregar");
+        System.out.println("2. Ver");
+        System.out.println("Producto: Laptop x5");
+        System.out.println("Producto: Mouse x20");
+    }
+}
+```
+
+**Con métodos** (organizado):
+```java
+public class Main {
+    public static void main(String[] args) {
+        mostrarMenu();
+        mostrarProducto("Laptop", 5);
+        mostrarProducto("Mouse", 20);
+    }
+
+    public static void mostrarMenu() {
+        System.out.println("=== MENÚ ===");
+        System.out.println("1. Agregar");
+        System.out.println("2. Ver");
+    }
+
+    public static void mostrarProducto(String nombre, int cantidad) {
+        System.out.println("Producto: " + nombre + " x" + cantidad);
+    }
+}
+```
+
+**¿Ves la diferencia?** Ahora puedes reutilizar `mostrarProducto()` sin repetir código.
+
+---
+
+## 🗺️ Diagrama: ¿Cómo Funciona un Método?
+
+### El flujo paso a paso:
+
+```
+┌─────────────────────────────────────────┐
+│  main() empieza                         │
+│    ↓                                    │
+│  Llama a: saludar("Ana")  ───────────┐  │
+│    ↓                                 │  │
+│  (main se PAUSA)                     │  │
+│    ↓                                 │  │
+│                                ┌──────▼──────┐
+│                                │ saludar()   │
+│                                │ nombre="Ana"│
+│                                │   ↓         │
+│                                │ Imprime     │
+│                                │   ↓         │
+│                                │ Termina     │
+│                                └──────┬──────┘
+│                                       │  RETURN
+│    ↓                                  │
+│  (main CONTINÚA)  ◄───────────────────┘
+│    ↓
+│  Siguiente línea de main()
+└─────────────────────────────────────────┘
+```
+
+### 📖 En palabras simples:
+
+1. **Java empieza en `main()`** (siempre empieza aquí)
+2. **Encuentra `saludar("Ana");`** → SALTA al método `saludar`
+3. **`main()` se PAUSA** (espera a que `saludar` termine)
+4. **`saludar()` ejecuta TODO su código** con `nombre = "Ana"`
+5. **Cuando termina** → REGRESA a `main()` exactamente donde se quedó
+6. **`main()` CONTINÚA** con la siguiente línea
+
+---
+
+## 📦 Paso 1: Estructura de un Método `void`
+
+### ¿Qué significa `void`?
+
+`void` = "Este método NO devuelve nada, solo hace algo"
+
+**Ejemplo**: `mostrarMensaje()` solo imprime, no devuelve ningún valor.
+
+### La fórmula mágica:
+
+```java
+public static void nombreDelMetodo() {
+    // Tu código aquí
+}
+```
+
+### Tu primer método:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        saludar();  // ← LLAMAS al método
+    }
+
+    // Aquí defines qué hace el método
+    public static void saludar() {
+        System.out.println("¡Hola! Bienvenido.");
+        System.out.println("Hoy aprenderás métodos.");
+    }
+}
+```
+
+**Salida**:
+```
+¡Hola! Bienvenido.
+Hoy aprenderás métodos.
+```
+
+---
+
+## 🚀 Paso 2: Métodos con Parámetros
+
+### ¿Qué es un parámetro?
+
+Es **información que le das** al método para que la use.
+
+**Ejemplo**: `saludar("Oscar")` le das el nombre para que lo use.
+
+### Ejemplo con parámetro:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        repetirLinea("Hola", 3);
+        repetirLinea("Mundo", 2);
+    }
+
+    public static void repetirLinea(String texto, int veces) {
+        for (int i = 1; i <= veces; i++) {
+            System.out.println(texto + " (vez " + i + ")");
+        }
+    }
+}
+```
+
+### 🔍 TRAZA PASO A PASO (¡MIRA cómo funciona!):
+
+```
+Llamada 1: repetirLinea("Hola", 3)
+  → texto = "Hola", veces = 3
+  → for: i=1, 1<=3 ✅ → "Hola (vez 1)"
+  → for: i=2, 2<=3 ✅ → "Hola (vez 2)"
+  → for: i=3, 3<=3 ✅ → "Hola (vez 3)"
+  → for: i=4, 4<=3 ❌ → SALE del for
+  → Método TERMINA, regresa a main()
+
+Llamada 2: repetirLinea("Mundo", 2)
+  → texto = "Mundo", veces = 2
+  → for: i=1, 1<=2 ✅ → "Mundo (vez 1)"
+  → for: i=2, 2<=2 ✅ → "Mundo (vez 2)"
+  → for: i=3, 3<=2 ❌ → SALE del for
+  → Método TERMINA, regresa a main()
+```
+
+**Salida**:
+```
+Hola (vez 1)
+Hola (vez 2)
+Hola (vez 3)
+Mundo (vez 1)
+Mundo (vez 2)
+```
+
+---
+
+## 💪 Ejercicios Guiados (Con `if`, `while`, `for`)
+
+<ExerciseBlock id={1} title="Método + if: Verificar edad" difficulty="easy">
+  Crea un método `verificarEdad(int edad)` que:
+  - Si `edad >= 18`, imprima `"✅ Eres mayor de edad"`
+  - Si `edad < 18`, imprima `"❌ Eres menor de edad"`
+
+  <div slot="hint1">
+    Usa `if (edad >= 18)` y `else`.
+  </div>
+
+  <div slot="hint2">
+    ```java
+    if (edad >= 18) {
+        System.out.println("✅ Eres mayor de edad");
+    } else {
+        System.out.println("❌ Eres menor de edad");
+    }
+    ```
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        verificarEdad(20);
+        verificarEdad(15);
+        verificarEdad(18);
+    }
+
+    public static void verificarEdad(int edad) {
+        if (edad >= 18) {
+            System.out.println("✅ Eres mayor de edad (edad: " + edad + ")");
+        } else {
+            System.out.println("❌ Eres menor de edad (edad: " + edad + ")");
+        }
+    }
+}
+```
+
+**Traza paso a paso**:
+```
+verificarEdad(20):
+  → edad = 20
+  → 20 >= 18 ✅ → entra al if
+  → Imprime "✅ Eres mayor de edad (edad: 20)"
+
+verificarEdad(15):
+  → edad = 15
+  → 15 >= 18 ❌ → entra al else
+  → Imprime "❌ Eres menor de edad (edad: 15)"
+
+verificarEdad(18):
+  → edad = 18
+  → 18 >= 18 ✅ → entra al if (¡18 SÍ es mayor!)
+  → Imprime "✅ Eres mayor de edad (edad: 18)"
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={2} title="Método + for: Tabla de multiplicar" difficulty="easy">
+  Crea un método `tablaMultiplicar(int numero, int hasta)` que imprima la tabla del `numero` del 1 al `hasta`.
+
+  <div slot="hint1">
+    Usa `for (int i = 1; i <= hasta; i++)`.
+  </div>
+
+  <div slot="hint2">
+    Dentro: `System.out.println(numero + " x " + i + " = " + (numero * i));`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        tablaMultiplicar(5, 10);
+    }
+
+    public static void tablaMultiplicar(int numero, int hasta) {
+        System.out.println("=== Tabla del " + numero + " ===");
+        for (int i = 1; i <= hasta; i++) {
+            System.out.println(numero + " x " + i + " = " + (numero * i));
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={3} title="Método + while: Cuenta regresiva" difficulty="easy">
+  Crea un método `cuentaRegresiva(int desde)` que cuente hacia atrás y diga `"¡Despegue! 🚀"` al final.
+
+  <div slot="hint1">
+    Usa `while (desde >= 1)`.
+  </div>
+
+  <div slot="hint2">
+    Dentro del while: imprime `desde`, luego `desde = desde - 1;`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        cuentaRegresiva(5);
+    }
+
+    public static void cuentaRegresiva(int desde) {
+        while (desde >= 1) {
+            System.out.println(desde + "...");
+            desde = desde - 1;
+        }
+        System.out.println("¡Despegue! 🚀");
+    }
+}
+```
+
+**Traza paso a paso**:
+```
+cuentaRegresiva(5):
+  → desde = 5
+  → 5 >= 1 ✅ → "5..." → desde = 4
+  → 4 >= 1 ✅ → "4..." → desde = 3
+  → 3 >= 1 ✅ → "3..." → desde = 2
+  → 2 >= 1 ✅ → "2..." → desde = 1
+  → 1 >= 1 ✅ → "1..." → desde = 0
+  → 0 >= 1 ❌ → SALE del while
+  → "¡Despegue! 🚀"
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={4} title="Método + if: Clasificar nota" difficulty="medium">
+  Crea un método `clasificarNota(int nota)` que:
+  - `nota >= 90` → `"🌟 Excelente"`
+  - `nota >= 70` y `nota < 90` → `"✅ Aprobado"`
+  - `nota < 70` → `"❌ Reprobado"`
+
+  <div slot="hint1">
+    Usa `if`, `else if`, `else`.
+  </div>
+
+  <div slot="hint2">
+    ```java
+    if (nota >= 90) {
+        System.out.println("🌟 Excelente");
+    } else if (nota >= 70) {
+        System.out.println("✅ Aprobado");
+    } else {
+        System.out.println("❌ Reprobado");
+    }
+    ```
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        clasificarNota(95);
+        clasificarNota(80);
+        clasificarNota(60);
+    }
+
+    public static void clasificarNota(int nota) {
+        if (nota >= 90) {
+            System.out.println("Nota: " + nota + " → 🌟 Excelente");
+        } else if (nota >= 70) {
+            System.out.println("Nota: " + nota + " → ✅ Aprobado");
+        } else {
+            System.out.println("Nota: " + nota + " → ❌ Reprobado");
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={5} title="Método + for + if: Números pares" difficulty="medium">
+  Crea un método `mostrarPares(int hasta)` que imprima solo los números pares del 2 al `hasta`.
+
+  <div slot="hint1">
+    Usa `for` del 1 al `hasta`, dentro un `if (i % 2 == 0)`.
+  </div>
+
+  <div slot="hint2">
+    `%` es el operador módulo (residuo de la división). Si `i % 2 == 0`, es par.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        mostrarPares(10);
+    }
+
+    public static void mostrarPares(int hasta) {
+        System.out.println("Números pares hasta " + hasta + ":");
+        for (int i = 1; i <= hasta; i++) {
+            if (i % 2 == 0) {
+                System.out.println(i + " ✅");
+            }
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Ejercicios Dinámicos (Combinando Todo)
+
+<ExerciseBlock id={6} title="Método + while + if: Adivinar número" difficulty="medium">
+  Crea un método `juegoAdivinanza(int numeroSecreto)` que simule adivinar un número del 1 al 5. El método prueba del 1 al 5 hasta encontrar el secreto.
+
+  <div slot="hint1">
+    Usa `int intento = 1;` y un `while` hasta 5.
+  </div>
+
+  <div slot="hint2">
+    Dentro: `if (intento == numeroSecreto)` → "¡Ganaste!" y `break;`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("--- Intentando con secreto = 3 ---");
+        juegoAdivinanza(3);
+
+        System.out.println("\n--- Intentando con secreto = 5 ---");
+        juegoAdivinanza(5);
+    }
+
+    public static void juegoAdivinanza(int numeroSecreto) {
+        int intento = 1;
+        while (intento <= 5) {
+            System.out.println("¿Es el " + intento + "?");
+
+            if (intento == numeroSecreto) {
+                System.out.println("🎉 ¡Sí! ¡Era el " + numeroSecreto + "!");
+                break;
+            }
+
+            System.out.println("❌ No...");
+            intento = intento + 1;
+        }
+    }
+}
+```
+
+**🔍 TRAZA PASO A PASO** (¡MIRA el while en acción!):
+```
+juegoAdivinanza(3) → numeroSecreto = 3, intento = 1
+  → 1 <= 5 ✅ → "¿Es el 1?" → 1 == 3 ❌ → "No..." → intento = 2
+  → 2 <= 5 ✅ → "¿Es el 2?" → 2 == 3 ❌ → "No..." → intento = 3
+  → 3 <= 5 ✅ → "¿Es el 3?" → 3 == 3 ✅ → "🎉 ¡Sí! ¡Era el 3!" → BREAK!
+  → SALE del while inmediatamente
+
+juegoAdivinanza(5) → numeroSecreto = 5, intento = 1
+  → 1 <= 5 ✅ → "¿Es el 1?" → 1 == 5 ❌ → "No..." → intento = 2
+  → 2 <= 5 ✅ → "¿Es el 2?" → 2 == 5 ❌ → "No..." → intento = 3
+  → 3 <= 5 ✅ → "¿Es el 3?" → 3 == 5 ❌ → "No..." → intento = 4
+  → 4 <= 5 ✅ → "¿Es el 4?" → 4 == 5 ❌ → "No..." → intento = 5
+  → 5 <= 5 ✅ → "¿Es el 5?" → 5 == 5 ✅ → "🎉 ¡Sí! ¡Era el 5!" → BREAK!
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={7} title="Método + for + if: Contador de vocales" difficulty="medium">
+  Crea un método `contarVocales(String texto)` que cuente cuántas vocales tiene el texto.
+
+  <div slot="hint1">
+    Usa `for (int i = 0; i < texto.length(); i++)` para recorrer cada carácter.
+  </div>
+
+  <div slot="hint2">
+    Obtén el carácter: `char c = texto.charAt(i);` y verifica si es vocal con `if`.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        contarVocales("Hola Mundo");
+        contarVocales("Java");
+        contarVocales("Programación");
+    }
+
+    public static void contarVocales(String texto) {
+        int contador = 0;
+
+        for (int i = 0; i < texto.length(); i++) {
+            char c = texto.charAt(i);
+
+            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
+                c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+                contador = contador + 1;
+            }
+        }
+
+        System.out.println("\"" + texto + "\" tiene " + contador + " vocales.");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={8} title="Método + while: Intentos de contraseña" difficulty="medium">
+  Crea un método `simularLogin(String usuarioCorrecto)` que intente login con 3 usuarios falsos y luego muestre el acceso con el correcto.
+
+  <div slot="hint1">
+    Usa un `for` de 1 a 3 para los intentos fallidos, imprimiendo cada intento.
+  </div>
+
+  <div slot="hint2">
+    Después del for, muestra `"✅ Acceso concedido"` con el usuario correcto.
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        simularLogin("admin");
+        System.out.println();
+        simularLogin("maria");
+    }
+
+    public static void simularLogin(String usuarioCorrecto) {
+        System.out.println("=== SIMULANDO LOGIN ===");
+
+        // Intentos fallidos
+        String[] usuariosFalsos = {"hacker", "intruso", "desconocido"};
+
+        for (int intento = 0; intento < 3; intento++) {
+            System.out.println("Intento " + (intento + 1) + ": " + usuariosFalsos[intento]);
+            System.out.println("❌ Acceso denegado");
+        }
+
+        // Intento correcto
+        System.out.println("Intento 4: " + usuarioCorrecto);
+        System.out.println("✅ ¡Acceso concedido!");
+        System.out.println("Bienvenido, " + usuarioCorrecto);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={9} title="Método + for + if: Dibujar patrón" difficulty="medium">
+  Crea un método `dibujarTriangulo(int filas)` que dibuje un triángulo con asteriscos.
+
+  Ejemplo con `filas = 4`:
+  ```
+  *
+  **
+  ***
+  ****
+  ```
+
+  <div slot="hint1">
+    Usa un `for` externo para las filas: `for (int fila = 1; fila <= filas; fila++)`
+  </div>
+
+  <div slot="hint2">
+    Dentro, otro `for` para los asteriscos: `for (int j = 1; j <= fila; j++)`
+  </div>
+
+  <div slot="solution">
+```java
+public class Main {
+    public static void main(String[] args) {
+        dibujarTriangulo(4);
+        System.out.println();
+        dibujarTriangulo(6);
+    }
+
+    public static void dibujarTriangulo(int filas) {
+        System.out.println("=== Triángulo de " + filas + " filas ===");
+
+        for (int fila = 1; fila <= filas; fila++) {
+            String linea = "";
+            for (int j = 1; j <= fila; j++) {
+                linea = linea + "*";
+            }
+            System.out.println(linea);
+        }
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={10} title="🐛 DEBUG MENTAL: Encuentra el error" difficulty="medium">
+  Este código tiene **3 errores**. ¿Puedes encontrarlos ANTES de mirar la solución?
+
+  ```java
+  // ❌ ESTE CÓDIGO NO FUNCIONA - Encuentra los errores
+  public class Main {
+      public static void main(String[] args) {
+          saludar("Ana");
+      }
+
+      public static void saludar(String nombre) {
+          System.out.println("Hola " + nombres)  // Error 1: falta ;
+      }
+  }
+
+  public class Main {  // Error 2: clase duplicada
+      public static void main(String[] args) {
+          contar(5);
+      }
+
+      public static void contar(int maximo) {
+          for (int i = 1; i <= maximo; i++);  // Error 3: ; después del for
+          {
+              System.out.println(i);
+          }
+      }
+  }
+  ```
+
+  <div slot="hint1">
+    Error 1: Mira el final de la línea del println. Error 2: ¿Puedes tener 2 clases Main? Error 3: ¿Qué pasa si pones ; después del for?
+  </div>
+
+  <div slot="hint2">
+    Error 1: Falta `;`. Error 2: Solo puede haber UNA clase Main. Error 3: El `;` hace que el for no ejecute nada, y `i` no existe fuera del for.
+  </div>
+
+  <div slot="solution">
+```java
+// ✅ CÓDIGO CORREGIDO
+public class Main {
+    public static void main(String[] args) {
+        saludar("Ana");
+        contar(5);
+    }
+
+    // Error 1 corregido: agregado ;
+    public static void saludar(String nombre) {
+        System.out.println("Hola " + nombre);
+    }
+
+    // Error 2 corregido: todo en una sola clase
+    // Error 3 corregido: eliminado ; después del for
+    public static void contar(int maximo) {
+        for (int i = 1; i <= maximo; i++) {
+            System.out.println(i);
+        }
+    }
+}
+```
+
+**Explicación de los errores**:
+1. **Falta `;`** → Java necesita `;` al final de cada instrucción
+2. **Dos clases Main** → Solo puede haber una clase pública por archivo
+3. **`;` después del `for`** → `for (...);` = "repite NADA N veces". Luego `{ System.out.println(i); }` se ejecuta UNA sola vez, y `i` no existe ahí.
+  </div>
+</ExerciseBlock>
+
+---
+
+## 🎯 Mini-Proyecto: Sistema de Inventario Dinámico
+
+Ahora construirás un **sistema de inventario real** que usa `if`, `while`, `for` combinados con métodos.
+
+### 📋 Lo que hará el sistema:
+
+1. Mostrar menú
+2. Agregar productos (con validación `if`)
+3. Ver inventario (con `for`)
+4. Buscar producto por nombre (con `while`)
+5. Vender producto (con validación de stock `if`)
+6. Mostrar resumen final (con `for` + cálculos)
+
+### ✅ Paso a Paso:
+
+<ExerciseBlock id={11} title="Paso 1: Método mostrarMenu()" difficulty="easy">
+  Crea el método `mostrarMenu()` que muestre las opciones.
+
+  <div slot="hint1">
+    Solo `println()` para cada opción.
+  </div>
+
+  <div slot="hint2">
+    4 opciones: Agregar, Ver, Vender, Resumen.
+  </div>
+
+  <div slot="solution">
+```java
+public static void mostrarMenu() {
+    System.out.println("╔══════════════════════════════╗");
+    System.out.println("║   SISTEMA DE INVENTARIO v1   ║");
+    System.out.println("╠══════════════════════════════╣");
+    System.out.println("║ 1. Agregar producto          ║");
+    System.out.println("║ 2. Ver inventario            ║");
+    System.out.println("║ 3. Vender producto           ║");
+    System.out.println("║ 4. Ver resumen               ║");
+    System.out.println("╚══════════════════════════════╝");
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={12} title="Paso 2: Método agregarProducto() con validación if" difficulty="medium">
+  Crea `agregarProducto(String nombre, double precio, int cantidad)` que:
+  - Si `precio <= 0` → error
+  - Si `cantidad <= 0` → error
+  - Si todo está bien → confirma el registro
+
+  <div slot="hint1">
+    Primero verifica: `if (precio <= 0)` → error.
+  </div>
+
+  <div slot="hint2">
+    Luego `else if (cantidad <= 0)` → error. Finalmente `else` → éxito.
+  </div>
+
+  <div slot="solution">
+```java
+public static void agregarProducto(String nombre, double precio, int cantidad) {
+    System.out.println("\n📦 Registrando: " + nombre);
+
+    if (precio <= 0) {
+        System.out.println("❌ Error: El precio debe ser mayor a 0");
+    } else if (cantidad <= 0) {
+        System.out.println("❌ Error: La cantidad debe ser mayor a 0");
+    } else {
+        System.out.println("✅ Producto registrado:");
+        System.out.println("   Nombre: " + nombre);
+        System.out.println("   Precio: $" + precio);
+        System.out.println("   Stock: " + cantidad + " unidades");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={13} title="Paso 3: Método verInventario() con for" difficulty="medium">
+  Crea `verInventario(String[] productos, double[] precios, int[] cantidades)` que muestre todos los productos con `for`.
+
+  <div slot="hint1">
+    Usa `for (int i = 0; i < productos.length; i++)`.
+  </div>
+
+  <div slot="hint2">
+    Dentro: imprime nombre, precio y cantidad de cada producto.
+  </div>
+
+  <div slot="solution">
+```java
+public static void verInventario(String[] productos, double[] precios, int[] cantidades) {
+    System.out.println("\n📋 INVENTARIO COMPLETO:");
+    System.out.println("══════════════════════════════");
+
+    for (int i = 0; i < productos.length; i++) {
+        System.out.println("[" + (i + 1) + "] " + productos[i]);
+        System.out.println("    Precio: $" + precios[i]);
+        System.out.println("    Stock: " + cantidades[i] + " unidades");
+
+        if (cantidades[i] == 0) {
+            System.out.println("    ⚠️ AGOTADO");
+        } else if (cantidades[i] < 5) {
+            System.out.println("    ⚠️ Stock bajo");
+        }
+
+        System.out.println("");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={14} title="Paso 4: Método buscarProducto() con while" difficulty="medium">
+  Crea `buscarProducto(String nombre, String[] productos)` que busque un producto y diga si existe.
+
+  <div slot="hint1">
+    Usa `while (i < productos.length)` para recorrer el array.
+  </div>
+
+  <div slot="hint2">
+    Si encuentra: `if (productos[i].equals(nombre))` → encontrado y `break;`
+  </div>
+
+  <div slot="solution">
+```java
+public static void buscarProducto(String nombre, String[] productos) {
+    System.out.println("\n🔍 Buscando: " + nombre);
+
+    int i = 0;
+    boolean encontrado = false;
+
+    while (i < productos.length) {
+        if (productos[i].equals(nombre)) {
+            System.out.println("✅ ¡Encontrado en posición " + (i + 1) + "!");
+            encontrado = true;
+            break;
+        }
+        i = i + 1;
+    }
+
+    if (!encontrado) {
+        System.out.println("❌ Producto '" + nombre + "' no encontrado");
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={15} title="Paso 5: Método venderProducto() con validación if" difficulty="medium">
+  Crea `venderProducto(String nombre, int cantidad, int stockActual)` que simule una venta con validación de stock.
+
+  <div slot="hint1">
+    Primero: `if (cantidad <= 0)` → error.
+  </div>
+
+  <div slot="hint2">
+    Luego: `if (cantidad > stockActual)` → no hay suficiente stock.
+  </div>
+
+  <div slot="solution">
+```java
+public static void venderProducto(String nombre, int cantidad, int stockActual) {
+    System.out.println("\n💰 Vendiendo: " + nombre + " (x" + cantidad + ")");
+
+    if (cantidad <= 0) {
+        System.out.println("❌ Error: La cantidad debe ser mayor a 0");
+    } else if (cantidad > stockActual) {
+        System.out.println("❌ Error: Stock insuficiente");
+        System.out.println("   Disponible: " + stockActual + ", Solicitado: " + cantidad);
+    } else {
+        int nuevoStock = stockActual - cantidad;
+        System.out.println("✅ Venta exitosa!");
+        System.out.println("   Stock anterior: " + stockActual);
+        System.out.println("   Vendido: " + cantidad);
+        System.out.println("   Stock actual: " + nuevoStock);
+    }
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={16} title="Paso 6: Método resumenFinal() con for + cálculos" difficulty="medium">
+  Crea `resumenFinal(String[] productos, double[] precios, int[] cantidades)` que calcule el valor total del inventario.
+
+  <div slot="hint1">
+    Usa `for` para recorrer y acumular: `total = total + (precios[i] * cantidades[i]);`
+  </div>
+
+  <div slot="hint2">
+    Al final imprime el total y el producto más caro.
+  </div>
+
+  <div slot="solution">
+```java
+public static void resumenFinal(String[] productos, double[] precios, int[] cantidades) {
+    System.out.println("\n📊 RESUMEN DEL INVENTARIO");
+    System.out.println("══════════════════════════════");
+
+    double totalInventario = 0;
+    int totalUnidades = 0;
+    int productoMasCaro = 0;
+
+    for (int i = 0; i < productos.length; i++) {
+        double valorProducto = precios[i] * cantidades[i];
+        totalInventario = totalInventario + valorProducto;
+        totalUnidades = totalUnidades + cantidades[i];
+
+        if (precios[i] > precios[productoMasCaro]) {
+            productoMasCaro = i;
+        }
+    }
+
+    System.out.println("Total de productos: " + productos.length);
+    System.out.println("Total de unidades: " + totalUnidades);
+    System.out.println("Valor total del inventario: $" + totalInventario);
+    System.out.println("Producto más caro: " + productos[productoMasCaro] + " ($" + precios[productoMasCaro] + ")");
+    System.out.println("══════════════════════════════");
+}
+```
+  </div>
+</ExerciseBlock>
+
+<ExerciseBlock id={17} title="Paso 7: ¡Juntar todo en main()!" difficulty="hard">
+  Ahora llama a todos los métodos en orden para simular un día completo en la tienda.
+
+  <div slot="hint1">
+    Orden: menú → agregar 5 productos → ver inventario → buscar → vender → resumen.
+  </div>
+
+  <div slot="hint2">
+    Crea 3 arrays al inicio: nombres, precios, cantidades.
+  </div>
+
+  <div slot="solution">
+```java
+public class Inventario {
+    public static void main(String[] args) {
+        System.out.println("🏪 BIENVENIDO AL SISTEMA DE INVENTARIO\n");
+
+        // Datos del inventario
+        String[] nombres = {"Laptop", "Mouse", "Teclado", "Monitor", "Audífonos"};
+        double[] precios = {999.99, 25.50, 75.00, 350.00, 120.00};
+        int[] cantidades = {10, 50, 30, 15, 25};
+
+        // 1. Mostrar menú
+        mostrarMenu();
+
+        // 2. Agregar productos (simulando validaciones)
+        System.out.println("\n── REGISTRANDO PRODUCTOS ──");
+        agregarProducto("Laptop", 999.99, 10);
+        agregarProducto("Mouse", 25.50, 50);
+        agregarProducto("Teclado", 75.00, 30);
+        agregarProducto("Monitor", 350.00, 15);
+        agregarProducto("Audífonos", 120.00, 25);
+
+        // Prueba de validación
+        System.out.println("\n── PRUEBA DE VALIDACIÓN ──");
+        agregarProducto("Error1", -10, 5);     // Precio inválido
+        agregarProducto("Error2", 50, -3);     // Cantidad inválida
+
+        // 3. Ver inventario
+        verInventario(nombres, precios, cantidades);
+
+        // 4. Buscar producto
+        buscarProducto("Mouse", nombres);
+        buscarProducto("Tablet", nombres);
+
+        // 5. Vender producto
+        System.out.println("\n── REALIZANDO VENTAS ──");
+        venderProducto("Laptop", 2, 10);
+        venderProducto("Mouse", 5, 50);
+        venderProducto("Laptop", 15, 10);  // Error: stock insuficiente
+
+        // 6. Resumen final
+        resumenFinal(nombres, precios, cantidades);
+
+        System.out.println("\n🎉 ¡Fin del simulacro!");
+    }
+
+    public static void mostrarMenu() {
+        System.out.println("╔══════════════════════════════╗");
+        System.out.println("║   SISTEMA DE INVENTARIO v1   ║");
+        System.out.println("╠══════════════════════════════╣");
+        System.out.println("║ 1. Agregar producto          ║");
+        System.out.println("║ 2. Ver inventario            ║");
+        System.out.println("║ 3. Vender producto           ║");
+        System.out.println("║ 4. Ver resumen               ║");
+        System.out.println("╚══════════════════════════════╝");
+    }
+
+    public static void agregarProducto(String nombre, double precio, int cantidad) {
+        System.out.println("\n📦 Registrando: " + nombre);
+
+        if (precio <= 0) {
+            System.out.println("❌ Error: El precio debe ser mayor a 0");
+        } else if (cantidad <= 0) {
+            System.out.println("❌ Error: La cantidad debe ser mayor a 0");
+        } else {
+            System.out.println("✅ Producto registrado:");
+            System.out.println("   Nombre: " + nombre);
+            System.out.println("   Precio: $" + precio);
+            System.out.println("   Stock: " + cantidad + " unidades");
+        }
+    }
+
+    public static void verInventario(String[] productos, double[] precios, int[] cantidades) {
+        System.out.println("\n📋 INVENTARIO COMPLETO:");
+        System.out.println("══════════════════════════════");
+
+        for (int i = 0; i < productos.length; i++) {
+            System.out.println("[" + (i + 1) + "] " + productos[i]);
+            System.out.println("    Precio: $" + precios[i]);
+            System.out.println("    Stock: " + cantidades[i] + " unidades");
+
+            if (cantidades[i] == 0) {
+                System.out.println("    ⚠️ AGOTADO");
+            } else if (cantidades[i] < 5) {
+                System.out.println("    ⚠️ Stock bajo");
+            }
+
+            System.out.println("");
+        }
+    }
+
+    public static void buscarProducto(String nombre, String[] productos) {
+        System.out.println("\n🔍 Buscando: " + nombre);
+
+        int i = 0;
+        boolean encontrado = false;
+
+        while (i < productos.length) {
+            if (productos[i].equals(nombre)) {
+                System.out.println("✅ ¡Encontrado en posición " + (i + 1) + "!");
+                encontrado = true;
+                break;
+            }
+            i = i + 1;
+        }
+
+        if (!encontrado) {
+            System.out.println("❌ Producto '" + nombre + "' no encontrado");
+        }
+    }
+
+    public static void venderProducto(String nombre, int cantidad, int stockActual) {
+        System.out.println("\n💰 Vendiendo: " + nombre + " (x" + cantidad + ")");
+
+        if (cantidad <= 0) {
+            System.out.println("❌ Error: La cantidad debe ser mayor a 0");
+        } else if (cantidad > stockActual) {
+            System.out.println("❌ Error: Stock insuficiente");
+            System.out.println("   Disponible: " + stockActual + ", Solicitado: " + cantidad);
+        } else {
+            int nuevoStock = stockActual - cantidad;
+            System.out.println("✅ Venta exitosa!");
+            System.out.println("   Stock anterior: " + stockActual);
+            System.out.println("   Vendido: " + cantidad);
+            System.out.println("   Stock actual: " + nuevoStock);
+        }
+    }
+
+    public static void resumenFinal(String[] productos, double[] precios, int[] cantidades) {
+        System.out.println("\n📊 RESUMEN DEL INVENTARIO");
+        System.out.println("══════════════════════════════");
+
+        double totalInventario = 0;
+        int totalUnidades = 0;
+        int productoMasCaro = 0;
+
+        for (int i = 0; i < productos.length; i++) {
+            double valorProducto = precios[i] * cantidades[i];
+            totalInventario = totalInventario + valorProducto;
+            totalUnidades = totalUnidades + cantidades[i];
+
+            if (precios[i] > precios[productoMasCaro]) {
+                productoMasCaro = i;
+            }
+        }
+
+        System.out.println("Total de productos: " + productos.length);
+        System.out.println("Total de unidades: " + totalUnidades);
+        System.out.println("Valor total del inventario: $" + totalInventario);
+        System.out.println("Producto más caro: " + productos[productoMasCaro] + " ($" + precios[productoMasCaro] + ")");
+        System.out.println("══════════════════════════════");
+    }
+}
+```
+
+### 📺 SALIDA COMPLETA DEL PROGRAMA:
+
+```
+🏪 BIENVENIDO AL SISTEMA DE INVENTARIO
+
+╔══════════════════════════════╗
+║   SISTEMA DE INVENTARIO v1   ║
+╠══════════════════════════════╣
+║ 1. Agregar producto          ║
+║ 2. Ver inventario            ║
+║ 3. Vender producto           ║
+║ 4. Ver resumen               ║
+╚══════════════════════════════╝
+
+── REGISTRANDO PRODUCTOS ──
+
+📦 Registrando: Laptop
+✅ Producto registrado:
+   Nombre: Laptop
+   Precio: $999.99
+   Stock: 10 unidades
+
+📦 Registrando: Mouse
+✅ Producto registrado:
+   Nombre: Mouse
+   Precio: $25.50
+   Stock: 50 unidades
+
+📦 Registrando: Teclado
+✅ Producto registrado:
+   Nombre: Teclado
+   Precio: $75.00
+   Stock: 30 unidades
+
+📦 Registrando: Monitor
+✅ Producto registrado:
+   Nombre: Monitor
+   Precio: $350.00
+   Stock: 15 unidades
+
+📦 Registrando: Audífonos
+✅ Producto registrado:
+   Nombre: Audífonos
+   Precio: $120.00
+   Stock: 25 unidades
+
+── PRUEBA DE VALIDACIÓN ──
+
+📦 Registrando: Error1
+❌ Error: El precio debe ser mayor a 0
+
+📦 Registrando: Error2
+❌ Error: La cantidad debe ser mayor a 0
+
+📋 INVENTARIO COMPLETO:
+══════════════════════════════
+[1] Laptop
+    Precio: $999.99
+    Stock: 10 unidades
+
+[2] Mouse
+    Precio: $25.50
+    Stock: 50 unidades
+
+[3] Teclado
+    Precio: $75.00
+    Stock: 30 unidades
+
+[4] Monitor
+    Precio: $350.00
+    Stock: 15 unidades
+
+[5] Audífonos
+    Precio: $120.00
+    Stock: 25 unidades
+
+
+🔍 Buscando: Mouse
+✅ ¡Encontrado en posición 2!
+
+🔍 Buscando: Tablet
+❌ Producto 'Tablet' no encontrado
+
+── REALIZANDO VENTAS ──
+
+💰 Vendiendo: Laptop (x2)
+✅ Venta exitosa!
+   Stock anterior: 10
+   Vendido: 2
+   Stock actual: 8
+
+💰 Vendiendo: Mouse (x5)
+✅ Venta exitosa!
+   Stock anterior: 50
+   Vendido: 5
+   Stock actual: 45
+
+💰 Vendiendo: Laptop (x15)
+❌ Error: Stock insuficiente
+   Disponible: 10, Solicitado: 15
+
+📊 RESUMEN DEL INVENTARIO
+══════════════════════════════
+Total de productos: 5
+Total de unidades: 130
+Valor total del inventario: $17324.9
+Producto más caro: Laptop ($999.99)
+══════════════════════════════
+
+🎉 ¡Fin del simulacro!
+```
+  </div>
+</ExerciseBlock>
+
+---
+
+## 📝 Mini-Quiz
+
+<QuizBlock day={10}>
+  <QuizQuestion
+    id={1}
+    question="¿Qué significa `void` en un método?"
+    options={[
+      { text: 'El método devuelve un número', correct: false },
+      { text: 'El método no devuelve nada, solo hace algo', correct: true },
+      { text: 'El método no se puede usar', correct: false },
+      { text: 'El método es privado', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={2}
+    question="¿Cómo llamas a un método llamado `saludar`?"
+    options={[
+      { text: 'llamar saludar', correct: false },
+      { text: 'saludar()', correct: true },
+      { text: 'ejecutar saludar', correct: false },
+      { text: 'run saludar', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={3}
+    question="¿Qué es un parámetro?"
+    options={[
+      { text: 'El nombre del método', correct: false },
+      { text: 'Información que le das al método para que la use', correct: true },
+      { text: 'El tipo de retorno del método', correct: false },
+      { text: 'Una variable global', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={4}
+    question="¿Qué pasa cuando un método termina?"
+    options={[
+      { text: 'El programa se cierra', correct: false },
+      { text: 'Regresa a donde fue llamado y continúa', correct: true },
+      { text: 'Se borra de la memoria', correct: false },
+      { text: 'Imprime un mensaje', correct: false },
+    ]}
+  />
+
+  <QuizQuestion
+    id={5}
+    question="¿Cuál es la ventaja principal de usar métodos?"
+    options={[
+      { text: 'El programa corre más rápido', correct: false },
+      { text: 'Ocupa menos memoria', correct: false },
+      { text: 'El código está organizado y es reutilizable', correct: true },
+      { text: 'No hay ventaja', correct: false },
+    ]}
+  />
+</QuizBlock>
+
+---
+
+## 🎁 Reto Opcional
+
+**Desafío**: Crea un método `mostrarResumen()` que al final del día muestre:
+```
+==============================
+📊 RESUMEN DEL DÍA
+==============================
+Productos agregados: 3
+Productos vendidos: 1
+Total en inventario: 2
+==============================
+```
+
+**Pista**: Este método no necesita parámetros. Solo imprime el resumen simulado.
+
+---
+
+## ✅ Checklist de Logros
+
+<Checklist
+  items={[
+    'Entiendo qué es un método y para qué sirve',
+    'Puedo crear métodos sin parámetros (void)',
+    'Puedo crear métodos con uno o más parámetros',
+    'Sé cómo llamar a un método desde main()',
+    'Entiendo el flujo: llamar → ejecutar → regresar',
+    'Combiné métodos con if para validaciones',
+    'Combiné métodos con for para repetir tareas',
+    'Combiné métodos con while para búsquedas',
+    'Completé el mini-proyecto de Inventario',
+    'Puedo encontrar errores en código con métodos'
+  ]}
+/>
+
+---
+
+## 🚨 Errores Comunes y Soluciones
+
+### Error: "cannot find symbol: method saludar()"
+
+**Problema**: El método no existe o está mal escrito.
+
+**Solución**:
+1. Verifica que el método `saludar()` exista en tu clase
+2. Revisa que los paréntesis `()` estén presentes
+3. Verifica que esté escrito correctamente (mayúsculas/minúsculas)
+
+### Error: "';' expected" en la llamada al método
+
+**Problema**: Olvidaste el punto y coma al llamar el método.
+
+**Solución**: Agrega `;` al final: `saludar();`
+
+### Error: "incompatible types" en parámetros
+
+**Problema**: Le diste el tipo de dato equivocado al método.
+
+**Solución**: Si el método espera `String nombre`, no le des un número: `saludar("Oscar")` ✅, `saludar(5)` ❌
+
+### Error: El método se define pero nunca se ejecuta
+
+**Problema**: Definiste el método, pero nunca lo llamaste desde `main()`.
+
+**Solución**: Agrega la llamada en `main()`: `saludar();`
+
+### Error: `;` después del `for` o `while`
+
+**Problema**: `for (int i = 0; i < 5; i++);` ← El `;` hace que el bucle no haga nada.
+
+**Solución**: Nunca pongas `;` inmediatamente después de `for(...)` o `while(...)`.
+
+---
+
+## 📖 ¿Qué Aprendimos Hoy? (Resumen Visual)
+
+```
+┌─────────────────────────────────────────────────┐
+│           🎯 DÍA 10: MÉTODOS (void)             │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  📦 ESTRUCTURA:                                 │
+│  public static void nombre() {                  │
+│      // código                                  │
+│  }                                              │
+│                                                 │
+│  🔀 CON PARÁMETROS:                             │
+│  nombre("Ana", 25)  ← le das información        │
+│                                                 │
+│  🔄 FLUJO:                                      │
+│  main() → llama método → ejecuta → regresa      │
+│                                                 │
+│  🔀 COMBINACIONES:                              │
+│  método + if     → decisiones                   │
+│  método + for    → repetir N veces conocidas    │
+│  método + while  → repetir mientras condición   │
+│                                                 │
+│  🏪 MINI-PROYECTO:                              │
+│  Sistema de Inventario con 6 métodos            │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## 🎉 ¡Felicidades!
+
+Has completado el Día 10. Ahora sabes:
+- ✅ Qué es un método y para qué sirve
+- ✅ Crear métodos `void` sin retorno
+- ✅ Usar parámetros para hacer métodos flexibles
+- ✅ Organizar tu código en partes pequeñas
+- ✅ Combinar métodos con `if`, `for`, `while`
+- ✅ Construir un mini-proyecto: Sistema de Inventario
+
+**Lo que viene**: Día 11 aprenderás sobre **métodos con retorno** (devolver valores) y **parámetros avanzados**.
+
+**¡Tu inventario está funcionando! 🎯** 🚀
